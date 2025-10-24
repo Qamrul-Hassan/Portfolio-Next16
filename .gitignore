@@ -25,3 +25,4 @@ Thumbs.db
 # Editor folders (optional)
 .vscode/
 .idea/
+.vercel

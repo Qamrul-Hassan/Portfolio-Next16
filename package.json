@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
+    "@emailjs/nodejs": "^5.0.2",
     "@reduxjs/toolkit": "^1.9.0",
     "aos": "^2.3.4",
     "axios": "^1.7.9",
