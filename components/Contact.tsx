@@ -63,7 +63,7 @@ const Contact = () => {
     },
     {
       icon: FaAt,
-      onClick: () => window.open("https://qhs-portfolio.vercel.app/", "_blank"),
+      onClick: () => window.open("https://portfolio-next16.vercel.app/", "_blank"),
     },
     {
       icon: FaComment,
@@ -175,7 +175,7 @@ const Contact = () => {
         </motion.form>
 
         <motion.div
-          className="relative w-full lg:w-2/2 flex justify-center items-center"
+          className="relative w-full lg:w-2/2 flex justify-center items-center "
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1.5 }}
@@ -191,6 +191,7 @@ const Contact = () => {
                 key={index}
                 onClick={onClick}
                 className="cursor-pointer"
+                
                 variants={iconVariants}
                 initial="hidden"
                 animate="visible"
