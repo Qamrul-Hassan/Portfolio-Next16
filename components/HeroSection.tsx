@@ -25,6 +25,7 @@ const HeroSection: React.FC = () => {
           alt="Background"
           className="object-cover w-full h-full"
           fill
+          priority={true} // LCP optimization
           style={{ objectFit: "cover" }}
         />
         <div className="absolute inset-0 bg-black/60"></div>
@@ -43,7 +44,7 @@ const HeroSection: React.FC = () => {
               src={profileImage}
               alt="Qamrul Hassan"
               className="object-cover w-full h-full opacity-95"
-              priority
+              priority // Make profile image LCP
             />
             <div className="absolute inset-0 bg-linear-to-b from-black/20 to-transparent"></div>
           </div>

@@ -2,7 +2,8 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaPhone, FaEnvelope, FaAt, FaComment } from "react-icons/fa";
-import ContactImage from "../public/Contact.jpg"; // Keep in public or import Next Image
+import Image from "next/image";
+import ContactImage from "../public/Contact.jpg";
 import emailjs from "@emailjs/browser";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -90,7 +91,13 @@ const Contact = () => {
         </motion.form>
 
         <motion.div className="relative w-full lg:w-2/2 flex justify-center items-center" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1.5 }}>
-          <img src={ContactImage.src} alt="Contact Us" className="rounded-lg shadow-lg object-cover w-full h-full" />
+          {/* Fixed image: Use Next.js Image and priority for LCP */}
+          <Image
+            src={ContactImage}
+            alt="Contact Us"
+            className="rounded-lg shadow-lg object-cover w-full h-full"
+            priority={true}
+          />
           <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-8">
             {iconActions.map(({ icon: Icon, onClick }, index) => (
               <motion.div key={index} onClick={onClick} className="cursor-pointer" variants={iconVariants} initial="hidden" animate="visible" transition={{ delay: index * 0.5, repeat: Infinity, repeatType: "reverse", duration: 1.5 }} whileHover={{ scale: 1.2 }}>
