@@ -110,7 +110,7 @@ const Navbar: React.FC = () => {
           initial={{ x: "100%" }}
           animate={{ x: isMenuOpen ? 0 : "100%" }}
           transition={{ type: "tween", duration: 0.3 }}
-          className="mobile-menu md:hidden fixed top-0 left-0 w-full h-full bg-[#272727] bg-opacity-95 flex flex-col justify-center items-center text-white z-40"
+          className="mobile-menu md:hidden fixed top-0 left-0 w-full h-full bg-[#272727] bg-opacity-95 flex flex-col justify-center items-center text-white z-40 "
         >
           <ul className="flex flex-col space-y-10 text-2xl font-semibold text-center">
             {links.map((link) => (
