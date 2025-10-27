@@ -8,6 +8,7 @@ import Image from "next/image";
 import profileImage from "../public/Portfolio-9.jpg";
 import backgroundImage from "../public/bg.png";
 
+
 const HeroSection: React.FC = () => {
   const welcomeText = "WELCOME TO MY PORTFOLIO";
   const typingTexts = [
@@ -161,9 +162,13 @@ const HeroSection: React.FC = () => {
                 }}
               />
             ))}
+
+            
           </div>
+          
         </div>
       </div>
+      
     </section>
   );
 };

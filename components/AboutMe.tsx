@@ -34,7 +34,7 @@ const AboutMe = () => {
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-gray-800">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
             About <span className="text-pink-500">Me</span>
           </h2>
           <p className="text-lg leading-relaxed mb-6 text-gray-800">
