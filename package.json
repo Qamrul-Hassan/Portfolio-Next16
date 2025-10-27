@@ -32,6 +32,7 @@
     "@types/aos": "^3.0.7",
     "@types/node": "^20.19.23",
     "@types/react": "^18.3.26",
+    "@types/react-scroll": "^1.8.10",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.38.0",
     "postcss": "^8.4.49",
