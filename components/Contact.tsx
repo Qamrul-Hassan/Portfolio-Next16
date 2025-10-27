@@ -81,7 +81,7 @@ const Contact = () => {
   const iconVariants = { hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 } };
 
   return (
-    <section className="bg-[#CECECE] py-20 px-6 lg:px-16 text-white">
+    <section id="contact" className="bg-[#CECECE] py-20 px-6 lg:px-16 text-white ">
       <motion.div
         className="text-center mb-12"
         initial={{ opacity: 0, y: 50 }}

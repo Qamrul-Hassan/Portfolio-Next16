@@ -10,7 +10,19 @@ const Navbar: React.FC = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  // Close mobile menu on outside click
+  // ✅ Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isMenuOpen]);
+
+  // ✅ Close menu when clicking outside
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
@@ -36,7 +48,7 @@ const Navbar: React.FC = () => {
     { name: "Contact", id: "contact" },
   ];
 
-  // Hamburger animation 
+  // Hamburger animation
   const topLine = isMenuOpen
     ? "rotate-45 translate-y-2.5"
     : "rotate-0 translate-y-0";

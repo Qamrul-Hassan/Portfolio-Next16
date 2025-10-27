@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -94,7 +94,55 @@ const getSlides = (projectsList: typeof projects, slidesPerView: number) => {
     : projectsList;
 };
 
-const MyProjects = () => {
+const MyProjects: React.FC = () => {
+  const [swiperInstance, setSwiperInstance] = useState<any | null>(null);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  // Mobile pagination state
+  const buttonsPerSet = 5; // show 5 numbers per set
+  const totalSets = Math.ceil(projects.length / buttonsPerSet);
+  const [currentPageSet, setCurrentPageSet] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 640);
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const handlePrevSet = () => {
+    if (currentPageSet > 0) setCurrentPageSet(currentPageSet - 1);
+  };
+
+  const handleNextSet = () => {
+    if (currentPageSet < totalSets - 1) setCurrentPageSet(currentPageSet + 1);
+  };
+
+  const handlePrev = () => {
+    if (!swiperInstance) return;
+    swiperInstance.slidePrev();
+  };
+
+  const handleNext = () => {
+    if (!swiperInstance) return;
+    swiperInstance.slideNext();
+  };
+
+  const goTo = (index: number) => {
+    if (!swiperInstance) return;
+    if (typeof swiperInstance.slideToLoop === "function") {
+      swiperInstance.slideToLoop(index);
+    } else {
+      swiperInstance.slideTo(index);
+    }
+  };
+
+  const visibleNumbers = projects.slice(
+    currentPageSet * buttonsPerSet,
+    currentPageSet * buttonsPerSet + buttonsPerSet
+  );
+
   return (
     <section id="projects" className="bg-[#CECECE] py-20 px-6 lg:px-16 text-white">
       <motion.div
@@ -113,8 +161,7 @@ const MyProjects = () => {
           <span className="text-gray-800">Projects</span>
         </motion.h2>
         <p className="text-xl mt-4 max-w-2xl mx-auto px-4 py-2 text-gray-800 text-center md:text-2xl">
-          I'm a passionate Frontend Developer with expertise in modern web
-          technologies.
+          I'm a passionate Frontend Developer with expertise in modern web technologies.
         </p>
       </motion.div>
 
@@ -125,7 +172,7 @@ const MyProjects = () => {
         centeredSlides={true}
         loop={projects.length >= 6}
         autoplay={{ delay: 2500, disableOnInteraction: false }}
-        navigation
+        navigation={false}
         pagination={{
           clickable: true,
           renderBullet: (index, className) => {
@@ -136,6 +183,14 @@ const MyProjects = () => {
           0: { slidesPerView: 1, spaceBetween: 10 },
           640: { slidesPerView: 2, spaceBetween: 20 },
           1024: { slidesPerView: 2.5, spaceBetween: 30 },
+        }}
+        onSwiper={(swiper) => setSwiperInstance(swiper)}
+        onSlideChange={(swiper) => {
+          if (!isMobile) return;
+          const index = swiper.realIndex;
+          setActiveIndex(index);
+          const newPageSet = Math.floor(index / buttonsPerSet);
+          if (newPageSet !== currentPageSet) setCurrentPageSet(newPageSet);
         }}
         className="mySwiper"
       >
@@ -150,7 +205,7 @@ const MyProjects = () => {
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, scale: 0.8, y: 50 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 1.2, delay: index * 0.3 }}
+              transition={{ duration: 1.2, delay: index * 0.03 }}
             >
               <motion.img
                 src={project.image}
@@ -160,9 +215,7 @@ const MyProjects = () => {
                 transition={{ duration: 0.5 }}
               />
               <div className="p-6">
-                <h3 className="text-2xl font-bold text-pink-500 mb-2">
-                  {project.title}
-                </h3>
+                <h3 className="text-2xl font-bold text-pink-500 mb-2">{project.title}</h3>
                 <p className="text-gray-300 mb-4">{project.description}</p>
                 <p className="text-gray-400 text-xs">Tech: {project.tech}</p>
               </div>
@@ -171,9 +224,51 @@ const MyProjects = () => {
         ))}
       </Swiper>
 
-      <div className="custom-pagination swiper-pagination"></div>
+      <div className="custom-pagination swiper-pagination" aria-hidden={isMobile ? "true" : "false"} />
 
-    <style>
+      {/* Mobile custom controls */}
+      <div className="mobile-pagination mt-6 hidden items-center justify-center gap-4">
+        <button
+          onClick={handlePrevSet}
+          aria-label="Previous"
+          className="px-3 py-1 text-white hover:text-pink-400 transition text-2xl"
+          disabled={currentPageSet === 0}
+        >
+          &lt;
+        </button>
+
+        <div className="flex items-center gap-2">
+          {visibleNumbers.map((_, idx) => {
+            const slideIndex = currentPageSet * buttonsPerSet + idx;
+            const isActive = slideIndex === activeIndex;
+            return (
+              <button
+                key={slideIndex}
+                onClick={() => goTo(slideIndex)}
+                className="w-10 h-10 flex items-center justify-center text-sm font-bold text-white transition"
+                style={{
+                  background: isActive ? "#ff4d6d" : "#ff6f91",
+                  border: "2px solid #ff4d6d",
+                  clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                }}
+              >
+                {slideIndex + 1}
+              </button>
+            );
+          })}
+        </div>
+
+        <button
+          onClick={handleNextSet}
+          aria-label="Next"
+          className="px-3 py-1 text-white hover:text-pink-400 transition text-2xl"
+          disabled={currentPageSet === totalSets - 1}
+        >
+          &gt;
+        </button>
+      </div>
+
+      <style>
         {`
           .swiper-pagination {
             position: relative;
@@ -207,6 +302,17 @@ const MyProjects = () => {
             background: #ff4d6d;
             border: 2px solid #ff6f91;
             transform: scale(1.1);
+          }
+          .swiper-button-prev,
+          .swiper-button-next {
+            display: none !important;
+          }
+          @media (max-width: 639px) {
+            .swiper-pagination { display: none !important; }
+            .mobile-pagination { display: flex !important; }
+          }
+          @media (min-width: 640px) {
+            .mobile-pagination { display: none !important; }
           }
         `}
       </style>
