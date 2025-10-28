@@ -150,7 +150,7 @@ const Contact = () => {
           {/* Privacy Terms Text - Only show after reCAPTCHA */}
           {captchaToken && (
             <div className="text-center mb-3 sm:mb-4">
-              <p className="text-xs text-gray-600 px-4">
+              <p className="text-xs text-gray-600 px-2">
                 Protected by reCAPTCHA - <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:underline">Privacy</a> & <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:underline">Terms</a>
               </p>
             </div>
