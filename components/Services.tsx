@@ -63,7 +63,7 @@ const services = [
 
 const MyServices = () => {
   React.useEffect(() => {
-    AOS.init({ duration:800, once: true });
+    AOS.init({ duration: 500, once: true });
   }, []);
 
   return (
