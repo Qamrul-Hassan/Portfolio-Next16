@@ -18,7 +18,9 @@ export default function RootLayout({
         <title>QHSportfolio</title>
       </head>
       <body className="bg-white text-gray-900" suppressHydrationWarning>
-        {children}
+        <div className="pt-0"> {/* Add padding top to account for fixed navbar */}
+          {children}
+        </div>
       </body>
     </html>
   );

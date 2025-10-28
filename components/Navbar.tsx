@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Disable scroll when menu is open
+  
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "auto";
     document.documentElement.style.overflow = isMenuOpen ? "hidden" : "auto";
@@ -46,13 +46,11 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      {/* Navbar */}
-      <nav
-        className={`${
-          isSticky ? "fixed top-0 left-0 w-full shadow-lg backdrop-blur-md z-50" : "relative"
-        } bg-[#272727cc] text-white transition-all duration-300`}
-      >
-        <div className="container mx-auto px-6 py-3 flex justify-between items-center relative overflow-visible">
+      
+      <nav className={`${
+        isSticky ? "fixed top-0 left-0 w-full shadow-lg backdrop-blur-md z-50" : "relative"
+      } bg-[#272727cc] text-white transition-all duration-300`}>
+        <div className="container mx-auto px-6 py-3 flex justify-between items-center">
           {/* Logo */}
           <div className="flex items-center space-x-2 cursor-pointer">
             <img src={Logo.src} alt="Logo" className="h-14 w-14 object-contain rounded-lg" />
@@ -67,7 +65,7 @@ const Navbar: React.FC = () => {
               <li key={link.id}>
                 <button
                   onClick={() => scrollToSection(link.id)}
-                  className="text-gray-300 hover:text-pink-500 transition-all duration-300 cursor-pointer px-4 py-2 rounded-md"
+                  className=" font-bold text-gray-300 hover:text-pink-500 transition-all duration-300 cursor-pointer px-4 py-2 rounded-md"
                 >
                   {link.name}
                 </button>
@@ -84,7 +82,7 @@ const Navbar: React.FC = () => {
               animate={isMenuOpen ? "open" : "closed"}
               className="flex flex-col justify-between w-6 h-6"
             >
-              {/* Top line */}
+              
               <motion.span
                 className="block h-0.5 w-full rounded-sm bg-white"
                 variants={{
@@ -93,7 +91,7 @@ const Navbar: React.FC = () => {
                 }}
                 transition={{ duration: 0.35 }}
               />
-              {/* Middle line */}
+             
               <motion.span
                 className="block h-0.5 w-full rounded-sm bg-pink-500"
                 variants={{
@@ -102,7 +100,7 @@ const Navbar: React.FC = () => {
                 }}
                 transition={{ duration: 0.35 }}
               />
-              {/* Bottom line */}
+            
               <motion.span
                 className="block h-0.5 w-full rounded-sm bg-white"
                 variants={{
@@ -116,14 +114,63 @@ const Navbar: React.FC = () => {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+      
       <motion.div
         initial={{ x: "100%" }}
         animate={{ x: isMenuOpen ? 0 : "100%" }}
         transition={{ type: "tween", duration: 0.35 }}
-        className="fixed top-20 right-0 w-screen h-[calc(100%-64px)] bg-[#272727] bg-opacity-95 flex flex-col text-white z-40 overflow-hidden"
+        className={`fixed top-0 right-0 w-screen h-screen bg-[#272727] bg-opacity-95 flex flex-col text-white z-60 overflow-hidden ${
+          isMenuOpen ? "block" : "hidden"
+        }`}
       >
-        <div className="flex flex-col space-y-8 text-2xl font-semibold text-center px-6 mt-10 py-10">
+       
+        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-700">
+          <div className="flex items-center space-x-2">
+            <img src={Logo.src} alt="Logo" className="h-12 w-12 object-contain rounded-lg" />
+            <div className="text-2xl font-bold text-pink-500">
+              Portfolio
+            </div>
+          </div>
+          
+          {/* Close Button with animation */}
+          <button
+            onClick={() => setIsMenuOpen(false)}
+            className="flex items-center justify-center w-10 h-10"
+          >
+            <motion.div
+              animate={isMenuOpen ? "open" : "closed"}
+              className="flex flex-col justify-between w-6 h-6"
+            >
+              <motion.span
+                className="block h-0.5 w-full rounded-sm bg-white"
+                variants={{
+                  closed: { rotate: 0, y: 0 },
+                  open: { rotate: -30, y: 5, x: -2 },
+                }}
+                transition={{ duration: 0.35 }}
+              />
+              <motion.span
+                className="block h-0.5 w-full rounded-sm bg-pink-500"
+                variants={{
+                  closed: { x: 0 },
+                  open: { x: -3 },
+                }}
+                transition={{ duration: 0.35 }}
+              />
+              <motion.span
+                className="block h-0.5 w-full rounded-sm bg-white"
+                variants={{
+                  closed: { rotate: 0, y: 0 },
+                  open: { rotate: 30, y: -5, x: -2 },
+                }}
+                transition={{ duration: 0.35 }}
+              />
+            </motion.div>
+          </button>
+        </div>
+
+        {/* Menu Links */}
+        <div className="flex flex-col space-y-8 text-2xl font-semibold text-center px-6 mt-8 py-6">
           {links.map((link) => (
             <button
               key={link.id}

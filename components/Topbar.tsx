@@ -3,7 +3,7 @@ import { FaEnvelope, FaMobileAlt } from "react-icons/fa";
 
 const Topbar = () => {
   return (
-    <div className="bg-[#333333] text-white py-4 px-6 shadow-md max-screen">
+    <div className="bg-[#333333] text-white py-4 px-6 shadow-md relative z-50">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
         {/* Email Section */}
         <div className="flex items-center space-x-4">

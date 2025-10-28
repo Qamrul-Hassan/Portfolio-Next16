@@ -81,18 +81,18 @@ const Contact = () => {
   const iconVariants = { hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 } };
 
   return (
-    <section id="contact" className="bg-[#CECECE] py-20 px-6 lg:px-16 text-white ">
+    <section id="contact" className="bg-[#CECECE] py-20 px-4 sm:px-6 lg:px-16 text-white">
       <motion.div
         className="text-center mb-12"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2 }}
       >
-        <h2 className="text-4xl md:text-5xl font-bold mb-4">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
           <span className="text-pink-500">Get</span> <span className="text-gray-800"> In Touch</span>
         </h2>
         <motion.p
-          className="text-lg md:text-2xl text-gray-800"
+          className="text-base sm:text-lg md:text-2xl text-gray-800"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.5, delay: 0.5 }}
@@ -101,47 +101,64 @@ const Contact = () => {
         </motion.p>
       </motion.div>
 
-      <div className="flex flex-col lg:flex-row items-center justify-center bg-[#434343] py-16 px-8 rounded-lg shadow-lg space-y-8 lg:space-y-0 lg:space-x-4">
+      <div className="flex flex-col lg:flex-row items-center justify-center bg-[#434343] py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8 rounded-lg shadow-lg space-y-6 sm:space-y-8 lg:space-y-0 lg:space-x-4">
         <motion.form
           onSubmit={handleSubmit}
-          className="w-full lg:w-2/4 bg-[#b5b5b5] p-8 rounded-lg shadow-xl"
+          className="w-full lg:w-2/4 bg-[#b5b5b5] p-4 sm:p-6 md:p-8 rounded-lg shadow-xl"
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1.5 }}
         >
-          <div className="mb-6">
-            <label htmlFor="name" className={`block text-lg font-semibold ${formData.name ? "text-pink-500" : "text-gray-700"}`}>Your Name</label>
-            <input type="text" name="name" id="name" value={formData.name} onChange={handleChange} className="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300" placeholder="Enter your full name" />
+          <div className="mb-4 sm:mb-6">
+            <label htmlFor="name" className={`block text-base sm:text-lg font-semibold ${formData.name ? "text-pink-500" : "text-gray-700"}`}>Your Name</label>
+            <input type="text" name="name" id="name" value={formData.name} onChange={handleChange} className="w-full p-2 sm:p-3 mt-1 sm:mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300 text-sm sm:text-base" placeholder="Enter your full name" />
           </div>
-          <div className="mb-6">
-            <label htmlFor="email" className={`block text-lg font-semibold ${formData.email ? "text-pink-500" : "text-gray-700"}`}>Your Email</label>
-            <input type="email" name="email" id="email" value={formData.email} onChange={handleChange} className="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300" placeholder="Enter your email" />
+          <div className="mb-4 sm:mb-6">
+            <label htmlFor="email" className={`block text-base sm:text-lg font-semibold ${formData.email ? "text-pink-500" : "text-gray-700"}`}>Your Email</label>
+            <input type="email" name="email" id="email" value={formData.email} onChange={handleChange} className="w-full p-2 sm:p-3 mt-1 sm:mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300 text-sm sm:text-base" placeholder="Enter your email" />
           </div>
-          <div className="mb-6">
-            <label htmlFor="message" className={`block text-lg font-semibold ${formData.message ? "text-pink-500" : "text-gray-700"}`}>Your Message</label>
-            <textarea name="message" id="message" rows={6} value={formData.message} onChange={handleChange} className="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300" placeholder="Write your message here"></textarea>
-          </div>
-
-          {/* reCAPTCHA */}
-          <div className="flex justify-center mb-4">
-            <ReCAPTCHA
-              ref={recaptchaRef}
-              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-              onChange={handleCaptcha}
-            />
+          <div className="mb-4 sm:mb-6">
+            <label htmlFor="message" className={`block text-base sm:text-lg font-semibold ${formData.message ? "text-pink-500" : "text-gray-700"}`}>Your Message</label>
+            <textarea name="message" id="message" rows={4} value={formData.message} onChange={handleChange} className="w-full p-2 sm:p-3 mt-1 sm:mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300 text-sm sm:text-base" placeholder="Write your message here"></textarea>
           </div>
 
-          <button type="submit" className="w-full py-3 px-6 bg-pink-500 text-white font-semibold rounded-lg hover:bg-pink-400">Send Message</button>
+          {/* reCAPTCHA - Mobile responsive */}
+          <div className="flex justify-center mb-3 sm:mb-4">
+            <div className="scale-75 sm:scale-90 md:scale-100 transform origin-center"> 
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+                onChange={handleCaptcha}
+                size={window.innerWidth < 640 ? "compact" : "normal"} 
+              />
+            </div>
+          </div>
+
+       
+          {captchaToken && (
+            <div className="text-center mb-3 sm:mb-4">
+              <p className="text-xs text-gray-600 px-2">
+                Protected by reCAPTCHA - <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:underline">Privacy</a> & <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:underline">Terms</a>
+              </p>
+            </div>
+          )}
+
+          <button type="submit" className="w-full py-2 sm:py-3 px-4 sm:px-6 bg-pink-500 text-white font-semibold rounded-lg hover:bg-pink-400 transition duration-300 text-sm sm:text-base">Send Message</button>
         </motion.form>
 
         <motion.div
-          className="relative w-full lg:w-2/2 flex justify-center items-center"
+          className="relative w-full lg:w-2/2 flex justify-center items-center mt-4 sm:mt-0"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1.5 }}
         >
-          <Image src={ContactImage} alt="Contact Us" className="rounded-lg shadow-lg object-cover w-full h-full" priority />
-          <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-8">
+          <Image 
+            src={ContactImage} 
+            alt="Contact Us" 
+            className="rounded-lg shadow-lg object-cover w-full h-48 sm:h-64 md:h-80 lg:h-96" 
+            priority 
+          />
+          <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-4 sm:space-x-6 md:space-x-8">
             {iconActions.map(({ icon: Icon, onClick }, index) => (
               <motion.div
                 key={index}
@@ -153,7 +170,7 @@ const Contact = () => {
                 transition={{ delay: index * 0.5, repeat: Infinity, repeatType: "reverse", duration: 1.5 }}
                 whileHover={{ scale: 1.2 }}
               >
-                <Icon size={30} className="text-white" />
+                <Icon size={24} className="sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" />
               </motion.div>
             ))}
           </div>

@@ -16,12 +16,14 @@ export default function Page() {
     <>
       <Topbar />
       <Navbar />
+      
+      <div className="h-0"></div>
       <main>
-        <HeroSection />   {/* id="home" */}
-        <AboutMe />       {/* id="about" */}
-        <Services />      {/* id="services" */}
-        <MyProjects />    {/* id="projects" */}
-        <Contact />       {/* id="contact" */}
+        <HeroSection />   
+        <AboutMe />       
+        <Services />    
+        <MyProjects />   
+        <Contact />       
       </main>
       <Footer />
       <Chat />
