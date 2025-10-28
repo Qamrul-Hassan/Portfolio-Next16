@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaPhone, FaEnvelope, FaAt, FaComment } from "react-icons/fa";
 import Image from "next/image";
@@ -13,7 +13,20 @@ import "react-toastify/dist/ReactToastify.css";
 const Contact = () => {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
+
+  // Detect mobile on client side only
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 640);
+    
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -124,17 +137,17 @@ const Contact = () => {
 
           {/* reCAPTCHA - Mobile responsive */}
           <div className="flex justify-center mb-3 sm:mb-4">
-            <div className="scale-75 sm:scale-90 md:scale-100 transform origin-center"> 
+            <div className="scale-75 sm:scale-90 md:scale-100 transform origin-center">
               <ReCAPTCHA
                 ref={recaptchaRef}
                 sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
                 onChange={handleCaptcha}
-                size={window.innerWidth < 640 ? "compact" : "normal"} 
+                size={isMobile ? "compact" : "normal"} // Use state instead of window directly
               />
             </div>
           </div>
 
-       
+          {/* Privacy Terms Text - Only show after reCAPTCHA */}
           {captchaToken && (
             <div className="text-center mb-3 sm:mb-4">
               <p className="text-xs text-gray-600 px-2">
