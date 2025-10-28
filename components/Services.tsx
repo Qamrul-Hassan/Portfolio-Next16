@@ -70,7 +70,7 @@ const MyServices = () => {
     <section id="services" className="py-16 bg-[#CECECE] text-white">
       <div className="container mx-auto text-center">
         <motion.h2
-          className="text-4xl md:5xl font-bold mb-10"
+          className="text-4xl md:text-5xl font-bold mb-10"
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2 }}

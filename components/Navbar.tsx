@@ -6,17 +6,25 @@ import Logo from "../public/Logo-2.webp";
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSticky, setIsSticky] = useState(false);
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  // Disable page scroll when mobile menu is open
+  // Sticky navbar
   useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = "hidden";
-      document.documentElement.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-      document.documentElement.style.overflow = "auto";
-    }
+    const handleScroll = () => {
+      const topbarHeight = 50;
+      setIsSticky(window.scrollY > topbarHeight);
+    };
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Disable scroll when menu is open
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? "hidden" : "auto";
+    document.documentElement.style.overflow = isMenuOpen ? "hidden" : "auto";
   }, [isMenuOpen]);
 
   const links = [
@@ -27,42 +35,23 @@ const Navbar: React.FC = () => {
     { name: "Contact", id: "contact" },
   ];
 
-  // Smooth scrolling with easing
   const scrollToSection = (id: string) => {
     const section = document.getElementById(id);
     if (!section) return;
-
-    const offset = 80; // Navbar height
+    const offset = 80;
     const targetPosition = section.getBoundingClientRect().top + window.scrollY - offset;
-    const startPosition = window.scrollY;
-    const distance = targetPosition - startPosition;
-    const duration = 800; // duration in ms
-    let startTime: number | null = null;
-
-    const easeInOutQuad = (t: number) =>
-      t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-
-    const animate = (currentTime: number) => {
-      if (startTime === null) startTime = currentTime;
-      const timeElapsed = currentTime - startTime;
-      const progress = Math.min(timeElapsed / duration, 1);
-      const ease = easeInOutQuad(progress);
-
-      window.scrollTo(0, startPosition + distance * ease);
-
-      if (timeElapsed < duration) {
-        requestAnimationFrame(animate);
-      }
-    };
-
-    requestAnimationFrame(animate);
+    window.scrollTo({ top: targetPosition, behavior: "smooth" });
     setIsMenuOpen(false);
   };
 
   return (
     <>
-      {/* Sticky Navbar */}
-      <nav className="fixed top-0 left-0 w-full bg-[#272727cc] text-white shadow-lg z-100 backdrop-blur-md">
+      {/* Navbar */}
+      <nav
+        className={`${
+          isSticky ? "fixed top-0 left-0 w-full shadow-lg backdrop-blur-md z-50" : "relative"
+        } bg-[#272727cc] text-white transition-all duration-300`}
+      >
         <div className="container mx-auto px-6 py-3 flex justify-between items-center relative overflow-visible">
           {/* Logo */}
           <div className="flex items-center space-x-2 cursor-pointer">
@@ -78,7 +67,7 @@ const Navbar: React.FC = () => {
               <li key={link.id}>
                 <button
                   onClick={() => scrollToSection(link.id)}
-                  className="text-gray-300 hover:text-pink-500 transition-all duration-300 cursor-pointer px-4 py-2 rounded-md"
+                  className="text-gray-300 font-bold text-xl hover:text-pink-500 transition-all duration-300 cursor-pointer px-4 py-2 rounded-md"
                 >
                   {link.name}
                 </button>
@@ -89,13 +78,13 @@ const Navbar: React.FC = () => {
           {/* Mobile Menu Toggle */}
           <button
             onClick={toggleMenu}
-            className="menu-toggle md:hidden flex items-center justify-center w-10 h-10 relative z-110"
+            className="menu-toggle md:hidden flex items-center justify-center w-10 h-10 relative z-60"
           >
             <motion.div
               animate={isMenuOpen ? "open" : "closed"}
               className="flex flex-col justify-between w-6 h-6"
             >
-              {/* Top line - white */}
+              {/* Top line */}
               <motion.span
                 className="block h-0.5 w-full rounded-sm bg-white"
                 variants={{
@@ -104,7 +93,7 @@ const Navbar: React.FC = () => {
                 }}
                 transition={{ duration: 0.35 }}
               />
-              {/* Middle line - pink */}
+              {/* Middle line */}
               <motion.span
                 className="block h-0.5 w-full rounded-sm bg-pink-500"
                 variants={{
@@ -113,7 +102,7 @@ const Navbar: React.FC = () => {
                 }}
                 transition={{ duration: 0.35 }}
               />
-              {/* Bottom line - white */}
+              {/* Bottom line */}
               <motion.span
                 className="block h-0.5 w-full rounded-sm bg-white"
                 variants={{
@@ -132,56 +121,19 @@ const Navbar: React.FC = () => {
         initial={{ x: "100%" }}
         animate={{ x: isMenuOpen ? 0 : "100%" }}
         transition={{ type: "tween", duration: 0.35 }}
-        className="fixed inset-0 w-screen h-screen bg-[#272727] bg-opacity-95 flex flex-col text-white z-90 overflow-hidden"
+        className="fixed inset-0 w-screen h-screen bg-[#272727] bg-opacity-95 flex flex-col text-white z-40 overflow-hidden"
       >
-        {/* Top Section */}
-        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-700">
-          <div className="flex items-center space-x-2 cursor-pointer">
-            <img src={Logo.src} alt="Logo" className="h-16 w-16 object-contain rounded-lg" />
-            <div className="text-3xl font-semibold text-pink-500 hover:text-pink-400">
-              Portfolio
-            </div>
-          </div>
-
-          {/* Close button */}
-          <motion.button
-            onClick={() => setIsMenuOpen(false)}
-            whileHover={{ scale: 1.1 }}
-            className="w-10 h-10 flex items-center justify-center"
-          >
-            <motion.div className="flex flex-col justify-between w-6 h-6">
-              <motion.span
-                className="block h-0.5 w-full bg-white rounded-sm"
-                animate={{ rotate: -30, y: 5, x: -2 }}
-                transition={{ duration: 0.35 }}
-              />
-              <motion.span
-                className="block h-0.5 w-full bg-pink-500 rounded-sm"
-                animate={{ x: -3 }}
-                transition={{ duration: 0.35 }}
-              />
-              <motion.span
-                className="block h-0.5 w-full bg-white rounded-sm"
-                animate={{ rotate: 30, y: -5, x: -2 }}
-                transition={{ duration: 0.35 }}
-              />
-            </motion.div>
-          </motion.button>
-        </div>
-
-        {/* Mobile Links */}
-        <ul className="flex flex-col space-y-8 text-2xl font-semibold text-center px-6 py-10 mt-6">
+        <div className="flex flex-col space-y-8 text-2xl font-semibold text-center px-6 mt-20 py-32">
           {links.map((link) => (
-            <li key={link.id}>
-              <button
-                onClick={() => scrollToSection(link.id)}
-                className="hover:text-pink-500 transition cursor-pointer"
-              >
-                {link.name}
-              </button>
-            </li>
+            <button
+              key={link.id}
+              onClick={() => scrollToSection(link.id)}
+              className="hover:text-pink-500 transition cursor-pointer py-3"
+            >
+              {link.name}
+            </button>
           ))}
-        </ul>
+        </div>
       </motion.div>
     </>
   );

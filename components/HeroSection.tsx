@@ -8,7 +8,6 @@ import Image from "next/image";
 import profileImage from "../public/Portfolio-9.jpg";
 import backgroundImage from "../public/bg.png";
 
-
 const HeroSection: React.FC = () => {
   const welcomeText = "WELCOME TO MY PORTFOLIO";
   const typingTexts = [
@@ -18,36 +17,38 @@ const HeroSection: React.FC = () => {
   ];
 
   return (
-    <section id="home" className="relative h-screen flex items-center justify-center">
+    <section
+      id="home"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+    >
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
           src={backgroundImage}
           alt="Background"
-          className="object-cover w-full h-full"
           fill
-          priority={true} // LCP optimization
-          style={{ objectFit: "cover" }}
+          priority
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-black/60"></div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-6 md:px-12 lg:px-20 flex flex-col lg:flex-row items-center justify-between gap-8">
+      <div className="relative z-10 w-full max-w-7xl px-4 sm:px-6 mx-auto flex flex-col lg:flex-row items-center justify-between gap-8">
         {/* Profile Image */}
         <motion.div
-          className="w-full lg:w-1/2 flex justify-center items-center"
+          className="w-full lg:w-1/2 flex justify-center"
           initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5, duration: 1 }}
         >
-          <div className="relative rounded-xl overflow-hidden w-64 h-64 sm:w-80 sm:h-80 md:w-md md:h-112 lg:w-120 lg:h-120 shadow-[0_10px_30px_rgba(0,0,0,0.6)] border-4 border-white/30 backdrop-blur-lg">
+          <div className="relative rounded-xl overflow-hidden w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 shadow-[0_10px_30px_rgba(0,0,0,0.6)] border-4 border-white/30">
             <Image
               src={profileImage}
               alt="Qamrul Hassan"
-              className="object-cover w-full h-full opacity-95"
-              priority // Make profile image LCP
+              className="object-cover"
+              fill
+              priority
             />
-            <div className="absolute inset-0 bg-linear-to-b from-black/20 to-transparent"></div>
           </div>
         </motion.div>
 
@@ -63,15 +64,15 @@ const HeroSection: React.FC = () => {
           </motion.p>
 
           <motion.h1
-            className="text-2xl sm:text-4xl md:text-5xl font-extrabold mb-6 text-white leading-tight"
+            className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-6 text-white leading-tight"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 0.8 }}
           >
-            Hi, I’m <span className="text-pink-500">Qamrul Hassan</span>,
+            Hi, I'm <span className="text-pink-500">Qamrul Hassan</span>,
           </motion.h1>
 
-          <div className="text-sm sm:text-lg md:text-2xl font-medium text-white">
+          <div className="text-lg sm:text-xl md:text-2xl font-medium text-white min-h-20 flex items-center justify-center lg:justify-start">
             <Typewriter
               words={typingTexts}
               loop
@@ -84,7 +85,7 @@ const HeroSection: React.FC = () => {
           </div>
 
           <motion.p
-            className="text-gray-300 text-xs sm:text-sm md:text-base mb-6 max-w-xl mx-auto lg:mx-0"
+            className="text-gray-300 text-sm sm:text-base mb-6 max-w-xl mx-auto lg:mx-0 leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 0.8 }}
@@ -97,7 +98,7 @@ const HeroSection: React.FC = () => {
 
           {/* Social Icons */}
           <motion.div
-            className="flex justify-center lg:justify-start gap-4 md:gap-6 mt-6"
+            className="flex justify-center lg:justify-start gap-6 mt-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5, duration: 0.8 }}
@@ -106,8 +107,8 @@ const HeroSection: React.FC = () => {
               href="https://www.linkedin.com/in/md-qamrul-hassan-a44b3835b"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white hover:text-blue-400 text-2xl md:text-3xl"
-              whileHover={{ y: -10 }}
+              className="text-white hover:text-blue-400 text-2xl md:text-3xl transition-colors"
+              whileHover={{ y: -5, scale: 1.1 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
               <FaLinkedin />
@@ -116,8 +117,8 @@ const HeroSection: React.FC = () => {
               href="https://github.com/Qamrul-Hassan"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white hover:text-blue-500 text-2xl md:text-3xl"
-              whileHover={{ y: -10 }}
+              className="text-white hover:text-gray-400 text-2xl md:text-3xl transition-colors"
+              whileHover={{ y: -5, scale: 1.1 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
               <FaGithub />
@@ -126,49 +127,39 @@ const HeroSection: React.FC = () => {
               href="https://x.com/Shajal1"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white hover:text-blue-500 text-2xl md:text-3xl"
-              whileHover={{ y: -10 }}
+              className="text-white hover:text-blue-400 text-2xl md:text-3xl transition-colors"
+              whileHover={{ y: -5, scale: 1.1 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
               <FaTwitter />
             </motion.a>
           </motion.div>
 
-          {/* Bouncing Hexagons */}
-          <div className="relative flex justify-center gap-8 mt-12">
+          {/* Bouncing Shapes */}
+          <div className="flex justify-center gap-6 mt-12">
             {[...Array(3)].map((_, index) => (
               <motion.div
                 key={index}
-                className={`w-10 h-10 sm:w-16 sm:h-16 bg-linear-to-r ${
+                className={`w-12 h-12 sm:w-16 sm:h-16 bg-linear-to-r ${
                   index === 0
                     ? "from-pink-500 to-purple-600"
                     : index === 1
-                    ? "from-blue-500 to-green-500"
-                    : "from-yellow-500 to-red-500"
-                }`}
-                style={{
-                  clipPath:
-                    "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-                }}
+                    ? "from-blue-500 to-cyan-500"
+                    : "from-yellow-500 to-orange-500"
+                } rounded-lg`}
                 animate={{
-                  y: [0, -20, 0],
+                  y: [0, -15, 0],
                 }}
                 transition={{
                   duration: 2,
                   repeat: Infinity,
-                  repeatDelay: 1,
-                  delay: index * 0.5,
-                  ease: "easeInOut",
+                  delay: index * 0.3,
                 }}
               />
             ))}
-
-            
           </div>
-          
         </div>
       </div>
-      
     </section>
   );
 };

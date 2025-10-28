@@ -26,7 +26,7 @@ const AboutMe = () => {
   ];
 
   return (
-    <section className="relative py-16 px-6 text-white bg-gray-200" id="about">
+    <section className=" py-16 px-6 text-white bg-gray-200" id="about">
       <div className="container mx-auto flex flex-col lg:flex-row items-center justify-between gap-12">
         <motion.div
           className="lg:w-1/2 text-center lg:text-left"

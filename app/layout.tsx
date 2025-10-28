@@ -12,16 +12,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <head>
-        {/* Favicon / Browser tab icon */}
         <link rel="icon" href={Logo.src} />
-        {/* Page title */}
         <title>QHSportfolio</title>
       </head>
       <body className="bg-white text-gray-900">
         {children}
-        
       </body>
     </html>
   );
