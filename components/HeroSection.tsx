@@ -64,7 +64,7 @@ const HeroSection: React.FC = () => {
           </motion.p>
 
           <motion.h1
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold mb-6 text-white leading-tight whitespace-nowrap"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-extrabold mb-6 text-white leading-tight whitespace-nowrap"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 0.8 }}
