@@ -17,7 +17,7 @@ export default function RootLayout({
         <link rel="icon" href={Logo.src} />
         <title>QHSportfolio</title>
       </head>
-      <body className="bg-white text-gray-900">
+      <body className="bg-white text-gray-900" suppressHydrationWarning>
         {children}
       </body>
     </html>

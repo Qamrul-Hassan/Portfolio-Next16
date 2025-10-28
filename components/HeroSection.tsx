@@ -64,7 +64,7 @@ const HeroSection: React.FC = () => {
           </motion.p>
 
           <motion.h1
-            className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-6 text-white leading-tight"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold mb-6 text-white leading-tight whitespace-nowrap"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 0.8 }}
@@ -72,7 +72,7 @@ const HeroSection: React.FC = () => {
             Hi, I'm <span className="text-pink-500">Qamrul Hassan</span>,
           </motion.h1>
 
-          <div className="text-lg sm:text-xl md:text-2xl font-medium text-white min-h-20 flex items-center justify-center lg:justify-start">
+          <div className="text-base sm:text-lg md:text-xl lg:text-2xl font-medium text-white min-h-20 flex items-center justify-center lg:justify-start">
             <Typewriter
               words={typingTexts}
               loop
@@ -135,25 +135,31 @@ const HeroSection: React.FC = () => {
             </motion.a>
           </motion.div>
 
-          {/* Bouncing Shapes */}
-          <div className="flex justify-center gap-6 mt-12">
+          {/* Bouncing Hexagons */}
+          <div className="relative flex justify-center gap-8 mt-12">
             {[...Array(3)].map((_, index) => (
               <motion.div
                 key={index}
-                className={`w-12 h-12 sm:w-16 sm:h-16 bg-linear-to-r ${
+                className={`w-10 h-10 sm:w-16 sm:h-16 bg-linear-to-r ${
                   index === 0
                     ? "from-pink-500 to-purple-600"
                     : index === 1
-                    ? "from-blue-500 to-cyan-500"
-                    : "from-yellow-500 to-orange-500"
-                } rounded-lg`}
+                    ? "from-blue-500 to-green-500"
+                    : "from-yellow-500 to-red-500"
+                }`}
+                style={{
+                  clipPath:
+                    "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                }}
                 animate={{
-                  y: [0, -15, 0],
+                  y: [0, -20, 0],
                 }}
                 transition={{
                   duration: 2,
                   repeat: Infinity,
-                  delay: index * 0.3,
+                  repeatDelay: 1,
+                  delay: index * 0.5,
+                  ease: "easeInOut",
                 }}
               />
             ))}

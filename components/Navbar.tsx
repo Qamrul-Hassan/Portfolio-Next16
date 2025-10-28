@@ -67,7 +67,7 @@ const Navbar: React.FC = () => {
               <li key={link.id}>
                 <button
                   onClick={() => scrollToSection(link.id)}
-                  className="text-gray-300 font-bold text-xl hover:text-pink-500 transition-all duration-300 cursor-pointer px-4 py-2 rounded-md"
+                  className="text-gray-300 hover:text-pink-500 transition-all duration-300 cursor-pointer px-4 py-2 rounded-md"
                 >
                   {link.name}
                 </button>
@@ -121,9 +121,9 @@ const Navbar: React.FC = () => {
         initial={{ x: "100%" }}
         animate={{ x: isMenuOpen ? 0 : "100%" }}
         transition={{ type: "tween", duration: 0.35 }}
-        className="fixed inset-0 w-screen h-screen bg-[#272727] bg-opacity-95 flex flex-col text-white z-40 overflow-hidden"
+        className="fixed top-20 right-0 w-screen h-[calc(100%-64px)] bg-[#272727] bg-opacity-95 flex flex-col text-white z-40 overflow-hidden"
       >
-        <div className="flex flex-col space-y-8 text-2xl font-semibold text-center px-6 mt-20 py-32">
+        <div className="flex flex-col space-y-8 text-2xl font-semibold text-center px-6 mt-10 py-10">
           {links.map((link) => (
             <button
               key={link.id}
