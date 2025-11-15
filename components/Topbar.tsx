@@ -12,7 +12,7 @@ const Topbar = () => {
             className="flex items-center text-sm hover:text-pink-400 transition duration-300"
           >
             <FaEnvelope className="text-lg mr-2" />
-            <span className="font-medium">mdqamrulhassan74@gmail.com</span>
+            <span className="font-medium">mdqamrul74@gmail.com</span>
           </a>
         </div>
 

@@ -170,7 +170,7 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* Menu Links */}
-        <div className="flex flex-col space-y-8 text-2xl font-semibold text-center px-6 mt-8 py-6">
+        <div className="flex flex-col space-y-6 text-2xl font-semibold text-center px-6 mt-8 py-6">
           {links.map((link) => (
             <button
               key={link.id}
