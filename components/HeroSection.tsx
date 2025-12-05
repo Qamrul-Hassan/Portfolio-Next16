@@ -6,7 +6,7 @@ import { FaLinkedin, FaGithub, FaTwitter } from "react-icons/fa";
 import { Typewriter } from "react-simple-typewriter";
 import Image from "next/image";
 import profileImage from "../public/Portfolio-9.jpg";
-import backgroundImage from "../public/bg.png";
+import backgroundImage from "../public/hegagon.jpg";
 
 const HeroSection: React.FC = () => {
   const welcomeText = "WELCOME TO MY PORTFOLIO";
@@ -30,7 +30,7 @@ const HeroSection: React.FC = () => {
           priority
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-black/60"></div>
+        <div className="absolute inset-0 bg-[#CECECE]/10"></div>
       </div>
 
       <div className="relative z-10 w-full max-w-7xl px-4 sm:px-6 mx-auto flex flex-col lg:flex-row items-center justify-between gap-8">
