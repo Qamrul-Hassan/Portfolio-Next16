@@ -194,37 +194,42 @@ const MyProjects: React.FC = () => {
         }}
         className="mySwiper"
       >
-        {getSlides(projects, 2.5).map((project, index) => (
-          <SwiperSlide key={index}>
-            <motion.a
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-[#434343] rounded-xl overflow-hidden shadow-xl transform transition-all hover:scale-105 hover:shadow-2xl block"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, scale: 0.8, y: 50 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 1.2, delay: index * 0.03 }}
-            >
-              <motion.img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-[350px] object-cover object-top rounded-xl shadow-md"
-                whileHover={{ scale: 1.1 }}
-                transition={{ duration: 0.5 }}
-              />
-              <div className="p-6">
-                <h3 className="text-2xl font-bold text-pink-500 mb-2">{project.title}</h3>
-                <p className="text-gray-300 mb-4">{project.description}</p>
-                <p className="text-gray-400 text-xs">Tech: {project.tech}</p>
-              </div>
-            </motion.a>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+        {getSlides(projects, 2.3).map((project, index) => (
+  <SwiperSlide key={index}>
+    <motion.a
+      href={project.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="bg-[#434343] rounded-xl overflow-hidden shadow-xl transform transition-all hover:scale-105 hover:shadow-2xl block"
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.95 }}
+      initial={{ opacity: 0, scale: 0.8, y: 50 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 1.2, delay: index * 0.03 }}
+      onMouseEnter={() => swiperInstance?.autoplay?.stop()}
+      onMouseLeave={() => swiperInstance?.autoplay?.start()}
+    >
+      <motion.img
+        src={project.image}
+        alt={project.title}
+        className="w-full h-[300px] sm:h-320px md:h-[340px] object-cover object-top rounded-xl shadow-md"
+        whileHover={{ scale: 1.05 }}
+        transition={{ duration: 0.5 }}
+      />
+      <div className="p-4 sm:p-5 md:p-6">
+        <h3 className="text-xl sm:text-2xl font-bold text-pink-500 mb-2">{project.title}</h3>
+        <p className="text-gray-300 mb-2 text-sm sm:text-base">{project.description}</p>
+        <p className="text-gray-400 text-xs sm:text-sm">Tech: {project.tech}</p>
+      </div>
+    </motion.a>
+  </SwiperSlide>
+))}
 
-      <div className="custom-pagination swiper-pagination" aria-hidden={isMobile ? "true" : "false"} />
+
+        <div className="custom-pagination swiper-pagination" aria-hidden={isMobile ? "true" : "false"} />
+
+        {/* Mobile custom controls */}
+      </Swiper>
 
       {/* Mobile custom controls */}
       <div className="mobile-pagination mt-6 hidden items-center justify-center gap-4">
