@@ -166,7 +166,7 @@ const Contact = () => {
             src={ContactImage} 
             alt="Contact Us" 
             className="rounded-lg shadow-lg object-cover w-full h-[400px] sm:h-[480px] md:h-[520px] lg:h-[498px]" 
-            priority 
+            loading="lazy"
           />
           <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-4 sm:space-x-6 md:space-x-8">
             {iconActions.map(({ icon: Icon, onClick }, index) => (
