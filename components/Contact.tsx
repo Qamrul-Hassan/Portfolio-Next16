@@ -112,15 +112,15 @@ const Contact = () => {
         >
           <div>
             <label htmlFor="name" className={`block text-base sm:text-lg font-semibold ${formData.name ? "text-pink-500" : "text-gray-700"}`}>Your Name</label>
-            <input type="text" name="name" id="name" value={formData.name} onChange={handleChange} className="w-full p-2 sm:p-3 mt-1 sm:mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300 text-sm sm:text-base" placeholder="Enter your full name" />
+            <input type="text" name="name" id="name" autoComplete="name" value={formData.name} onChange={handleChange} className="w-full p-2 sm:p-3 mt-1 sm:mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300 text-sm sm:text-base" placeholder="Enter your full name" />
           </div>
           <div>
             <label htmlFor="email" className={`block text-base sm:text-lg font-semibold ${formData.email ? "text-pink-500" : "text-gray-700"}`}>Your Email</label>
-            <input type="email" name="email" id="email" value={formData.email} onChange={handleChange} className="w-full p-2 sm:p-3 mt-1 sm:mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300 text-sm sm:text-base" placeholder="Enter your email" />
+            <input type="email" name="email" id="email" autoComplete="email" value={formData.email} onChange={handleChange} className="w-full p-2 sm:p-3 mt-1 sm:mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300 text-sm sm:text-base" placeholder="Enter your email" />
           </div>
           <div>
             <label htmlFor="message" className={`block text-base sm:text-lg font-semibold ${formData.message ? "text-pink-500" : "text-gray-700"}`}>Your Message</label>
-            <textarea name="message" id="message" rows={4} value={formData.message} onChange={handleChange} className="w-full p-2 sm:p-3 mt-1 sm:mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300 text-sm sm:text-base" placeholder="Write your message here"></textarea>
+            <textarea name="message" id="message" autoComplete="off" rows={4} value={formData.message} onChange={handleChange} className="w-full p-2 sm:p-3 mt-1 sm:mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300 text-sm sm:text-base" placeholder="Write your message here"></textarea>
           </div>
 
           {/* reCAPTCHA */}

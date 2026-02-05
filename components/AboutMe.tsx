@@ -1,6 +1,6 @@
 
 "use client";
-import React, { use } from "react";
+import React from "react";
 import {
   FaHtml5,
   FaCss3Alt,
@@ -39,13 +39,14 @@ const AboutMe = () => {
           </h2>
           <p className="text-lg leading-relaxed mb-6 text-gray-800">
             I am{" "}
-            <span className="text-pink-500 font-semibold">Qamrul Hassan</span>,
-            a frontend developer with a passion for crafting visually appealing
+            <span className="text-pink-500 font-semibold">Qamrul Hassan</span>, a
+            frontend developer with a passion for crafting visually appealing
             and responsive web interfaces. With hands-on experience in modern
             tools and technologies, I specialize in transforming ideas into
-            functional web solutions.
-            
-            I have a strong foundation in frontend development, focusing on creating user-friendly designs and maintaining performance. I am eager to grow and embrace challenges that enhance my skills and creativity.
+            functional web solutions. I have a strong foundation in frontend
+            development, focusing on creating user-friendly designs and
+            maintaining performance. I am eager to grow and embrace challenges
+            that enhance my skills and creativity.
           </p>
           <motion.p
             className="text-pink-400 italic text-xl font-medium mb-8"

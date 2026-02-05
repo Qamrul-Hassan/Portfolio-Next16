@@ -11,7 +11,7 @@ import backgroundImage from "../public/hegagon.jpg";
 const HeroSection: React.FC = () => {
   const welcomeText = "WELCOME TO MY PORTFOLIO";
   const typingTexts = [
-    "Passionate FrontEnd Developer.",
+    "Passionate Frontend Developer.",
     "React Expert with a Focus on UI/UX.",
     "Creative Problem Solver.",
   ];
@@ -28,9 +28,10 @@ const HeroSection: React.FC = () => {
           alt="Background"
           fill
           priority
+          sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-[#CECECE]/1"></div>
+        <div className="absolute inset-0 bg-black/45"></div>
       </div>
 
       <div className="relative z-10 w-full max-w-7xl px-4 sm:px-6 mx-auto flex flex-col lg:flex-row items-center justify-between gap-8">
@@ -48,6 +49,7 @@ const HeroSection: React.FC = () => {
               className="object-cover"
               fill
               priority
+              sizes="(min-width: 1024px) 50vw, (min-width: 640px) 60vw, 80vw"
             />
           </div>
         </motion.div>
@@ -64,7 +66,7 @@ const HeroSection: React.FC = () => {
           </motion.p>
 
           <motion.h1
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-extrabold mb-6 text-white leading-tight whitespace-nowrap"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-extrabold mb-6 text-white leading-tight"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 0.8 }}
@@ -140,7 +142,7 @@ const HeroSection: React.FC = () => {
             {[...Array(3)].map((_, index) => (
               <motion.div
                 key={index}
-                className={`w-10 h-10 sm:w-16 sm:h-16 bg-linear-to-r ${
+                className={`w-10 h-10 sm:w-16 sm:h-16 bg-gradient-to-r ${
                   index === 0
                     ? "from-pink-500 to-purple-600"
                     : index === 1

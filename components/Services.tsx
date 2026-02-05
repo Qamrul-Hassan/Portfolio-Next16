@@ -1,71 +1,65 @@
 "use client";
-import React from 'react';
-import 'aos/dist/aos.css';
-import AOS from 'aos';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 
 const services = [
   {
-    title: 'Front-End Development',
+    title: "Front-End Development",
     description:
-      'Developing modern and responsive websites using HTML, CSS, JavaScript, React, and Next.js. Ensuring cross-browser compatibility and smooth user experiences.',
-    icon: '🌐',
+      "Developing modern and responsive websites using HTML, CSS, JavaScript, React, and Next.js. Ensuring cross-browser compatibility and smooth user experiences.",
+    icon: "🌐",
   },
   {
-    title: 'Responsive Design',
+    title: "Responsive Design",
     description:
-      'Crafting adaptive and mobile-first websites with Tailwind CSS and Bootstrap. Ensuring optimal viewing experiences across all devices and screen sizes.',
-    icon: '📱',
+      "Crafting adaptive and mobile-first websites with Tailwind CSS and Bootstrap. Ensuring optimal viewing experiences across all devices and screen sizes.",
+    icon: "📱",
   },
   {
-    title: 'React Development',
+    title: "React Development",
     description:
-      'Building dynamic web applications with React, ensuring scalability, reusability, and efficient state management for a smooth user experience.',
-    icon: '⚡',
+      "Building dynamic web applications with React, ensuring scalability, reusability, and efficient state management for a smooth user experience.",
+    icon: "⚡",
   },
   {
-    title: 'Next.js Development',
+    title: "Next.js Development",
     description:
-      'Creating server-side rendered applications and static websites using Next.js, ensuring fast loading times, SEO optimization, and improved user experience.',
-    icon: '🚀',
+      "Creating server-side rendered applications and static websites using Next.js, ensuring fast loading times, SEO optimization, and improved user experience.",
+    icon: "🚀",
   },
   {
-    title: 'Figma to HTML Conversion',
+    title: "Figma to HTML Conversion",
     description:
-      'Transforming Figma designs into pixel-perfect, responsive, and semantic HTML, ensuring accurate implementation of design elements.',
-    icon: '🎨',
+      "Transforming Figma designs into pixel-perfect, responsive, and semantic HTML, ensuring accurate implementation of design elements.",
+    icon: "🎨",
   },
   {
-    title: 'Website Customization',
+    title: "Website Customization",
     description:
-      'Customizing websites to meet specific client requirements, including design tweaks, feature additions, and layout adjustments.',
-    icon: '🛠️',
+      "Customizing websites to meet specific client requirements, including design tweaks, feature additions, and layout adjustments.",
+    icon: "🛠️",
   },
   {
-    title: 'Debugging & Testing',
+    title: "Debugging & Testing",
     description:
-      'Identifying and resolving issues across various browsers and devices. Ensuring smooth functionality through rigorous testing and debugging.',
-    icon: '🧪',
+      "Identifying and resolving issues across various browsers and devices. Ensuring smooth functionality through rigorous testing and debugging.",
+    icon: "🧪",
   },
   {
-    title: 'Maintenance & Post-Deployment Support',
+    title: "Maintenance & Post-Deployment Support",
     description:
-      'Providing ongoing website maintenance, updates, and support to ensure performance and security after deployment.',
-    icon: '🔧',
+      "Providing ongoing website maintenance, updates, and support to ensure performance and security after deployment.",
+    icon: "🔧",
   },
   {
-    title: 'Firebase Authentication',
+    title: "Firebase Authentication",
     description:
-      'Implementing secure user authentication systems with Firebase, including email, social login, and phone authentication.',
-    icon: '🔒',
+      "Implementing secure user authentication systems with Firebase, including email, social login, and phone authentication.",
+    icon: "🔒",
   },
 ];
 
 const MyServices = () => {
-  React.useEffect(() => {
-    AOS.init({ duration: 500, once: true });
-  }, []);
-
   return (
     <section id="services" className="py-16 bg-[#CECECE] text-white">
       <div className="container mx-auto text-center">
@@ -75,21 +69,33 @@ const MyServices = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2 }}
         >
-          <span className="text-pink-500">My</span> <span className="text-gray-800">Services</span>
+          <span className="text-pink-500">My</span>{" "}
+          <span className="text-gray-800">Services</span>
         </motion.h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.12 } },
+          }}
+        >
           {services.map((service, index) => (
             <motion.div
               key={index}
               className="bg-[#434343] p-6 rounded-lg shadow-lg"
-              data-aos="fade-up"
-              data-aos-delay={index * 200}
-              whileHover={{
-                scale: 1.1,
-                rotate: 5,
-                boxShadow: '0 15px 30px rgba(0, 0, 0, 0.3)',
+              variants={{
+                hidden: { opacity: 0, y: 24, scale: 0.96 },
+                visible: { opacity: 1, y: 0, scale: 1 },
               }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
+              whileHover={{
+                y: -6,
+                scale: 1.03,
+                boxShadow: "0 18px 36px rgba(0, 0, 0, 0.35)",
+              }}
             >
               <div className="text-4xl mb-4">{service.icon}</div>
               <h3 className="text-xl font-semibold text-white mb-3">
@@ -98,7 +104,7 @@ const MyServices = () => {
               <p className="text-gray-300">{service.description}</p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

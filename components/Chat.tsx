@@ -52,12 +52,10 @@ const Chat = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-9999">
-
+    <div className="fixed bottom-4 right-4 z-70">
       {/* CHAT BOX */}
       {isOpen && (
         <div className="absolute right-0 bottom-20 bg-[#CECECE] rounded-lg shadow-xl sm:w-80 w-64 flex flex-col max-h-[70vh]">
-
           {/* HEADER */}
           <header className="flex justify-between items-center bg-pink-600 text-white py-3 px-4 rounded-t-lg">
             <h3 className="text-lg font-semibold">Chat with Qamrul</h3>
@@ -69,9 +67,7 @@ const Chat = () => {
           {/* MESSAGES */}
           <div className="grow overflow-y-auto p-4 bg-white border-t">
             {messages.length === 0 ? (
-              <p className="text-gray-500 text-center text-sm">
-                Say hi! 🚀
-              </p>
+              <p className="text-gray-500 text-center text-sm">Say hi! 🚀</p>
             ) : (
               messages.map((msg) => (
                 <div
@@ -103,7 +99,7 @@ const Chat = () => {
             <input
               ref={inputRef}
               type="text"
-              className="grow border p-2 rounded-l-md text-sm outline-none focus:ring-1 focus:ring-pink-500"
+              className="grow border p-2 rounded-l-md text-sm outline-none focus:ring-1 focus:ring-pink-500 text-gray-900 placeholder:text-gray-400 caret-pink-600 bg-white"
               placeholder="Ask something..."
               value={input}
               onChange={(e) => setInput(e.target.value)}

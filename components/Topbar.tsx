@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { FaEnvelope, FaMobileAlt } from "react-icons/fa";
 
 const Topbar = () => {
@@ -8,11 +9,18 @@ const Topbar = () => {
         {/* Email Section */}
         <div className="flex items-center space-x-4">
           <a
-            href="mailto:mdqamrulhassan74@gmail.com"
+            href="mailto:mdqamrul74@gmail.com"
             className="flex items-center text-sm hover:text-pink-400 transition duration-300"
           >
             <FaEnvelope className="text-lg mr-2" />
-            <span className="font-medium">mdqamrul74@gmail.com</span>
+            <motion.span
+              className="font-medium"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            >
+              mdqamrul74@gmail.com
+            </motion.span>
           </a>
         </div>
 
@@ -23,7 +31,14 @@ const Topbar = () => {
             className="flex items-center text-sm hover:text-pink-400 transition duration-300"
           >
             <FaMobileAlt className="text-lg mr-2" />
-            <span className="font-medium">+8801711844948</span>
+            <motion.span
+              className="font-medium"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+            >
+              +8801711844948
+            </motion.span>
           </a>
         </div>
       </div>

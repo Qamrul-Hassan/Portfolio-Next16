@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 const Footer = () => {
   return (
-    <footer className="bg-linear-to-r from-[#1B1B1B] via-[#3F3F3F] to-[#505050] text-white py-12 w-full">
+    <footer className="bg-gradient-to-r from-[#1B1B1B] via-[#3F3F3F] to-[#505050] text-white py-12 w-full">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
         {/* About Section */}
         <div>
@@ -25,10 +25,8 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            QHSPortfolio is your one-stop <br />
-            solution for smart and professional <br />
-            web development. We focus on <br />
-            delivering unique and creative <br />
+            QHSPortfolio is your one-stop solution for smart and professional
+            web development. We focus on delivering unique and creative
             solutions tailored to your needs.
           </motion.p>
         </div>
@@ -143,7 +141,7 @@ const Footer = () => {
 
       {/* Footer Bottom */}
       <motion.div
-        className="mt-12 border-t border-gray-600 pt-6 text-center text-gray-400 text-sm"
+        className="mt-12 border-t border-gray-500 pt-6 text-center text-gray-200 text-sm"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}

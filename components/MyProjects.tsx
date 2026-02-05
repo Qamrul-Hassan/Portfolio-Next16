@@ -1,11 +1,67 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 
 const projects = [
+  {
+    title: "Chess Board",
+    description:
+      "A simple, clean chess-board layout built with HTML, CSS, and JavaScript.",
+    link: "#",
+    tech: "HTML, CSS, JavaScript",
+    image: "/Chess-Board.jpg",
+  },
+  {
+    title: "Ethereum Explorer",
+    description:
+      "A feature-rich crypto explorer with wallet balances, transactions, NFTs, and live prices powered by Alchemy, Etherscan, and CoinGecko APIs with server-side proxies.",
+    link: "#",
+    tech: "Next.js, TypeScript, Tailwind CSS, shadcn/ui, Axios, Alchemy API, Etherscan API, CoinGecko API",
+    image: "/etherium-explorer.jpg",
+  },
+  {
+    title: "Countries Dashboard",
+    description:
+      "A modern dashboard for searching, filtering, and sorting countries with SSR + CSR architecture and accessible UI components.",
+    link: "#",
+    tech: "Next.js (App Router), TypeScript, REST Countries API",
+    image: "/countries-dashboard.jpg",
+  },
+  {
+    title: "Job Board",
+    description:
+      "A responsive job board using public REST APIs, built with modern Next.js tooling and a clean UI.",
+    link: "#",
+    tech: "Next.js (App Router), React, TypeScript, Tailwind CSS, shadcn/ui, Axios",
+    image: "/Job-board.jpg",
+  },
+  {
+    title: "Small E-Commerce Landing Page",
+    description:
+      "A compact, conversion-focused e-commerce landing page built with HTML and CSS.",
+    link: "#",
+    tech: "HTML, CSS",
+    image: "/small-e-commerce page.jpg",
+  },
+  {
+    title: "Justice Law Firm Landing",
+    description:
+      "A responsive law-firm landing page crafted with Tailwind CSS v4 and a professional layout.",
+    link: "#",
+    tech: "Tailwind CSS v4, HTML",
+    image: "/justice.jpg",
+  },
+  {
+    title: "AgriCulture Template",
+    description:
+      "A fully responsive agriculture template built with HTML, CSS, and Bootstrap.",
+    link: "#",
+    tech: "HTML, CSS, Bootstrap",
+    image: "/agriculture.jpg",
+  },
   {
     title: "E-Commerce Website - Hektto",
     description:
@@ -96,20 +152,12 @@ const getSlides = (projectsList: typeof projects, slidesPerView: number) => {
 
 const MyProjects: React.FC = () => {
   const [swiperInstance, setSwiperInstance] = useState<any | null>(null);
-  const [isMobile, setIsMobile] = useState<boolean>(false);
 
   // Mobile pagination state
-  const buttonsPerSet = 5; // show 5 numbers per set
+  const buttonsPerSet = 10; // show 10 numbers per set
   const totalSets = Math.ceil(projects.length / buttonsPerSet);
   const [currentPageSet, setCurrentPageSet] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
-
-  useEffect(() => {
-    const onResize = () => setIsMobile(window.innerWidth < 640);
-    onResize();
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
 
   const handlePrevSet = () => {
     if (currentPageSet > 0) setCurrentPageSet(currentPageSet - 1);
@@ -117,16 +165,6 @@ const MyProjects: React.FC = () => {
 
   const handleNextSet = () => {
     if (currentPageSet < totalSets - 1) setCurrentPageSet(currentPageSet + 1);
-  };
-
-  const handlePrev = () => {
-    if (!swiperInstance) return;
-    swiperInstance.slidePrev();
-  };
-
-  const handleNext = () => {
-    if (!swiperInstance) return;
-    swiperInstance.slideNext();
   };
 
   const goTo = (index: number) => {
@@ -173,12 +211,7 @@ const MyProjects: React.FC = () => {
         loop={projects.length >= 6}
         autoplay={{ delay: 2500, disableOnInteraction: false }}
         navigation={false}
-        pagination={{
-          clickable: true,
-          renderBullet: (index, className) => {
-            return `<span class="${className}">${index + 1}</span>`;
-          },
-        }}
+        pagination={false}
         breakpoints={{
           0: { slidesPerView: 1, spaceBetween: 10 },
           640: { slidesPerView: 2, spaceBetween: 20 },
@@ -186,7 +219,6 @@ const MyProjects: React.FC = () => {
         }}
         onSwiper={(swiper) => setSwiperInstance(swiper)}
         onSlideChange={(swiper) => {
-          if (!isMobile) return;
           const index = swiper.realIndex;
           setActiveIndex(index);
           const newPageSet = Math.floor(index / buttonsPerSet);
@@ -195,44 +227,44 @@ const MyProjects: React.FC = () => {
         className="mySwiper"
       >
         {getSlides(projects, 2.3).map((project, index) => (
-  <SwiperSlide key={index}>
-    <motion.a
-      href={project.link}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="bg-[#434343] rounded-xl overflow-hidden shadow-xl transform transition-all hover:scale-105 hover:shadow-2xl block"
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.95 }}
-      initial={{ opacity: 0, scale: 0.8, y: 50 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ duration: 1.2, delay: index * 0.03 }}
-      onMouseEnter={() => swiperInstance?.autoplay?.stop()}
-      onMouseLeave={() => swiperInstance?.autoplay?.start()}
-    >
-      <motion.img
-        src={project.image}
-        alt={project.title}
-        className="w-full h-[300px] sm:h-320px md:h-[340px] object-cover object-top rounded-xl shadow-md"
-        whileHover={{ scale: 1.05 }}
-        transition={{ duration: 0.5 }}
-      />
-      <div className="p-4 sm:p-5 md:p-6">
-        <h3 className="text-xl sm:text-2xl font-bold text-pink-500 mb-2">{project.title}</h3>
-        <p className="text-gray-300 mb-2 text-sm sm:text-base">{project.description}</p>
-        <p className="text-gray-400 text-xs sm:text-sm">Tech: {project.tech}</p>
-      </div>
-    </motion.a>
-  </SwiperSlide>
-))}
+          <SwiperSlide key={index} className="h-full">
+            <motion.a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#434343] rounded-xl overflow-hidden shadow-xl transform transition-all hover:scale-105 hover:shadow-2xl h-full flex flex-col"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.8, y: 50 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 1.2, delay: index * 0.03 }}
+              onMouseEnter={() => swiperInstance?.autoplay?.stop()}
+              onMouseLeave={() => swiperInstance?.autoplay?.start()}
+            >
+              <motion.img
+                src={project.image}
+                alt={project.title}
+                className="w-full aspect-4/3 object-cover object-center rounded-xl shadow-md"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.5 }}
+              />
+              <div className="p-4 sm:p-5 md:p-6 flex-1">
+                <h3 className="text-xl sm:text-2xl font-bold text-pink-500 mb-2">
+                  {project.title}
+                </h3>
+                <p className="text-gray-300 mb-2 text-sm sm:text-base min-h-[72px]">
+                  {project.description}
+                </p>
+                <p className="text-gray-400 text-xs sm:text-sm">Tech: {project.tech}</p>
+              </div>
+            </motion.a>
+          </SwiperSlide>
+        ))}
 
-
-        <div className="custom-pagination swiper-pagination" aria-hidden={isMobile ? "true" : "false"} />
-
-        {/* Mobile custom controls */}
       </Swiper>
 
-      {/* Mobile custom controls */}
-      <div className="mobile-pagination mt-6 hidden items-center justify-center gap-4">
+      {/* Custom pagination (1-10 with arrows) */}
+      <div className="mobile-pagination mt-6 flex items-center justify-center gap-4">
         <button
           onClick={handlePrevSet}
           aria-label="Previous"
@@ -275,49 +307,9 @@ const MyProjects: React.FC = () => {
 
       <style>
         {`
-          .swiper-pagination {
-            position: relative;
-            margin-top: 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-          .swiper-pagination-bullet {
-            width: 40px;
-            height: 40px;
-            background: #ff6f91;
-            border: 2px solid #ff4d6d;
-            border-radius: 0;
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            margin: 0 8px;
-            cursor: pointer;
-            transition: transform 0.3s ease, background 0.3s ease;
-          }
-          .swiper-pagination-bullet:hover {
-            transform: scale(1.1);
-            background: #ff4d6d;
-          }
-          .swiper-pagination-bullet-active {
-            background: #ff4d6d;
-            border: 2px solid #ff6f91;
-            transform: scale(1.1);
-          }
           .swiper-button-prev,
           .swiper-button-next {
             display: none !important;
-          }
-          @media (max-width: 639px) {
-            .swiper-pagination { display: none !important; }
-            .mobile-pagination { display: flex !important; }
-          }
-          @media (min-width: 640px) {
-            .mobile-pagination { display: none !important; }
           }
         `}
       </style>

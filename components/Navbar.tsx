@@ -76,7 +76,7 @@ const Navbar: React.FC = () => {
           {/* Mobile Menu Toggle */}
           <button
             onClick={toggleMenu}
-            className="menu-toggle md:hidden flex items-center justify-center w-10 h-10 relative z-60"
+            className="menu-toggle md:hidden flex items-center justify-center w-10 h-10 relative z-[60]"
           >
             <motion.div
               animate={isMenuOpen ? "open" : "closed"}
@@ -119,7 +119,7 @@ const Navbar: React.FC = () => {
         initial={{ x: "100%" }}
         animate={{ x: isMenuOpen ? 0 : "100%" }}
         transition={{ type: "tween", duration: 0.35 }}
-        className={`fixed top-0 right-0 w-screen h-screen bg-[#272727] bg-opacity-95 flex flex-col text-white z-60 overflow-hidden ${
+        className={`fixed top-0 right-0 w-screen h-screen bg-[#272727] bg-opacity-95 flex flex-col text-white z-[60] overflow-hidden ${
           isMenuOpen ? "block" : "hidden"
         }`}
       >
