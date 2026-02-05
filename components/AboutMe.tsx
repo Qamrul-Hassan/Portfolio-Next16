@@ -8,8 +8,19 @@ import {
   FaReact,
   FaGithub,
   FaBootstrap,
+  FaEnvelope,
 } from "react-icons/fa";
-import { SiNextdotjs, SiTailwindcss, SiFirebase } from "react-icons/si";
+import {
+  SiNextdotjs,
+  SiTailwindcss,
+  SiFirebase,
+  SiAxios,
+  SiRedux,
+  SiRadixui,
+  SiTypescript,
+  SiFigma,
+  SiVite,
+} from "react-icons/si";
 import { motion } from "framer-motion";
 
 const AboutMe = () => {
@@ -18,10 +29,19 @@ const AboutMe = () => {
     { Icon: FaCss3Alt, label: "CSS", color: "text-blue-500" },
     { Icon: FaJs, label: "JavaScript", color: "text-yellow-500" },
     { Icon: FaReact, label: "React", color: "text-blue-400" },
+    { Icon: SiTypescript, label: "TypeScript", color: "text-blue-500" },
     { Icon: SiNextdotjs, label: "Next.js", color: "text-gray-900" },
     { Icon: FaBootstrap, label: "Bootstrap", color: "text-purple-600" },
     { Icon: SiTailwindcss, label: "Tailwind CSS", color: "text-blue-300" },
+    { Icon: SiRadixui, label: "shadcn/ui", color: "text-zinc-200" },
+    { Icon: SiAxios, label: "Axios", color: "text-purple-400" },
+    { Icon: SiRedux, label: "Redux", color: "text-purple-500" },
+    { Icon: FaReact, label: "Zustand", color: "text-cyan-300" },
+    { Icon: FaReact, label: "State Management", color: "text-cyan-300" },
+    { Icon: FaEnvelope, label: "EmailJS", color: "text-pink-400" },
     { Icon: SiFirebase, label: "Firebase", color: "text-yellow-500" },
+    { Icon: SiFigma, label: "Figma", color: "text-pink-500" },
+    { Icon: SiVite, label: "Vite", color: "text-yellow-400" },
     { Icon: FaGithub, label: "GitHub", color: "text-white" },
   ];
 
