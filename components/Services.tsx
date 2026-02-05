@@ -61,8 +61,8 @@ const services = [
 
 const MyServices = () => {
   return (
-    <section id="services" className="py-16 bg-[#CECECE] text-white">
-      <div className="container mx-auto text-center">
+    <section id="services" className="py-16 px-6 lg:px-16 bg-[#CECECE] text-gray-900">
+      <div className="w-full max-w-7xl mx-auto text-center">
         <motion.h2
           className="text-4xl md:text-5xl font-bold mb-10"
           initial={{ opacity: 0, y: -50 }}

@@ -34,28 +34,28 @@ const HeroSection: React.FC = () => {
         <div className="absolute inset-0 bg-black/45"></div>
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl px-4 sm:px-6 mx-auto flex flex-col lg:flex-row items-center justify-between gap-8">
+      <div className="relative z-10 w-full max-w-7xl px-6 lg:px-16 mx-auto flex flex-col lg:flex-row items-stretch justify-between gap-8">
         {/* Profile Image */}
         <motion.div
-          className="w-full lg:w-1/2 flex justify-center"
+          className="w-full lg:w-1/2 flex justify-center lg:justify-start"
           initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5, duration: 1 }}
         >
-          <div className="relative rounded-xl overflow-hidden w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 shadow-[0_10px_30px_rgba(0,0,0,0.6)] border-4 border-white/30">
+          <div className="relative rounded-xl overflow-hidden w-72 h-72 sm:w-96 sm:h-96 lg:w-[480px] lg:h-[520px] shadow-[0_10px_30px_rgba(0,0,0,0.6)] border-4 border-white/30">
             <Image
               src={profileImage}
               alt="Qamrul Hassan"
               className="object-cover"
               fill
               priority
-              sizes="(min-width: 1024px) 50vw, (min-width: 640px) 60vw, 80vw"
+              sizes="(min-width: 1024px) 480px, (min-width: 640px) 384px, 288px"
             />
           </div>
         </motion.div>
 
         {/* Text Section */}
-        <div className="w-full lg:w-1/2 text-center lg:text-left space-y-6">
+        <div className="w-full lg:w-1/2 text-center lg:text-left space-y-6 flex flex-col justify-center">
           <motion.p
             className="text-gray-300 text-sm sm:text-lg mb-4 font-semibold tracking-wide uppercase"
             initial={{ opacity: 0, y: -20 }}

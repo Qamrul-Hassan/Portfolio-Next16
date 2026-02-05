@@ -26,8 +26,8 @@ const AboutMe = () => {
   ];
 
   return (
-    <section className=" py-16 px-6 text-white bg-gray-200" id="about">
-      <div className="container mx-auto flex flex-col lg:flex-row items-center justify-between gap-12">
+    <section className="py-16 px-6 lg:px-16 text-gray-900 bg-gray-200" id="about">
+      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12">
         <motion.div
           className="lg:w-1/2 text-center lg:text-left"
           initial={{ opacity: 0, x: 100 }}
@@ -76,7 +76,7 @@ const AboutMe = () => {
           {skills.map(({ Icon, label, color }, index) => (
             <div
               key={index}
-              className="flex items-center gap-3 bg-gray-800 px-4 py-3 rounded shadow-md"
+              className="flex items-center gap-3 bg-gray-800 px-4 py-3 rounded shadow-md text-white"
             >
               <Icon className={`${color}`} size={24} />
               {label}

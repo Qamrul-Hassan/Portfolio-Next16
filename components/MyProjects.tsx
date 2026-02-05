@@ -44,7 +44,7 @@ const projects = [
       "A compact, conversion-focused e-commerce landing page built with HTML and CSS.",
     link: "#",
     tech: "HTML, CSS",
-    image: "/small-e-commerce page.jpg",
+    image: "/small-e-commerce-page.jpg",
   },
   {
     title: "Justice Law Firm Landing",
@@ -60,7 +60,7 @@ const projects = [
       "A fully responsive agriculture template built with HTML, CSS, and Bootstrap.",
     link: "#",
     tech: "HTML, CSS, Bootstrap",
-    image: "/agriculture.jpg",
+    image: "/Agriculture.jpg",
   },
   {
     title: "E-Commerce Website - Hektto",
@@ -182,9 +182,9 @@ const MyProjects: React.FC = () => {
   );
 
   return (
-    <section id="projects" className="bg-[#CECECE] py-20 px-6 lg:px-16 text-white">
+    <section id="projects" className="bg-[#CECECE] py-20 px-6 lg:px-16 text-gray-900">
       <motion.div
-        className="text-center mb-12"
+        className="text-center mb-12 max-w-7xl mx-auto"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2 }}
@@ -203,65 +203,68 @@ const MyProjects: React.FC = () => {
         </p>
       </motion.div>
 
-      <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={30}
-        slidesPerView={2.5}
-        centeredSlides={true}
-        loop={projects.length >= 6}
-        autoplay={{ delay: 2500, disableOnInteraction: false }}
-        navigation={false}
-        pagination={false}
-        breakpoints={{
-          0: { slidesPerView: 1, spaceBetween: 10 },
-          640: { slidesPerView: 2, spaceBetween: 20 },
-          1024: { slidesPerView: 2.5, spaceBetween: 30 },
-        }}
-        onSwiper={(swiper) => setSwiperInstance(swiper)}
-        onSlideChange={(swiper) => {
-          const index = swiper.realIndex;
-          setActiveIndex(index);
-          const newPageSet = Math.floor(index / buttonsPerSet);
-          if (newPageSet !== currentPageSet) setCurrentPageSet(newPageSet);
-        }}
-        className="mySwiper"
-      >
-        {getSlides(projects, 2.3).map((project, index) => (
-          <SwiperSlide key={index} className="h-full">
-            <motion.a
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-[#434343] rounded-xl overflow-hidden shadow-xl transform transition-all hover:scale-105 hover:shadow-2xl h-full flex flex-col"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, scale: 0.8, y: 50 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 1.2, delay: index * 0.03 }}
-              onMouseEnter={() => swiperInstance?.autoplay?.stop()}
-              onMouseLeave={() => swiperInstance?.autoplay?.start()}
-            >
-              <motion.img
-                src={project.image}
-                alt={project.title}
-                className="w-full aspect-4/3 object-cover object-center rounded-xl shadow-md"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.5 }}
-              />
-              <div className="p-4 sm:p-5 md:p-6 flex-1">
-                <h3 className="text-xl sm:text-2xl font-bold text-pink-500 mb-2">
-                  {project.title}
-                </h3>
-                <p className="text-gray-300 mb-2 text-sm sm:text-base min-h-[72px]">
-                  {project.description}
-                </p>
-                <p className="text-gray-400 text-xs sm:text-sm">Tech: {project.tech}</p>
-              </div>
-            </motion.a>
-          </SwiperSlide>
-        ))}
-
-      </Swiper>
+      <div className="w-full max-w-7xl mx-auto">
+        <Swiper
+          modules={[Navigation, Pagination, Autoplay]}
+          spaceBetween={30}
+          slidesPerView={2.5}
+          centeredSlides={true}
+          loop={projects.length >= 6}
+          autoplay={{ delay: 2500, disableOnInteraction: false }}
+          navigation={false}
+          pagination={false}
+          breakpoints={{
+            0: { slidesPerView: 1, spaceBetween: 10 },
+            640: { slidesPerView: 2, spaceBetween: 20 },
+            1024: { slidesPerView: 2.5, spaceBetween: 30 },
+          }}
+          onSwiper={(swiper) => setSwiperInstance(swiper)}
+          onSlideChange={(swiper) => {
+            const index = swiper.realIndex;
+            setActiveIndex(index);
+            const newPageSet = Math.floor(index / buttonsPerSet);
+            if (newPageSet !== currentPageSet) setCurrentPageSet(newPageSet);
+          }}
+          className="mySwiper"
+        >
+          {getSlides(projects, 2.3).map((project, index) => (
+            <SwiperSlide key={index} className="h-full">
+              <motion.a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#434343] rounded-xl overflow-hidden shadow-xl transform transition-all hover:scale-105 hover:shadow-2xl h-full flex flex-col"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.8, y: 50 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 1.2, delay: index * 0.03 }}
+                onMouseEnter={() => swiperInstance?.autoplay?.stop()}
+                onMouseLeave={() => swiperInstance?.autoplay?.start()}
+              >
+                <motion.img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full aspect-4/3 object-cover object-center rounded-xl shadow-md"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.5 }}
+                />
+                <div className="p-4 sm:p-5 md:p-6 flex-1">
+                  <h3 className="text-xl sm:text-2xl font-bold text-pink-500 mb-2">
+                    {project.title}
+                  </h3>
+                  <p className="text-gray-300 mb-2 text-sm sm:text-base min-h-[72px]">
+                    {project.description}
+                  </p>
+                  <p className="text-gray-400 text-xs sm:text-sm">
+                    Tech: {project.tech}
+                  </p>
+                </div>
+              </motion.a>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
 
       {/* Custom pagination (1-10 with arrows) */}
       <div className="mobile-pagination mt-6 flex items-center justify-center gap-4">

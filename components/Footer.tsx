@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 const Footer = () => {
   return (
     <footer className="bg-gradient-to-r from-[#1B1B1B] via-[#3F3F3F] to-[#505050] text-white py-12 w-full">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
+      <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-6 lg:px-16 items-start">
         {/* About Section */}
         <div>
           <motion.h3
@@ -141,7 +141,7 @@ const Footer = () => {
 
       {/* Footer Bottom */}
       <motion.div
-        className="mt-12 border-t border-gray-500 pt-6 text-center text-gray-200 text-sm"
+        className="mt-12 border-t border-gray-500 pt-6 text-center text-gray-200 text-sm w-full max-w-7xl mx-auto px-6 lg:px-16"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}

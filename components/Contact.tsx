@@ -81,7 +81,7 @@ const Contact = () => {
   const showCaptcha = formData.name && formData.email && formData.message;
 
   return (
-    <section id="contact" className="bg-[#CECECE] py-8 px-4 sm:px-6 lg:px-16 text-white">
+    <section id="contact" className="bg-[#CECECE] py-8 px-6 lg:px-16 text-gray-900">
       <motion.div
         className="text-center mb-12"
         initial={{ opacity: 0, y: 50 }}
@@ -101,7 +101,7 @@ const Contact = () => {
         </motion.p>
       </motion.div>
 
-      <div className="flex flex-col lg:flex-row items-start justify-center bg-[#434343] py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8 rounded-lg shadow-lg gap-6 lg:gap-8">
+      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-start justify-center bg-[#434343] py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8 rounded-lg shadow-lg gap-6 lg:gap-8">
         {/* LEFT: Form */}
         <motion.form
           onSubmit={handleSubmit}
