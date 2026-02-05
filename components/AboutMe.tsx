@@ -57,7 +57,7 @@ const AboutMe = () => {
             "Building engaging and accessible digital experiences."
           </motion.p>
           <motion.a
-            href="/QamrulCV.pdf"
+            href="/CV Front-End Web Development 28-01-2026.pdf"
             download="Qamrul_Hassan_Resume.pdf"
             className="inline-block px-8 py-3 bg-pink-500 text-white font-semibold rounded shadow hover:bg-pink-600 transition duration-300"
             initial={{ opacity: 0, y: 20 }}
