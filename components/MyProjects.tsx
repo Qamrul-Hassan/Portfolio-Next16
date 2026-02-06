@@ -10,10 +10,10 @@ const projects = [
   {
     title: "Chess Board",
     description:
-      "A simple, clean chess-board layout built with HTML, CSS, and JavaScript.",
+      "A simple, clean live chess-board layout built with HTML, CSS, and JavaScript.",
     link: "https://qamrul-hassan.github.io/chess-board/",
     tech: "HTML, CSS, JavaScript",
-    image: "/Chess-Board.jpg",
+    image: "/Grandmaster Chess Board.jpg",
   },
   {
     title: "Ethereum Explorer",
