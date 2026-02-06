@@ -106,7 +106,7 @@ const HeroSection: React.FC = () => {
             transition={{ delay: 1.5, duration: 0.8 }}
           >
             <motion.a
-              href="https://www.linkedin.com/in/md-qamrul-hassan-a44b3835b"
+              href="https://www.linkedin.com/in/md-qamrul-hassan-a44b3835b/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white hover:text-blue-400 text-2xl md:text-3xl transition-colors"
