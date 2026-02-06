@@ -65,7 +65,7 @@ const Navbar: React.FC = () => {
               <li key={link.id}>
                 <button
                   onClick={() => scrollToSection(link.id)}
-                  className=" font-bold text-gray-300 hover:text-pink-500 transition-all duration-300 cursor-pointer px-4 py-2 rounded-md"
+                  className="font-bold text-gray-100 hover:text-pink-500 transition-all duration-300 cursor-pointer px-4 py-2 rounded-md"
                 >
                   {link.name}
                 </button>

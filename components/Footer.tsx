@@ -19,7 +19,7 @@ const Footer = () => {
             About
           </motion.h3>
           <motion.p
-            className="text-gray-300 leading-relaxed"
+            className="text-gray-100 leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -53,7 +53,7 @@ const Footer = () => {
               >
                 <a
                   href={`#${link.toLowerCase()}`}
-                  className="hover:text-pink-400 transition-colors text-gray-300"
+                  className="hover:text-pink-400 transition-colors text-gray-100"
                 >
                   {link}
                 </a>
@@ -75,9 +75,9 @@ const Footer = () => {
           </motion.h3>
 
           <div className="space-y-3">
-            <div className="flex items-center text-gray-300">
+            <div className="flex items-center text-gray-100">
               <motion.div
-                className="mr-3 w-7 h-7 text-gray-200 hover:text-pink-400 transition-all transform hover:translate-y-1 hover:animate-bounce"
+                className="mr-3 w-7 h-7 text-gray-100 hover:text-pink-400 transition-all transform hover:translate-y-1 hover:animate-bounce"
                 whileHover={{ scale: 1.2 }}
                 whileTap={{ rotate: 15 }}
               >
@@ -90,9 +90,9 @@ const Footer = () => {
                 mdqamrul74@gmail.com
               </a>
             </div>
-            <div className="flex items-center text-gray-300">
+            <div className="flex items-center text-gray-100">
               <motion.div
-                className="mr-3 w-7 h-7 text-gray-200 hover:text-green-400 transition-all transform hover:translate-y-1 hover:animate-bounce"
+                className="mr-3 w-7 h-7 text-gray-100 hover:text-green-400 transition-all transform hover:translate-y-1 hover:animate-bounce"
                 whileHover={{ scale: 1.2 }}
                 whileTap={{ rotate: 15 }}
               >
@@ -112,15 +112,15 @@ const Footer = () => {
             {[
               {
                 href: "https://www.linkedin.com/in/md-qamrul-hassan-303853347",
-                icon: <FaLinkedin className="w-6 h-6 text-gray-200 hover:text-blue-500" />,
+                icon: <FaLinkedin className="w-6 h-6 text-gray-100 hover:text-blue-500" />,
               },
               {
                 href: "https://x.com/Shajal1",
-                icon: <FaTwitter className="w-6 h-6 text-gray-200 hover:text-blue-400" />,
+                icon: <FaTwitter className="w-6 h-6 text-gray-100 hover:text-blue-400" />,
               },
               {
                 href: "https://github.com/Qamrul-Hassan",
-                icon: <FaGithub className="w-6 h-6 text-gray-200 hover:text-blue-400" />,
+                icon: <FaGithub className="w-6 h-6 text-gray-100 hover:text-blue-400" />,
               },
             ].map((social, index) => (
               <motion.a
@@ -141,7 +141,7 @@ const Footer = () => {
 
       {/* Footer Bottom */}
       <motion.div
-        className="mt-12 border-t border-gray-500 pt-6 text-center text-gray-200 text-sm w-full max-w-7xl mx-auto px-6 lg:px-16"
+        className="mt-12 border-t border-gray-500 pt-6 text-center text-gray-100 text-sm w-full max-w-7xl mx-auto px-6 lg:px-16"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}

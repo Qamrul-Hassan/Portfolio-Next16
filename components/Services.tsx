@@ -101,7 +101,7 @@ const MyServices = () => {
               <h3 className="text-xl font-semibold text-white mb-3">
                 {service.title}
               </h3>
-              <p className="text-gray-300">{service.description}</p>
+              <p className="text-gray-100">{service.description}</p>
             </motion.div>
           ))}
         </motion.div>

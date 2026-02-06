@@ -278,10 +278,10 @@ const MyProjects: React.FC = () => {
                   <h3 className="text-xl sm:text-2xl font-bold text-pink-500 mb-2">
                     {project.title}
                   </h3>
-                  <p className="text-gray-300 mb-2 text-sm sm:text-base min-h-[72px]">
+                  <p className="text-gray-100 mb-2 text-sm sm:text-base min-h-[72px]">
                     {project.description}
                   </p>
-                  <p className="text-gray-400 text-xs sm:text-sm">
+                  <p className="text-gray-200 text-xs sm:text-sm">
                     Tech: {project.tech}
                   </p>
                 </div>
