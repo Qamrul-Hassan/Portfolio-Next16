@@ -11,7 +11,7 @@ const projects = [
     title: "Chess Board",
     description:
       "A simple, clean live chess-board layout built with HTML, CSS, and JavaScript.",
-    link: "https://qamrul-hassan.github.io/chess-board/",
+    link: "https://chess-board-ufj9.onrender.com/",
     tech: "HTML, CSS, JavaScript",
     image: "/Grandmaster Chess Board.jpg",
   },
