@@ -111,7 +111,7 @@ const Footer = () => {
             {/* Social Links */}
             {[
               {
-                href: "https://www.linkedin.com/in/md-qamrul-hassan-303853347",
+                href: "https://www.linkedin.com/in/md-qamrul-hassan-a44b3835b/",
                 icon: <FaLinkedin className="w-6 h-6 text-gray-100 hover:text-blue-500" />,
               },
               {
