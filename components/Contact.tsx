@@ -13,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 const Contact = () => {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [showSuccessAnim, setShowSuccessAnim] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
@@ -59,6 +60,8 @@ const Contact = () => {
       await emailjs.send(serviceID, ownerTemplateID, templateParams, publicKey);
       await emailjs.send(serviceID, userTemplateID, { ...templateParams, to_email: formData.email }, publicKey);
       toast.success("Message sent successfully!");
+      setShowSuccessAnim(true);
+      setTimeout(() => setShowSuccessAnim(false), 5000);
       setFormData({ name: "", email: "", message: "" });
       setCaptchaToken(null);
       recaptchaRef.current?.reset();
@@ -153,6 +156,83 @@ const Contact = () => {
           >
             Send Message
           </button>
+
+          {showSuccessAnim && (
+            <div className="relative w-full h-14 mt-3 overflow-hidden rounded-full bg-gradient-to-r from-[#1c1f2e] via-[#23283b] to-[#1c1f2e] border border-white/10 shadow-inner">
+              {/* Progress glow */}
+              <motion.div
+                className="absolute inset-y-0 left-0 bg-pink-500/20 blur-md"
+                initial={{ width: "0%" }}
+                animate={{ width: "100%" }}
+                transition={{ duration: 4.2, ease: "easeInOut" }}
+              />
+
+              {/* Envelope starts */}
+              <motion.div
+                className="absolute left-3 top-1/2 -translate-y-1/2"
+                initial={{ x: 0, opacity: 1, scale: 1 }}
+                animate={{ x: [0, 60, 120], opacity: [1, 1, 0], scale: [1, 0.95, 0.8] }}
+                transition={{ duration: 2.2, ease: "easeInOut" }}
+              >
+                <div className="w-6 h-4 bg-yellow-300 rounded-sm shadow-sm relative">
+                  <div className="absolute inset-x-0 top-0 h-0 border-l-[12px] border-r-[12px] border-t-[8px] border-transparent border-t-yellow-200" />
+                </div>
+              </motion.div>
+
+              {/* Courier vehicle */}
+              <motion.div
+                className="absolute left-16 top-1/2 -translate-y-1/2"
+                initial={{ x: 0, opacity: 1 }}
+                animate={{ x: [0, 0, 240], opacity: [1, 1, 0] }}
+                transition={{ duration: 5, ease: "easeInOut" }}
+              >
+                <div className="relative w-20 h-9">
+                  {/* Cargo box */}
+                  <div className="absolute left-0 top-0 w-14 h-9 rounded-sm bg-gradient-to-b from-white to-gray-200 shadow-md" />
+                  <div className="absolute left-1 top-2 w-8 h-[2px] bg-gray-300/80 rounded-full" />
+                  {/* Door close */}
+                  <motion.div
+                    className="absolute left-0 top-0 h-9 bg-white"
+                    initial={{ width: 12 }}
+                    animate={{ width: [12, 12, 0] }}
+                    transition={{ duration: 0.7, ease: "easeInOut", delay: 2.1 }}
+                  />
+                  {/* Cab */}
+                  <div className="absolute right-0 top-1 w-6 h-7 bg-pink-500 rounded-sm shadow-md" />
+                  <div className="absolute right-1 top-2 w-3 h-2 bg-cyan-100/80 rounded-sm" />
+                  <div className="absolute right-0 top-4 w-1 h-3 bg-red-600 rounded-sm" />
+                  {/* Bumper */}
+                  <div className="absolute right-0 bottom-0 w-2 h-2 bg-gray-800 rounded-sm" />
+                  {/* Wheels */}
+                  <div className="absolute left-3 bottom-[-2px] w-4 h-4 bg-gray-900 rounded-full shadow">
+                    <div className="absolute inset-1 bg-gray-500 rounded-full" />
+                  </div>
+                  <div className="absolute right-3 bottom-[-2px] w-4 h-4 bg-gray-900 rounded-full shadow">
+                    <div className="absolute inset-1 bg-gray-500 rounded-full" />
+                  </div>
+                  {/* Headlight beam */}
+                  <motion.div
+                    className="absolute right-[-14px] top-3 w-5 h-5"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 0, 1] }}
+                    transition={{ duration: 0.6, ease: "easeInOut", delay: 3.6 }}
+                  >
+                    <div className="w-0 h-0 border-t-[7px] border-b-[7px] border-l-[14px] border-transparent border-l-yellow-300 opacity-80" />
+                  </motion.div>
+                </div>
+              </motion.div>
+
+              {/* Success text */}
+              <motion.div
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-xs sm:text-sm text-white/90 font-semibold"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: [0, 0, 1], x: [-20, -20, 0] }}
+                transition={{ duration: 0.8, ease: "easeInOut", delay: 5.2 }}
+              >
+                Message sent successfully
+              </motion.div>
+            </div>
+          )}
         </motion.form>
 
         {/* RIGHT: Image with Icons */}

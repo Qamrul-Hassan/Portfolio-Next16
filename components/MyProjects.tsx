@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import "swiper/css/effect-coverflow";
+import { Navigation, Pagination, Autoplay, EffectCoverflow } from "swiper/modules";
 
 const projects = [
   {
@@ -153,11 +154,27 @@ const getSlides = (projectsList: typeof projects, slidesPerView: number) => {
 const MyProjects: React.FC = () => {
   const [swiperInstance, setSwiperInstance] = useState<any | null>(null);
 
-  // Mobile pagination state
-  const buttonsPerSet = 10; // show 10 numbers per set
-  const totalSets = Math.ceil(projects.length / buttonsPerSet);
+  // Pagination state (responsive counts)
+  const [buttonsPerSet, setButtonsPerSet] = useState(5);
   const [currentPageSet, setCurrentPageSet] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const updateButtons = () => {
+      setButtonsPerSet(window.innerWidth >= 1024 ? 7 : 5);
+    };
+    updateButtons();
+    window.addEventListener("resize", updateButtons);
+    return () => window.removeEventListener("resize", updateButtons);
+  }, []);
+
+  const totalSets = Math.ceil(projects.length / buttonsPerSet);
+
+  useEffect(() => {
+    if (currentPageSet > totalSets - 1) {
+      setCurrentPageSet(Math.max(totalSets - 1, 0));
+    }
+  }, [buttonsPerSet, totalSets, currentPageSet]);
 
   const handlePrevSet = () => {
     if (currentPageSet > 0) setCurrentPageSet(currentPageSet - 1);
@@ -205,7 +222,7 @@ const MyProjects: React.FC = () => {
 
       <div className="w-full max-w-7xl mx-auto">
         <Swiper
-          modules={[Navigation, Pagination, Autoplay]}
+          modules={[Navigation, Pagination, Autoplay, EffectCoverflow]}
           spaceBetween={30}
           slidesPerView={2.5}
           centeredSlides={true}
@@ -213,9 +230,17 @@ const MyProjects: React.FC = () => {
           autoplay={{ delay: 2500, disableOnInteraction: false }}
           navigation={false}
           pagination={false}
+          effect="coverflow"
+          coverflowEffect={{
+            rotate: 0,
+            stretch: 10,
+            depth: 220,
+            modifier: 1.6,
+            slideShadows: false,
+          }}
           breakpoints={{
-            0: { slidesPerView: 1, spaceBetween: 10 },
-            640: { slidesPerView: 2, spaceBetween: 20 },
+            0: { slidesPerView: 1.05, spaceBetween: 12 },
+            640: { slidesPerView: 1.6, spaceBetween: 18 },
             1024: { slidesPerView: 2.5, spaceBetween: 30 },
           }}
           onSwiper={(swiper) => setSwiperInstance(swiper)}
@@ -225,7 +250,7 @@ const MyProjects: React.FC = () => {
             const newPageSet = Math.floor(index / buttonsPerSet);
             if (newPageSet !== currentPageSet) setCurrentPageSet(newPageSet);
           }}
-          className="mySwiper"
+          className="mySwiper projectsSwiper"
         >
           {getSlides(projects, 2.3).map((project, index) => (
             <SwiperSlide key={index} className="h-full">
@@ -290,6 +315,7 @@ const MyProjects: React.FC = () => {
                   background: isActive ? "#ff4d6d" : "#ff6f91",
                   border: "2px solid #ff4d6d",
                   clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                  WebkitClipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
                 }}
               >
                 {slideIndex + 1}
@@ -313,6 +339,26 @@ const MyProjects: React.FC = () => {
           .swiper-button-prev,
           .swiper-button-next {
             display: none !important;
+          }
+          .projectsSwiper .swiper-slide {
+            opacity: 0.35;
+            transform: scale(0.88);
+            filter: grayscale(0.7);
+            transition: opacity 350ms ease, transform 350ms ease, filter 350ms ease;
+          }
+          .projectsSwiper .swiper-slide-prev,
+          .projectsSwiper .swiper-slide-next {
+            opacity: 0.6;
+            transform: scale(0.94);
+            filter: grayscale(0.35);
+          }
+          .projectsSwiper .swiper-slide-active {
+            opacity: 1;
+            transform: scale(1);
+            filter: grayscale(0);
+          }
+          .projectsSwiper .swiper-slide-active a {
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
           }
         `}
       </style>

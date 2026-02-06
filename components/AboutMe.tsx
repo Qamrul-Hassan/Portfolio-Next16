@@ -88,7 +88,7 @@ const AboutMe = () => {
           </motion.a>
         </motion.div>
         <motion.div
-          className="lg:w-1/2 grid grid-cols-2 md:grid-cols-3 gap-6 text-lg"
+          className="lg:w-1/2 grid grid-cols-2 md:grid-cols-3 gap-6"
           initial={{ opacity: 0, x: -100 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
@@ -96,10 +96,12 @@ const AboutMe = () => {
           {skills.map(({ Icon, label, color }, index) => (
             <div
               key={index}
-              className="flex items-center gap-3 bg-gray-800 px-4 py-3 rounded shadow-md text-white"
+              className="flex items-center gap-3 bg-gray-800 px-4 py-3 rounded shadow-md text-white min-h-[52px]"
             >
-              <Icon className={`${color}`} size={24} />
-              {label}
+              <Icon className={`${color} flex-shrink-0`} size={24} />
+              <span className="text-sm sm:text-base leading-snug min-w-0">
+                {label}
+              </span>
             </div>
           ))}
         </motion.div>
