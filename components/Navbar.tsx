@@ -50,17 +50,17 @@ const Navbar: React.FC = () => {
       <nav className={`${
         isSticky ? "fixed top-0 left-0 w-full shadow-lg backdrop-blur-md z-50" : "relative"
       } bg-[#272727cc] text-white transition-all duration-300`}>
-        <div className="container mx-auto px-6 py-3 flex justify-between items-center">
+        <div className="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
           {/* Logo */}
           <div className="flex items-center space-x-2 cursor-pointer">
             <img src={Logo.src} alt="Logo" className="h-14 w-14 object-contain rounded-lg" />
-            <div className="text-3xl font-bold text-pink-500 hover:text-pink-400 transition">
+            <div className="text-2xl sm:text-3xl font-bold text-pink-500 hover:text-pink-400 transition">
               Portfolio
             </div>
           </div>
 
           {/* Desktop Links */}
-          <ul className="hidden md:flex items-center space-x-8 text-lg font-medium">
+          <ul className="hidden lg:flex items-center space-x-8 text-lg font-medium">
             {links.map((link) => (
               <li key={link.id}>
                 <button
@@ -76,7 +76,7 @@ const Navbar: React.FC = () => {
           {/* Mobile Menu Toggle */}
           <button
             onClick={toggleMenu}
-            className="menu-toggle md:hidden flex items-center justify-center w-10 h-10 relative z-[60]"
+            className="menu-toggle lg:hidden flex items-center justify-center w-10 h-10 relative z-[60]"
           >
             <motion.div
               animate={isMenuOpen ? "open" : "closed"}

@@ -96,10 +96,10 @@ const AboutMe = () => {
           {skills.map(({ Icon, label, color }, index) => (
             <div
               key={index}
-              className="flex items-center gap-3 bg-gray-800 px-4 py-3 rounded shadow-md text-white min-h-[52px]"
+              className="flex items-center gap-3 bg-gray-800 px-4 py-3 rounded shadow-md text-white min-h-[52px] min-w-0"
             >
               <Icon className={`${color} flex-shrink-0`} size={24} />
-              <span className="text-sm sm:text-base leading-snug min-w-0">
+              <span className="text-sm sm:text-base leading-tight break-words whitespace-normal min-w-0 max-w-full">
                 {label}
               </span>
             </div>
