@@ -11,7 +11,7 @@ const projects = [
     title: "Chess Board",
     description:
       "A simple, clean chess-board layout built with HTML, CSS, and JavaScript.",
-    link: "#",
+    link: "https://qamrul-hassan.github.io/chess-board/",
     tech: "HTML, CSS, JavaScript",
     image: "/Chess-Board.jpg",
   },
@@ -19,7 +19,7 @@ const projects = [
     title: "Ethereum Explorer",
     description:
       "A feature-rich crypto explorer with wallet balances, transactions, NFTs, and live prices powered by Alchemy, Etherscan, and CoinGecko APIs with server-side proxies.",
-    link: "#",
+    link: "https://ethereum-explorer-sepia.vercel.app/",
     tech: "Next.js, TypeScript, Tailwind CSS, shadcn/ui, Axios, Alchemy API, Etherscan API, CoinGecko API",
     image: "/etherium-explorer.jpg",
   },
@@ -27,7 +27,7 @@ const projects = [
     title: "Countries Dashboard",
     description:
       "A modern dashboard for searching, filtering, and sorting countries with SSR + CSR architecture and accessible UI components.",
-    link: "#",
+    link: "https://countries-dashboard-gamma.vercel.app/",
     tech: "Next.js (App Router), TypeScript, REST Countries API",
     image: "/countries-dashboard.jpg",
   },
@@ -35,7 +35,7 @@ const projects = [
     title: "Job Board",
     description:
       "A responsive job board using public REST APIs, built with modern Next.js tooling and a clean UI.",
-    link: "#",
+    link: "https://job-board-liart-two.vercel.app/",
     tech: "Next.js (App Router), React, TypeScript, Tailwind CSS, shadcn/ui, Axios",
     image: "/Job-board.jpg",
   },
@@ -43,7 +43,7 @@ const projects = [
     title: "Small E-Commerce Landing Page",
     description:
       "A compact, conversion-focused e-commerce landing page built with HTML and CSS.",
-    link: "#",
+    link: "https://small-e-commerce-page.vercel.app/",
     tech: "HTML, CSS",
     image: "/small-e-commerce-page.jpg",
   },
@@ -51,7 +51,7 @@ const projects = [
     title: "Justice Law Firm Landing",
     description:
       "A responsive law-firm landing page crafted with Tailwind CSS v4 and a professional layout.",
-    link: "#",
+    link: "https://justice-pi-liart.vercel.app/",
     tech: "Tailwind CSS v4, HTML",
     image: "/justice.jpg",
   },
@@ -59,7 +59,7 @@ const projects = [
     title: "AgriCulture Template",
     description:
       "A fully responsive agriculture template built with HTML, CSS, and Bootstrap.",
-    link: "#",
+    link: "https://agri-culture-template.vercel.app/",
     tech: "HTML, CSS, Bootstrap",
     image: "/Agriculture.jpg",
   },
