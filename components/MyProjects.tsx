@@ -123,7 +123,7 @@ const projects = [
     title: "Weather App",
     description:
       "A dynamic Weather App powered by Next.js, Zustand for state management, and Framer Motion for smooth, interactive animations, delivering real-time weather updates.",
-    link: "https://weather-1ddxtqioq-qamrul-hassans-projects.vercel.app/",
+    link: "https://weather-app-zeta-seven-71.vercel.app/",
     tech: "React, Tailwind CSS, API",
     image: "/Weather.jpg",
   },
