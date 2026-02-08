@@ -6,7 +6,7 @@ import { FaLinkedin, FaGithub, FaTwitter } from "react-icons/fa";
 import { Typewriter } from "react-simple-typewriter";
 import Image from "next/image";
 import profileImage from "../public/Portfolio-9.jpg";
-import backgroundImage from "../public/hegagon.jpg";
+import backgroundImage from "../public/banner.jpg";
 
 const HeroSection: React.FC = () => {
   const welcomeText = "WELCOME TO MY PORTFOLIO";
@@ -19,9 +19,9 @@ const HeroSection: React.FC = () => {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative flex min-h-[86svh] items-center justify-center overflow-hidden py-14 sm:min-h-[100svh] sm:py-28 lg:py-20"
     >
-    {/* Background Image */}
+      {/* Background Image */}
       <div className="absolute inset-0">
         <Image
           src={backgroundImage}
@@ -29,35 +29,35 @@ const HeroSection: React.FC = () => {
           fill
           priority
           sizes="100vw"
-          className="object-cover"
+          className="object-cover object-right sm:object-center"
         />
-        <div className="absolute inset-0 bg-black/45"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-black/70"></div>
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl px-6 lg:px-16 mx-auto flex flex-col lg:flex-row items-stretch justify-between gap-8">
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-5 px-5 sm:gap-10 sm:px-8 lg:flex-row lg:items-center lg:gap-12 lg:px-16">
         {/* Profile Image */}
         <motion.div
-          className="w-full lg:w-1/2 flex justify-center lg:justify-start"
+          className="flex w-full justify-center lg:w-1/2 lg:justify-start"
           initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5, duration: 1 }}
         >
-          <div className="relative rounded-xl overflow-hidden w-72 h-72 sm:w-96 sm:h-96 lg:w-[480px] lg:h-[520px] shadow-[0_10px_30px_rgba(0,0,0,0.6)] border-4 border-white/30">
+          <div className="relative h-[min(64vw,16rem)] w-[min(64vw,16rem)] overflow-hidden rounded-2xl border-4 border-white/30 shadow-[0_10px_30px_rgba(0,0,0,0.6)] sm:h-[24rem] sm:w-[24rem] md:h-[27rem] md:w-[27rem] lg:h-[29rem] lg:w-[29rem]">
             <Image
               src={profileImage}
               alt="Qamrul Hassan"
               className="object-cover"
               fill
               priority
-              sizes="(min-width: 1024px) 480px, (min-width: 640px) 384px, 288px"
+              sizes="(min-width: 1024px) 464px, (min-width: 768px) 432px, (min-width: 640px) 384px, 64vw"
             />
           </div>
         </motion.div>
 
         {/* Text Section */}
-        <div className="w-full lg:w-1/2 text-center lg:text-left space-y-6 flex flex-col justify-center">
+        <div className="flex w-full max-w-2xl flex-col justify-center space-y-2 text-center sm:space-y-5 lg:w-1/2 lg:max-w-none lg:text-left">
           <motion.p
-            className="text-gray-100 text-sm sm:text-lg mb-4 font-semibold tracking-wide uppercase"
+            className="mb-1 text-[11px] font-semibold tracking-[0.16em] text-gray-100 uppercase sm:text-sm md:text-base"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.8 }}
@@ -66,15 +66,15 @@ const HeroSection: React.FC = () => {
           </motion.p>
 
           <motion.h1
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-extrabold mb-6 text-white leading-tight"
+            className="mb-1 text-[1.95rem] leading-[1.12] font-extrabold text-white sm:mb-2 sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 0.8 }}
           >
-            Hi, I'm <span className="text-pink-500">Qamrul Hassan</span>,
+            Hi, I'm <span className="text-pink-500 whitespace-nowrap">Qamrul Hassan</span>,
           </motion.h1>
 
-          <div className="text-base sm:text-lg md:text-xl lg:text-2xl font-medium text-white min-h-20 flex items-center justify-center lg:justify-start">
+          <div className="flex min-h-12 items-center justify-center text-sm font-medium text-white sm:min-h-16 sm:text-lg md:text-xl lg:justify-start lg:text-2xl">
             <Typewriter
               words={typingTexts}
               loop
@@ -87,7 +87,7 @@ const HeroSection: React.FC = () => {
           </div>
 
           <motion.p
-            className="text-gray-100 text-sm sm:text-base mb-6 max-w-xl mx-auto lg:mx-0 leading-relaxed"
+            className="mx-auto mb-2 max-w-[34ch] px-1 text-[0.95rem] leading-relaxed text-gray-100 sm:mb-3 sm:max-w-xl sm:px-0 sm:text-base lg:mx-0"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 0.8 }}
@@ -100,7 +100,7 @@ const HeroSection: React.FC = () => {
 
           {/* Social Icons */}
           <motion.div
-            className="flex justify-center lg:justify-start gap-6 mt-6"
+            className="mt-2 flex justify-center gap-5 lg:justify-start"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5, duration: 0.8 }}
@@ -138,11 +138,11 @@ const HeroSection: React.FC = () => {
           </motion.div>
 
           {/* Bouncing Hexagons */}
-          <div className="relative flex justify-center gap-8 mt-12">
+          <div className="relative mt-3 flex justify-center gap-2 sm:mt-8 sm:gap-6 lg:justify-start">
             {[...Array(3)].map((_, index) => (
               <motion.div
                 key={index}
-                className={`w-10 h-10 sm:w-16 sm:h-16 bg-gradient-to-r ${
+                className={`h-7 w-7 sm:h-16 sm:w-16 bg-gradient-to-r ${
                   index === 0
                     ? "from-pink-500 to-purple-600"
                     : index === 1
