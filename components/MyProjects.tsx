@@ -314,17 +314,18 @@ const MyProjects: React.FC = () => {
       </div>
 
       {/* Custom pagination (1-10 with arrows) */}
-      <div className="mobile-pagination mt-6 flex items-center justify-center gap-4">
+      <div className="mobile-pagination mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-4">
         <button
           onClick={handlePrevSet}
           aria-label="Previous"
-          className="h-11 min-w-11 rounded-full px-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg shadow-pink-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none"
+          className="h-10 w-10 sm:h-11 sm:min-w-11 sm:w-auto sm:px-4 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg shadow-pink-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
           disabled={currentPageSet === 0}
         >
-          Prev
+          <span className="sm:hidden text-lg leading-none">&lt;</span>
+          <span className="hidden sm:inline">Prev</span>
         </button>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {visibleNumbers.map((_, idx) => {
             const slideIndex = currentPageSet * buttonsPerSet + idx;
             const isActive = slideIndex === activeIndex;
@@ -332,7 +333,7 @@ const MyProjects: React.FC = () => {
               <button
                 key={slideIndex}
                 onClick={() => goTo(slideIndex)}
-                className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all border ${
+                className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold transition-all border ${
                   isActive
                     ? "bg-gradient-to-r from-pink-500 to-rose-500 text-white border-pink-400 scale-110 shadow-lg shadow-pink-500/35"
                     : "bg-white/70 text-gray-800 border-white hover:bg-white hover:-translate-y-0.5"
@@ -352,10 +353,11 @@ const MyProjects: React.FC = () => {
         <button
           onClick={handleNextSet}
           aria-label="Next"
-          className="h-11 min-w-11 rounded-full px-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg shadow-pink-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none"
+          className="h-10 w-10 sm:h-11 sm:min-w-11 sm:w-auto sm:px-4 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg shadow-pink-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
           disabled={currentPageSet === totalSets - 1}
         >
-          Next
+          <span className="sm:hidden text-lg leading-none">&gt;</span>
+          <span className="hidden sm:inline">Next</span>
         </button>
       </div>
 
