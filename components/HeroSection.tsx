@@ -42,16 +42,25 @@ const HeroSection: React.FC = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5, duration: 1 }}
         >
-          <div className="relative h-[min(64vw,16rem)] w-[min(64vw,16rem)] overflow-hidden rounded-2xl border-4 border-white/30 shadow-[0_10px_30px_rgba(0,0,0,0.6)] sm:h-[24rem] sm:w-[24rem] md:h-[27rem] md:w-[27rem] lg:h-[29rem] lg:w-[29rem]">
-            <Image
-              src={profileImage}
-              alt="Qamrul Hassan"
-              className="object-cover"
-              fill
-              priority
-              sizes="(min-width: 1024px) 464px, (min-width: 768px) 432px, (min-width: 640px) 384px, 64vw"
-            />
-          </div>
+          <motion.div
+            className="relative h-[min(64vw,16rem)] w-[min(64vw,16rem)] sm:h-[24rem] sm:w-[24rem] md:h-[27rem] md:w-[27rem] lg:h-[29rem] lg:w-[29rem]"
+            whileHover={{ y: -4 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+          >
+            <span className="absolute -inset-4 rounded-[2rem] bg-pink-500/20 blur-2xl opacity-60" />
+            <span className="absolute -inset-2 rounded-[1.7rem] border border-white/20 bg-white/5 backdrop-blur-[1px]" />
+            <div className="relative h-full w-full overflow-hidden rounded-2xl border-4 border-white/30 shadow-[0_14px_36px_rgba(0,0,0,0.5)]">
+              <Image
+                src={profileImage}
+                alt="Qamrul Hassan"
+                className="object-cover"
+                fill
+                priority
+                sizes="(min-width: 1024px) 464px, (min-width: 768px) 432px, (min-width: 640px) 384px, 64vw"
+              />
+              <span className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/10" />
+            </div>
+          </motion.div>
         </motion.div>
 
         {/* Text Section */}
