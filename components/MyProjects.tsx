@@ -40,6 +40,54 @@ const projects = [
     image: "/Job-board.jpg",
   },
   {
+    title: "Dictionary",
+    description:
+      "Discover word meanings, pronunciations, and examples instantly with our sleek and responsive Dictionary App. Built with Next.js and Tailwind CSS for a fast and seamless experience.",
+    link: "https://dictionary-app-nine-ruby.vercel.app/",
+    tech: "Next.js, Tailwind CSS",
+    image: "/Dictionary.jpg",
+  },
+  {
+    title: "Movie Hub",
+    description:
+      "A responsive movie discovery app to browse trending films, search titles, and explore detailed movie information with a clean UI.",
+    link: "#",
+    tech: "Next.js, TypeScript, Tailwind CSS, API integration",
+    image: "/Movie-Hub.jpg",
+  },
+  {
+    title: "Weather App",
+    description:
+      "A dynamic Weather App powered by Next.js, Zustand for state management, and Framer Motion for smooth, interactive animations, delivering real-time weather updates.",
+    link: "https://weather-app-zeta-seven-71.vercel.app/",
+    tech: "React, Tailwind CSS, API",
+    image: "/Weather.jpg",
+  },
+  {
+    title: "Flash News",
+    description:
+      "Get real-time news updates with this sleek app built with Next.js, Tailwind CSS, and Zustand. Featuring live API news fetching, smooth animations via Framer Motion, and responsive design for a seamless browsing experience",
+    link: "https://flash-news-app.vercel.app/",
+    tech: "Next.js, Tailwind CSS, Framer Motion, Swiper, responsive design",
+    image: "/News.jpg",
+  },
+  {
+    title: "Recipe Finder",
+    description:
+      "A dynamic and responsive web app that lets users discover meals ðŸ½ and cocktails ðŸ¹ in real-time. Built with Next.js, Tailwind CSS, and TypeScript, it fetches live data from public APIs, displays smooth animations using Framer Motion, and adapts seamlessly across devices. Ideal for exploring, saving, and planning recipes with a modern, user-friendly interface.",
+    link: "https://recipe-finder-theta-five.vercel.app/",
+    tech: "Next.js, Tailwind CSS, Framer Motion, TypeScript, responsive design",
+    image: "/Recipe-Finder.jpg",
+  },
+  {
+    title: "E-Commerce Website - Hektto",
+    description:
+      "A modern e-commerce platform built with React and Tailwind CSS, featuring seamless payment integration and a responsive design.",
+    link: "https://hektto.vercel.app/",
+    tech: "React, Tailwind CSS, Firebase",
+    image: "/hektto.jpg",
+  },
+  {
     title: "Small E-Commerce Landing Page",
     description:
       "A compact, conversion-focused e-commerce landing page built with HTML and CSS.",
@@ -62,14 +110,6 @@ const projects = [
     link: "https://agri-culture-template.vercel.app/",
     tech: "HTML, CSS, Bootstrap",
     image: "/Agriculture.jpg",
-  },
-  {
-    title: "E-Commerce Website - Hektto",
-    description:
-      "A modern e-commerce platform built with React and Tailwind CSS, featuring seamless payment integration and a responsive design.",
-    link: "https://hektto.vercel.app/",
-    tech: "React, Tailwind CSS, Firebase",
-    image: "/hektto.jpg",
   },
   {
     title: "Woddy Page",
@@ -110,38 +150,6 @@ const projects = [
     link: "#",
     tech: "React, Tailwind CSS",
     image: "/Consult.jpg",
-  },
-  {
-    title: "Dictionary",
-    description:
-      "Discover word meanings, pronunciations, and examples instantly with our sleek and responsive Dictionary App. Built with Next.js and Tailwind CSS for a fast and seamless experience.",
-    link: "https://dictionary-app-nine-ruby.vercel.app/",
-    tech: "Next.js, Tailwind CSS",
-    image: "/Dictionary.jpg",
-  },
-  {
-    title: "Weather App",
-    description:
-      "A dynamic Weather App powered by Next.js, Zustand for state management, and Framer Motion for smooth, interactive animations, delivering real-time weather updates.",
-    link: "https://weather-app-zeta-seven-71.vercel.app/",
-    tech: "React, Tailwind CSS, API",
-    image: "/Weather.jpg",
-  },
-  {
-    title: "Flash News",
-    description:
-      "Get real-time news updates with this sleek app built with Next.js, Tailwind CSS, and Zustand. Featuring live API news fetching, smooth animations via Framer Motion, and responsive design for a seamless browsing experience",
-    link: "https://flash-news-app.vercel.app/",
-    tech: "Next.js, Tailwind CSS, Framer Motion, Swiper, responsive design",
-    image: "/News.jpg",
-  },
-  {
-    title: "Recipe Finder",
-    description:
-      "A dynamic and responsive web app that lets users discover meals 🍽 and cocktails 🍹 in real-time. Built with Next.js, Tailwind CSS, and TypeScript, it fetches live data from public APIs, displays smooth animations using Framer Motion, and adapts seamlessly across devices. Ideal for exploring, saving, and planning recipes with a modern, user-friendly interface.",
-    link: "https://recipe-finder-theta-five.vercel.app/",
-    tech: "Next.js, Tailwind CSS, Framer Motion, TypeScript, responsive design",
-    image: "/Recipe-Finder.jpg",
   },
 ];
 
@@ -367,3 +375,4 @@ const MyProjects: React.FC = () => {
 };
 
 export default MyProjects;
+
