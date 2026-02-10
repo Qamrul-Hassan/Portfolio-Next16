@@ -91,9 +91,23 @@ const Contact = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2 }}
       >
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+        <motion.span
+          className="inline-block mb-2 px-3 py-1 rounded-full text-xs font-bold tracking-[0.2em] uppercase text-pink-600 bg-pink-100/70 border border-pink-200"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          Let's Connect
+        </motion.span>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-3">
           <span className="text-pink-500">Get</span> <span className="text-gray-800">In Touch</span>
         </h2>
+        <motion.div
+          className="h-1 w-28 mx-auto rounded-full bg-gradient-to-r from-pink-500 via-rose-400 to-orange-300 mb-4"
+          initial={{ width: 0, opacity: 0 }}
+          animate={{ width: 112, opacity: 1 }}
+          transition={{ duration: 0.7 }}
+        />
         <motion.p
           className="text-base sm:text-lg md:text-2xl text-gray-800"
           initial={{ opacity: 0 }}
@@ -104,11 +118,12 @@ const Contact = () => {
         </motion.p>
       </motion.div>
 
-      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-start justify-center bg-[#434343] py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8 rounded-lg shadow-lg gap-6 lg:gap-8">
+      <div className="relative w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-start justify-center bg-gradient-to-br from-[#3e3e3e] via-[#454545] to-[#303030] py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8 rounded-2xl shadow-xl border border-white/10 gap-6 lg:gap-8 overflow-hidden">
+        <span className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,rgba(244,114,182,0.18),transparent_40%)]" />
         {/* LEFT: Form */}
         <motion.form
           onSubmit={handleSubmit}
-          className="w-full lg:w-2/5 bg-[#b5b5b5] p-4 sm:p-6 md:p-8 rounded-lg shadow-xl flex flex-col gap-4"
+          className="relative z-10 w-full lg:w-2/5 bg-gradient-to-br from-[#c1c1c1] via-[#b9b9b9] to-[#aeaeae] p-4 sm:p-6 md:p-8 rounded-2xl shadow-xl border border-white/40 flex flex-col gap-4"
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1.5 }}
@@ -237,7 +252,7 @@ const Contact = () => {
 
         {/* RIGHT: Image with Icons */}
         <motion.div
-          className="relative w-full lg:w-3/5 flex justify-center items-center"
+          className="relative z-10 w-full lg:w-3/5 flex justify-center items-center"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1.5 }}
@@ -245,7 +260,7 @@ const Contact = () => {
           <Image 
             src={ContactImage} 
             alt="Contact Us" 
-            className="rounded-lg shadow-lg object-cover w-full h-[400px] sm:h-[480px] md:h-[520px] lg:h-[498px]" 
+            className="rounded-2xl shadow-xl border border-white/10 object-cover w-full h-[400px] sm:h-[480px] md:h-[520px] lg:h-[498px]" 
             loading="lazy"
           />
           <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-4 sm:space-x-6 md:space-x-8">
@@ -253,12 +268,12 @@ const Contact = () => {
               <motion.div
                 key={index}
                 onClick={onClick}
-                className="cursor-pointer"
+                className="cursor-pointer w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/10 border border-white/25 backdrop-blur-md flex items-center justify-center shadow-lg"
                 variants={iconVariants}
                 initial="hidden"
                 animate="visible"
                 transition={{ delay: index * 0.5, repeat: Infinity, repeatType: "reverse", duration: 1.5 }}
-                whileHover={{ scale: 1.2 }}
+                whileHover={{ scale: 1.15, y: -2, backgroundColor: "rgba(244, 114, 182, 0.28)" }}
               >
                 <Icon size={24} className="sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" />
               </motion.div>

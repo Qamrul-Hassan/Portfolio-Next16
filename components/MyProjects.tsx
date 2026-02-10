@@ -214,8 +214,16 @@ const MyProjects: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2 }}
       >
+        <motion.span
+          className="inline-block mb-2 px-3 py-1 rounded-full text-xs font-bold tracking-[0.2em] uppercase text-pink-600 bg-pink-100/70 border border-pink-200"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          Portfolio Work
+        </motion.span>
         <motion.h2
-          className="text-4xl md:text-5xl font-bold mb-10"
+          className="text-4xl md:text-5xl font-extrabold mb-3"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2 }}
@@ -223,6 +231,12 @@ const MyProjects: React.FC = () => {
           <span className="text-pink-500">My</span>{" "}
           <span className="text-gray-800">Projects</span>
         </motion.h2>
+        <motion.div
+          className="h-1 w-28 mx-auto rounded-full bg-gradient-to-r from-pink-500 via-rose-400 to-orange-300 mb-10"
+          initial={{ width: 0, opacity: 0 }}
+          animate={{ width: 112, opacity: 1 }}
+          transition={{ duration: 0.7 }}
+        />
         <p className="text-xl mt-4 max-w-2xl mx-auto px-4 py-2 text-gray-800 text-center md:text-2xl">
           I'm a passionate Frontend Developer with expertise in modern web technologies.
         </p>
@@ -304,10 +318,10 @@ const MyProjects: React.FC = () => {
         <button
           onClick={handlePrevSet}
           aria-label="Previous"
-          className="px-3 py-1 text-white hover:text-pink-400 transition text-2xl"
+          className="h-11 min-w-11 rounded-full px-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg shadow-pink-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none"
           disabled={currentPageSet === 0}
         >
-          &lt;
+          Prev
         </button>
 
         <div className="flex items-center gap-2">
@@ -318,12 +332,15 @@ const MyProjects: React.FC = () => {
               <button
                 key={slideIndex}
                 onClick={() => goTo(slideIndex)}
-                className="w-10 h-10 flex items-center justify-center text-sm font-bold text-white transition"
+                className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all border ${
+                  isActive
+                    ? "bg-gradient-to-r from-pink-500 to-rose-500 text-white border-pink-400 scale-110 shadow-lg shadow-pink-500/35"
+                    : "bg-white/70 text-gray-800 border-white hover:bg-white hover:-translate-y-0.5"
+                }`}
                 style={{
-                  background: isActive ? "#ff4d6d" : "#ff6f91",
-                  border: "2px solid #ff4d6d",
                   clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-                  WebkitClipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                  WebkitClipPath:
+                    "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
                 }}
               >
                 {slideIndex + 1}
@@ -335,10 +352,10 @@ const MyProjects: React.FC = () => {
         <button
           onClick={handleNextSet}
           aria-label="Next"
-          className="px-3 py-1 text-white hover:text-pink-400 transition text-2xl"
+          className="h-11 min-w-11 rounded-full px-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg shadow-pink-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none"
           disabled={currentPageSet === totalSets - 1}
         >
-          &gt;
+          Next
         </button>
       </div>
 

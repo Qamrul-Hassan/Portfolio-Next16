@@ -9,6 +9,7 @@ import {
   FaGithub,
   FaBootstrap,
   FaEnvelope,
+  FaDownload,
 } from "react-icons/fa";
 import {
   SiNextdotjs,
@@ -54,9 +55,23 @@ const AboutMe = () => {
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
+          <motion.span
+            className="inline-block mb-2 px-3 py-1 rounded-full text-xs font-bold tracking-[0.2em] uppercase text-pink-600 bg-pink-100/70 border border-pink-200"
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            Profile
+          </motion.span>
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-3 text-gray-800">
             About <span className="text-pink-500">Me</span>
           </h2>
+          <motion.div
+            className="h-1 w-28 mx-auto lg:mx-0 rounded-full bg-gradient-to-r from-pink-500 via-rose-400 to-orange-300 mb-6"
+            initial={{ width: 0, opacity: 0 }}
+            whileInView={{ width: 112, opacity: 1 }}
+            transition={{ duration: 0.7 }}
+          />
           <p className="text-lg leading-relaxed mb-6 text-gray-800">
             I am{" "}
             <span className="text-pink-500 font-semibold">Qamrul Hassan</span>, a
@@ -79,12 +94,19 @@ const AboutMe = () => {
           <motion.a
             href="/CV Front-End Web Development 28-01-2026.pdf"
             download="Qamrul_Hassan_Resume.pdf"
-            className="inline-block px-8 py-3 bg-pink-500 text-white font-semibold rounded shadow hover:bg-pink-600 transition duration-300"
+            className="relative inline-flex items-center gap-2 px-8 py-3 text-white font-semibold rounded-xl overflow-visible border border-pink-300/60 bg-gradient-to-r from-pink-500 to-rose-500 shadow-lg shadow-pink-500/30 transition duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.8 }}
+            whileTap={{ scale: 0.97 }}
           >
-            Download Resume
+            <motion.span
+              className="absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.35),transparent_55%)]"
+              animate={{ x: ["-120%", "120%"] }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
+            />
+            <FaDownload className="relative z-10" />
+            <span className="relative z-10">Download Resume</span>
           </motion.a>
         </motion.div>
         <motion.div
@@ -94,15 +116,20 @@ const AboutMe = () => {
           transition={{ duration: 0.8 }}
         >
           {skills.map(({ Icon, label, color }, index) => (
-            <div
+            <motion.div
               key={index}
-              className="flex items-center gap-3 bg-gray-800 px-4 py-3 rounded shadow-md text-white min-h-[52px] min-w-0"
+              className="group relative overflow-hidden flex items-center gap-3 px-4 py-3 rounded-xl border border-white/10 text-white min-h-[52px] min-w-0 bg-gradient-to-br from-[#2c2c2c] via-[#343434] to-[#242424] shadow-md"
+              whileHover={{ y: -4, scale: 1.02 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
             >
-              <Icon className={`${color} flex-shrink-0`} size={24} />
+              <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_top_right,rgba(244,114,182,0.25),transparent_45%)]" />
+              <div className="relative z-10 h-9 w-9 rounded-lg bg-white/10 flex items-center justify-center ring-1 ring-white/15 group-hover:bg-white/15 transition">
+                <Icon className={`${color} flex-shrink-0`} size={20} />
+              </div>
               <span className="text-sm sm:text-base leading-tight break-words whitespace-normal min-w-0 max-w-full">
                 {label}
               </span>
-            </div>
+            </motion.div>
           ))}
         </motion.div>
       </div>
