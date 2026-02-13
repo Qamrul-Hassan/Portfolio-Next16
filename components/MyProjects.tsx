@@ -6,7 +6,17 @@ import "swiper/css";
 import "swiper/css/effect-coverflow";
 import { Navigation, Pagination, Autoplay, EffectCoverflow } from "swiper/modules";
 
-const projects = [
+type Project = {
+  title: string;
+  description: string;
+  link: string;
+  tech: string;
+  image: string;
+  featured?: boolean;
+  outcome?: string;
+};
+
+const projects: Project[] = [
   {
     title: "Chess Board",
     description:
@@ -18,18 +28,22 @@ const projects = [
   {
     title: "Ethereum Explorer",
     description:
-      "A feature-rich crypto explorer with wallet balances, transactions, NFTs, and live prices powered by Alchemy, Etherscan, and CoinGecko APIs with server-side proxies.",
+      "Built with Next.js, shadcn/ui, and Axios, this feature-rich crypto explorer shows wallet balances, transactions, NFTs, and live prices using Alchemy, Etherscan, and CoinGecko APIs with server-side proxies.",
     link: "https://ethereum-explorer-sepia.vercel.app/",
     tech: "Next.js, TypeScript, Tailwind CSS, shadcn/ui, Axios, Alchemy API, Etherscan API, CoinGecko API",
     image: "/etherium-explorer.jpg",
+    featured: true,
+    outcome: "Built with shadcn/ui and Axios to aggregate balances, transfers, NFTs, and live pricing in one dashboard.",
   },
   {
     title: "Countries Dashboard",
     description:
-      "A modern dashboard for searching, filtering, and sorting countries with SSR + CSR architecture and accessible UI components.",
+      "A modern countries dashboard built with Next.js 16, React 19, Axios, Radix Slot, CVA, and Tailwind CSS v4 for fast searching, filtering, sorting, and accessible UI patterns.",
     link: "https://countries-dashboard-gamma.vercel.app/",
-    tech: "Next.js (App Router), TypeScript, REST Countries API",
+    tech: "Next.js 16.1.6, React 19.2.3, TypeScript 5, Axios, @radix-ui/react-slot, class-variance-authority, clsx, lucide-react, tailwind-merge, Tailwind CSS v4, tw-animate-css",
     image: "/countries-dashboard.jpg",
+    featured: true,
+    outcome: "Delivers fast country search/filter UX with a typed, reusable component architecture.",
   },
   {
     title: "Job Board",
@@ -38,6 +52,8 @@ const projects = [
     link: "https://job-board-liart-two.vercel.app/",
     tech: "Next.js (App Router), React, TypeScript, Tailwind CSS, shadcn/ui, Axios",
     image: "/Job-board.jpg",
+    featured: true,
+    outcome: "Search-driven job discovery flow with responsive, accessible UI patterns.",
   },
   {
     title: "Dictionary",
@@ -58,7 +74,7 @@ const projects = [
   {
     title: "Weather App",
     description:
-      "A dynamic Weather App powered by Next.js, Zustand for state management, and Framer Motion for smooth, interactive animations, delivering real-time weather updates.",
+      "A dynamic weather app powered by Next.js, Zustand for state management, and Framer Motion for smooth, interactive animations, delivering real-time weather updates.",
     link: "https://weather-app-zeta-seven-71.vercel.app/",
     tech: "React, Tailwind CSS, API",
     image: "/Weather.jpg",
@@ -66,7 +82,7 @@ const projects = [
   {
     title: "Flash News",
     description:
-      "Get real-time news updates with this sleek app built with Next.js, Tailwind CSS, and Zustand. Featuring live API news fetching, smooth animations via Framer Motion, and responsive design for a seamless browsing experience",
+      "Get real-time news updates with this sleek app built with Next.js, Tailwind CSS, and Zustand. It features live API news fetching, smooth animations via Framer Motion, and responsive design for seamless browsing.",
     link: "https://flash-news-app.vercel.app/",
     tech: "Next.js, Tailwind CSS, Framer Motion, Swiper, responsive design",
     image: "/News.jpg",
@@ -74,7 +90,7 @@ const projects = [
   {
     title: "Recipe Finder",
     description:
-      "A dynamic and responsive web app that lets users discover meals ðŸ½ and cocktails ðŸ¹ in real-time. Built with Next.js, Tailwind CSS, and TypeScript, it fetches live data from public APIs, displays smooth animations using Framer Motion, and adapts seamlessly across devices. Ideal for exploring, saving, and planning recipes with a modern, user-friendly interface.",
+      "A dynamic and responsive web app that helps users discover meals and cocktails in real-time. Built with Next.js, Tailwind CSS, and TypeScript, it fetches live data from public APIs and adapts cleanly across devices.",
     link: "https://recipe-finder-theta-five.vercel.app/",
     tech: "Next.js, Tailwind CSS, Framer Motion, TypeScript, responsive design",
     image: "/Recipe-Finder.jpg",
@@ -153,7 +169,7 @@ const projects = [
   },
 ];
 
-const getSlides = (projectsList: typeof projects, slidesPerView: number) => {
+const getSlides = (projectsList: Project[], slidesPerView: number) => {
   return projectsList.length < slidesPerView * 2
     ? [...projectsList, ...projectsList]
     : projectsList;
@@ -162,7 +178,6 @@ const getSlides = (projectsList: typeof projects, slidesPerView: number) => {
 const MyProjects: React.FC = () => {
   const [swiperInstance, setSwiperInstance] = useState<any | null>(null);
 
-  // Pagination state (responsive counts)
   const [buttonsPerSet, setButtonsPerSet] = useState(5);
   const [currentPageSet, setCurrentPageSet] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -206,10 +221,49 @@ const MyProjects: React.FC = () => {
     currentPageSet * buttonsPerSet + buttonsPerSet
   );
 
+  const featuredProjects = projects.filter((project) => project.featured).slice(0, 3);
+  const getFeaturedCardRadius = (index: number) => {
+    if (index === 0) return "md:rounded-l-full md:rounded-r-none";
+    if (index === 1) return "md:rounded-none";
+    return "md:rounded-r-full md:rounded-l-none";
+  };
+  const getFeaturedTextAlign = (index: number) => {
+    if (index === 0) return "md:text-right";
+    if (index === 1) return "md:text-center";
+    return "text-left";
+  };
+
   return (
-    <section id="projects" className="bg-[#CECECE] py-20 px-6 lg:px-16 text-gray-900">
+    <section
+      id="projects"
+      className="relative overflow-hidden py-20 px-6 lg:px-16 text-gray-900"
+      style={{
+        backgroundImage:
+          "linear-gradient(140deg, rgba(236,236,242,0.9) 0%, rgba(232,232,238,0.86) 45%, rgba(247,220,234,0.72) 100%), url('/banner.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="pointer-events-none absolute inset-0">
+        <span className="absolute top-8 right-10 hidden h-24 w-60 rotate-6 rounded-2xl border border-pink-300/35 bg-pink-300/10 lg:block" />
+        <span className="absolute bottom-10 left-10 hidden h-36 w-36 -rotate-12 rounded-3xl border border-fuchsia-300/30 bg-fuchsia-300/10 lg:block" />
+        <span
+          className="absolute top-16 left-[7%] hidden h-44 w-44 border border-pink-300/35 bg-gradient-to-br from-pink-300/30 to-fuchsia-400/20 lg:block"
+          style={{
+            clipPath:
+              "polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%)",
+          }}
+        />
+        <span
+          className="absolute bottom-14 right-[10%] hidden h-56 w-56 border border-fuchsia-300/35 bg-gradient-to-br from-fuchsia-300/25 to-pink-500/20 lg:block"
+          style={{
+            clipPath:
+              "polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%)",
+          }}
+        />
+      </div>
       <motion.div
-        className="text-center mb-12 max-w-7xl mx-auto"
+        className="relative z-10 text-center mb-12 max-w-7xl mx-auto"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2 }}
@@ -238,11 +292,38 @@ const MyProjects: React.FC = () => {
           transition={{ duration: 0.7 }}
         />
         <p className="text-xl mt-4 max-w-2xl mx-auto px-4 py-2 text-gray-800 text-center md:text-2xl">
-          I'm a passionate Frontend Developer with expertise in modern web technologies.
+          I am a passionate Frontend Developer with expertise in modern web technologies.
         </p>
       </motion.div>
 
-      <div className="w-full max-w-7xl mx-auto">
+      <div className="relative z-10 w-full max-w-7xl mx-auto mb-10 grid grid-cols-1 md:grid-cols-3 gap-5">
+        {featuredProjects.map((project, index) => (
+          <div
+            key={project.title}
+            className={`group relative overflow-hidden rounded-lg ${getFeaturedCardRadius(
+              index
+            )} ${getFeaturedTextAlign(
+              index
+            )} border border-fuchsia-300/40 bg-[linear-gradient(155deg,#180f1c_0%,#2a1430_56%,#14101a_100%)] p-5 shadow-[0_16px_35px_rgba(0,0,0,0.35)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_46px_rgba(217,70,239,0.28)]`}
+          >
+            <span className="absolute -top-8 -right-8 h-24 w-24 rounded-2xl rotate-12 bg-fuchsia-400/20 blur-2xl" />
+            <span className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-transparent via-pink-300/70 to-transparent" />
+            <p className="relative text-xs font-semibold uppercase tracking-[0.15em] text-pink-200 mb-2">
+              Featured
+            </p>
+            <h3 className="relative text-xl font-extrabold text-white mb-2">{project.title}</h3>
+            <p className="relative text-sm text-gray-50 mb-3">{project.description}</p>
+            <p className="relative text-sm text-gray-50 mb-2">
+              <span className="font-semibold text-pink-200">Stack:</span> {project.tech}
+            </p>
+            <p className="relative text-sm text-white font-medium">
+              Result: <span className="font-normal">{project.outcome}</span>
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div className="relative z-10 w-full max-w-7xl mx-auto">
         <Swiper
           modules={[Navigation, Pagination, Autoplay, EffectCoverflow]}
           spaceBetween={30}
@@ -276,45 +357,100 @@ const MyProjects: React.FC = () => {
         >
           {getSlides(projects, 2.3).map((project, index) => (
             <SwiperSlide key={index} className="h-full">
-              <motion.a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-[#434343] rounded-xl overflow-hidden shadow-xl transform transition-all hover:scale-105 hover:shadow-2xl h-full flex flex-col"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.95 }}
-                initial={{ opacity: 0, scale: 0.8, y: 50 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ duration: 1.2, delay: index * 0.03 }}
-                onMouseEnter={() => swiperInstance?.autoplay?.stop()}
-                onMouseLeave={() => swiperInstance?.autoplay?.start()}
-              >
-                <motion.img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full aspect-4/3 object-cover object-center rounded-xl shadow-md"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.5 }}
-                />
-                <div className="p-4 sm:p-5 md:p-6 flex-1">
-                  <h3 className="text-xl sm:text-2xl font-bold text-pink-500 mb-2">
-                    {project.title}
-                  </h3>
-                  <p className="text-gray-100 mb-2 text-sm sm:text-base min-h-[72px]">
-                    {project.description}
-                  </p>
-                  <p className="text-gray-200 text-xs sm:text-sm">
-                    Tech: {project.tech}
-                  </p>
+              {project.link === "#" ? (
+                <div className="group relative rounded-2xl overflow-hidden border border-fuchsia-300/35 bg-[linear-gradient(160deg,#1b1320_0%,#26152f_58%,#120d18_100%)] shadow-xl h-full flex flex-col opacity-95 transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(217,70,239,0.3)]">
+                  <div className="relative overflow-hidden">
+                    <motion.img
+                      src={project.image}
+                      alt={`${project.title} preview image`}
+                      className="w-full aspect-4/3 object-cover object-center rounded-xl shadow-md"
+                      loading="lazy"
+                      decoding="async"
+                      whileHover={{ scale: 1.04 }}
+                      transition={{ duration: 0.5 }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+                    <div className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-black/60 border border-fuchsia-300/45 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-pink-100">
+                      Project Preview
+                    </div>
+                  </div>
+                  <div className="p-4 sm:p-5 md:p-6 flex-1">
+                    <div className="inline-block text-[10px] uppercase tracking-wide bg-amber-300 text-gray-900 px-2 py-1 rounded-full mb-2 font-semibold">
+                      Demo Coming Soon
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-bold text-pink-300 mb-2">
+                      {project.title}
+                    </h3>
+                    <p className="text-gray-50 mb-2 text-sm sm:text-base min-h-[72px]">
+                      {project.description}
+                    </p>
+                    <p className="text-gray-100 text-xs sm:text-sm">
+                      Tech: {project.tech}
+                    </p>
+                    {project.title === "Ethereum Explorer" && (
+                      <p className="mt-2 text-xs sm:text-sm font-semibold text-pink-200">
+                        Built with shadcn/ui and Axios.
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </motion.a>
+              ) : (
+                <motion.a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Open live demo for ${project.title}`}
+                  className="group relative rounded-2xl overflow-hidden border border-fuchsia-300/35 bg-[linear-gradient(160deg,#1f1525_0%,#2d1735_58%,#150f1d_100%)] shadow-xl transform transition-all hover:scale-[1.02] hover:-translate-y-1 hover:shadow-[0_22px_52px_rgba(217,70,239,0.32)] h-full flex flex-col"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, scale: 0.8, y: 50 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 1.2, delay: index * 0.03 }}
+                  onMouseEnter={() => swiperInstance?.autoplay?.stop()}
+                  onMouseLeave={() => swiperInstance?.autoplay?.start()}
+                >
+                  <div className="relative overflow-hidden">
+                    <motion.img
+                      src={project.image}
+                      alt={`${project.title} preview image`}
+                      className="w-full aspect-4/3 object-cover object-center rounded-xl shadow-md"
+                      loading="lazy"
+                      decoding="async"
+                      whileHover={{ scale: 1.06 }}
+                      transition={{ duration: 0.5 }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+                    <div className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-black/60 border border-fuchsia-300/45 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-pink-100">
+                      Live Demo
+                    </div>
+                  </div>
+                  <div className="p-4 sm:p-5 md:p-6 flex-1">
+                    <h3 className="text-xl sm:text-2xl font-bold text-pink-300 mb-2">
+                      {project.title}
+                    </h3>
+                    <p className="text-gray-50 mb-2 text-sm sm:text-base min-h-[72px]">
+                      {project.description}
+                    </p>
+                    <p className="text-gray-100 text-xs sm:text-sm">
+                      Tech: {project.tech}
+                    </p>
+                    {project.title === "Ethereum Explorer" && (
+                      <p className="mt-2 text-xs sm:text-sm font-semibold text-pink-200">
+                        Built with shadcn/ui and Axios.
+                      </p>
+                    )}
+                    <span className="mt-3 inline-flex items-center rounded-full border border-fuchsia-300/45 bg-fuchsia-500/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-pink-100">
+                      View Project
+                    </span>
+                  </div>
+                </motion.a>
+              )}
             </SwiperSlide>
           ))}
         </Swiper>
       </div>
 
-      {/* Custom pagination (1-10 with arrows) */}
-      <div className="mobile-pagination mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-4">
+      <div className="relative z-10 mobile-pagination mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-4">
         <button
           onClick={handlePrevSet}
           aria-label="Previous"
@@ -333,6 +469,7 @@ const MyProjects: React.FC = () => {
               <button
                 key={slideIndex}
                 onClick={() => goTo(slideIndex)}
+                aria-label={`Go to project ${slideIndex + 1}`}
                 className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold transition-all border ${
                   isActive
                     ? "bg-gradient-to-r from-pink-500 to-rose-500 text-white border-pink-400 scale-110 shadow-lg shadow-pink-500/35"
@@ -385,7 +522,7 @@ const MyProjects: React.FC = () => {
             filter: grayscale(0);
           }
           .projectsSwiper .swiper-slide-active a {
-            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 20px 48px rgba(217, 70, 239, 0.28);
           }
         `}
       </style>
@@ -394,4 +531,3 @@ const MyProjects: React.FC = () => {
 };
 
 export default MyProjects;
-

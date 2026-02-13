@@ -30,6 +30,7 @@ const Contact = () => {
   };
 
   const handleCaptcha = (token: string | null) => setCaptchaToken(token);
+  const handleCaptchaExpired = () => setCaptchaToken(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -123,22 +124,22 @@ const Contact = () => {
         {/* LEFT: Form */}
         <motion.form
           onSubmit={handleSubmit}
-          className="relative z-10 w-full lg:w-2/5 bg-gradient-to-br from-[#c1c1c1] via-[#b9b9b9] to-[#aeaeae] p-4 sm:p-6 md:p-8 rounded-2xl shadow-xl border border-white/40 flex flex-col gap-4"
+          className="relative z-10 w-full lg:w-2/5 bg-gradient-to-br from-[#c1c1c1] via-[#b9b9b9] to-[#aeaeae] p-4 sm:p-6 md:p-8 rounded-2xl lg:rounded-l-[64px] lg:rounded-r-none shadow-xl border border-white/40 flex flex-col gap-4 text-left lg:text-right"
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1.5 }}
         >
           <div>
             <label htmlFor="name" className={`block text-base sm:text-lg font-semibold ${formData.name ? "text-pink-500" : "text-gray-700"}`}>Your Name</label>
-            <input type="text" name="name" id="name" autoComplete="name" value={formData.name} onChange={handleChange} className="w-full p-2 sm:p-3 mt-1 sm:mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300 text-sm sm:text-base" placeholder="Enter your full name" />
+            <input type="text" name="name" id="name" autoComplete="name" value={formData.name} onChange={handleChange} className="w-full p-2 sm:p-3 mt-1 sm:mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300 text-sm sm:text-base text-left lg:text-right placeholder:text-left lg:placeholder:text-right" placeholder="Enter your full name" />
           </div>
           <div>
             <label htmlFor="email" className={`block text-base sm:text-lg font-semibold ${formData.email ? "text-pink-500" : "text-gray-700"}`}>Your Email</label>
-            <input type="email" name="email" id="email" autoComplete="email" value={formData.email} onChange={handleChange} className="w-full p-2 sm:p-3 mt-1 sm:mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300 text-sm sm:text-base" placeholder="Enter your email" />
+            <input type="email" name="email" id="email" autoComplete="email" value={formData.email} onChange={handleChange} className="w-full p-2 sm:p-3 mt-1 sm:mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300 text-sm sm:text-base text-left lg:text-right placeholder:text-left lg:placeholder:text-right" placeholder="Enter your email" />
           </div>
           <div>
             <label htmlFor="message" className={`block text-base sm:text-lg font-semibold ${formData.message ? "text-pink-500" : "text-gray-700"}`}>Your Message</label>
-            <textarea name="message" id="message" autoComplete="off" rows={4} value={formData.message} onChange={handleChange} className="w-full p-2 sm:p-3 mt-1 sm:mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300 text-sm sm:text-base" placeholder="Write your message here"></textarea>
+            <textarea name="message" id="message" autoComplete="off" rows={4} value={formData.message} onChange={handleChange} className="w-full p-2 sm:p-3 mt-1 sm:mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300 text-sm sm:text-base text-left lg:text-right placeholder:text-left lg:placeholder:text-right" placeholder="Write your message here"></textarea>
           </div>
 
           {/* reCAPTCHA */}
@@ -149,6 +150,7 @@ const Contact = () => {
                   ref={recaptchaRef}
                   sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
                   onChange={handleCaptcha}
+                  onExpired={handleCaptchaExpired}
                   size={isMobile ? "compact" : "normal"}
                 />
               </div>
@@ -260,7 +262,7 @@ const Contact = () => {
           <Image 
             src={ContactImage} 
             alt="Contact Us" 
-            className="rounded-2xl shadow-xl border border-white/10 object-cover w-full h-[400px] sm:h-[480px] md:h-[520px] lg:h-[498px]" 
+            className="rounded-2xl lg:rounded-r-[64px] lg:rounded-l-none shadow-xl border border-white/10 object-cover w-full h-[280px] sm:h-[420px] md:h-[520px] lg:h-[498px]" 
             loading="lazy"
           />
           <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-4 sm:space-x-6 md:space-x-8">

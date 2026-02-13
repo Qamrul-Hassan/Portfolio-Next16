@@ -47,7 +47,32 @@ const AboutMe = () => {
   ];
 
   return (
-    <section className="py-16 px-6 lg:px-16 text-gray-900 bg-gray-200" id="about">
+    <section
+      className="relative overflow-hidden py-16 px-6 lg:px-16 text-gray-900"
+      id="about"
+      style={{
+        backgroundImage:
+          "linear-gradient(120deg, rgba(229,231,235,0.92) 0%, rgba(243,244,246,0.88) 45%, rgba(251,207,232,0.56) 100%), url('/bg-1.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "right center",
+      }}
+    >
+      <div className="pointer-events-none absolute inset-0">
+        <motion.span
+          className="absolute -top-12 right-8 hidden h-44 w-44 rotate-12 rounded-3xl border border-white/35 bg-white/12 backdrop-blur-[1px] lg:block"
+          initial={{ opacity: 0, y: -20, rotate: 18 }}
+          whileInView={{ opacity: 1, y: 0, rotate: 12 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+        />
+        <motion.span
+          className="absolute top-1/2 right-6 hidden h-28 w-28 -translate-y-1/2 rounded-full border-2 border-pink-300/45 lg:block"
+          initial={{ opacity: 0, scale: 0.8 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.15 }}
+        />
+      </div>
       <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12">
         <motion.div
           className="lg:w-1/2 text-center lg:text-left"
@@ -63,7 +88,7 @@ const AboutMe = () => {
           >
             Profile
           </motion.span>
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-3 text-gray-800">
+          <h2 className="text-5xl md:text-6xl font-black mb-3 text-gray-900">
             About <span className="text-pink-500">Me</span>
           </h2>
           <motion.div
@@ -72,7 +97,7 @@ const AboutMe = () => {
             whileInView={{ width: 112, opacity: 1 }}
             transition={{ duration: 0.7 }}
           />
-          <p className="text-lg leading-relaxed mb-6 text-gray-800">
+          <p className="text-xl leading-relaxed mb-6 text-gray-900 font-medium">
             I am{" "}
             <span className="text-pink-500 font-semibold">Qamrul Hassan</span>, a
             frontend developer with a passion for crafting visually appealing
@@ -84,7 +109,7 @@ const AboutMe = () => {
             that enhance my skills and creativity.
           </p>
           <motion.p
-            className="text-pink-400 italic text-xl font-medium mb-8"
+            className="text-pink-500 italic text-2xl font-semibold mb-8"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 1 }}
@@ -94,17 +119,12 @@ const AboutMe = () => {
           <motion.a
             href="/CV Front-End Web Development 28-01-2026.pdf"
             download="Qamrul_Hassan_Resume.pdf"
-            className="relative inline-flex items-center gap-2 px-8 py-3 text-white font-semibold rounded-xl overflow-visible border border-pink-300/60 bg-gradient-to-r from-pink-500 to-rose-500 shadow-lg shadow-pink-500/30 transition duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40"
+            className="relative inline-flex items-center gap-2 px-9 py-3.5 text-white font-bold rounded-xl overflow-visible border border-pink-300/60 bg-gradient-to-r from-pink-500 to-rose-500 shadow-lg shadow-pink-500/30 transition duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.8 }}
             whileTap={{ scale: 0.97 }}
           >
-            <motion.span
-              className="absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.35),transparent_55%)]"
-              animate={{ x: ["-120%", "120%"] }}
-              transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
-            />
             <FaDownload className="relative z-10" />
             <span className="relative z-10">Download Resume</span>
           </motion.a>
@@ -116,20 +136,34 @@ const AboutMe = () => {
           transition={{ duration: 0.8 }}
         >
           {skills.map(({ Icon, label, color }, index) => (
+            (() => {
+              const mobileShape =
+                index % 2 === 0
+                  ? "rounded-l-full rounded-r-none"
+                  : "rounded-r-full rounded-l-none";
+              const desktopShape =
+                index % 3 === 0
+                  ? "md:rounded-l-full md:rounded-r-none"
+                  : index % 3 === 2
+                  ? "md:rounded-r-full md:rounded-l-none"
+                  : "md:rounded-none";
+
+              return (
             <motion.div
               key={index}
-              className="group relative overflow-hidden flex items-center gap-3 px-4 py-3 rounded-xl border border-white/10 text-white min-h-[52px] min-w-0 bg-gradient-to-br from-[#2c2c2c] via-[#343434] to-[#242424] shadow-md"
+              className={`group relative overflow-hidden flex items-center gap-3 px-4 py-3 ${mobileShape} ${desktopShape} border border-white/10 text-white min-h-[54px] min-w-0 bg-gradient-to-br from-[#222226] via-[#2d2d31] to-[#18181b] shadow-lg`}
               whileHover={{ y: -4, scale: 1.02 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
             >
-              <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_top_right,rgba(244,114,182,0.25),transparent_45%)]" />
-              <div className="relative z-10 h-9 w-9 rounded-lg bg-white/10 flex items-center justify-center ring-1 ring-white/15 group-hover:bg-white/15 transition">
+              <div className="relative z-10 h-9 w-9 rounded-full bg-white/10 flex items-center justify-center ring-1 ring-white/15 group-hover:bg-white/15 transition">
                 <Icon className={`${color} flex-shrink-0`} size={20} />
               </div>
               <span className="text-sm sm:text-base leading-tight break-words whitespace-normal min-w-0 max-w-full">
                 {label}
               </span>
             </motion.div>
+              );
+            })()
           ))}
         </motion.div>
       </div>
