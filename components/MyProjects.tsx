@@ -67,7 +67,7 @@ const projects: Project[] = [
     title: "Movie Hub",
     description:
       "A responsive movie discovery app to browse trending films, search titles, and explore detailed movie information with a clean UI.",
-    link: "#",
+    link: "https://movie-hub-kappa-five.vercel.app/",
     tech: "Next.js, TypeScript, Tailwind CSS, API integration",
     image: "/Movie-Hub.jpg",
   },
@@ -375,9 +375,6 @@ const MyProjects: React.FC = () => {
                     </div>
                   </div>
                   <div className="p-4 sm:p-5 md:p-6 flex-1">
-                    <div className="inline-block text-[10px] uppercase tracking-wide bg-amber-300 text-gray-900 px-2 py-1 rounded-full mb-2 font-semibold">
-                      Demo Coming Soon
-                    </div>
                     <h3 className="text-xl sm:text-2xl font-bold text-pink-300 mb-2">
                       {project.title}
                     </h3>
