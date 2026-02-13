@@ -48,7 +48,7 @@ const HeroSection: React.FC = () => {
             transition={{ duration: 0.25, ease: "easeOut" }}
           >
             <span className="absolute -inset-4 rounded-[2rem] bg-pink-500/20 blur-2xl opacity-60" />
-            <span className="absolute -inset-2 rounded-[1.7rem] border border-white/20 bg-white/5 backdrop-blur-[1px]" />
+            <span className="absolute -inset-2 rounded-[1.7rem] border border-white/20 bg-white/15 supports-[backdrop-filter:blur(0px)]:bg-white/5 supports-[backdrop-filter:blur(0px)]:backdrop-blur-[1px]" />
             <div className="relative h-full w-full overflow-hidden rounded-2xl border-4 border-white/30 shadow-[0_14px_36px_rgba(0,0,0,0.5)]">
               <Image
                 src={profileImage}
@@ -151,7 +151,7 @@ const HeroSection: React.FC = () => {
             {[...Array(3)].map((_, index) => (
               <motion.div
                 key={index}
-                className={`h-7 w-7 sm:h-16 sm:w-16 bg-gradient-to-r ${
+                className={`h-7 w-7 sm:h-16 sm:w-16 rounded-xl bg-gradient-to-r ${
                   index === 0
                     ? "from-pink-500 to-purple-600"
                     : index === 1

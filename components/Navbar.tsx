@@ -60,8 +60,10 @@ const Navbar: React.FC = () => {
     <>
       
       <nav className={`${
-        isSticky ? "fixed top-0 left-0 w-full shadow-lg backdrop-blur-md z-50" : "relative"
-      } bg-[#272727cc] text-white transition-all duration-300`}>
+        isSticky
+          ? "fixed top-0 left-0 w-full shadow-lg z-50 bg-[#272727f2] supports-[backdrop-filter:blur(0px)]:bg-[#272727cc] supports-[backdrop-filter:blur(0px)]:backdrop-blur-md"
+          : "relative bg-[#272727cc]"
+      } text-white transition-all duration-300`}>
         <div className="container mx-auto px-4 sm:px-6 py-2.5 flex justify-between items-center">
           {/* Logo */}
           <div className="flex items-center space-x-2 cursor-pointer">

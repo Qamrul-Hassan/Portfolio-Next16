@@ -85,9 +85,13 @@ const Contact = () => {
   const showCaptcha = formData.name && formData.email && formData.message;
 
   return (
-    <section id="contact" className="bg-[#CECECE] py-8 px-6 lg:px-16 text-gray-900">
+    <section id="contact" className="relative bg-[#CECECE] py-8 px-6 lg:px-16 text-gray-900 overflow-hidden">
+      <span className="pointer-events-none absolute z-[1] -top-8 right-10 h-32 w-32 lg:h-44 lg:w-44 xl:h-52 xl:w-52 rounded-3xl border-2 border-pink-300/70 bg-pink-100/15 rotate-12 shadow-[0_0_28px_rgba(236,72,153,0.28)]" />
+      <span className="pointer-events-none absolute z-[1] bottom-10 left-10 h-20 w-20 lg:h-28 lg:w-28 xl:h-32 xl:w-32 rounded-full border-2 border-rose-300/75 bg-rose-200/20 shadow-[0_0_24px_rgba(244,114,182,0.3)]" />
+      <span className="pointer-events-none absolute z-[1] top-1/2 left-8 h-20 w-20 lg:h-28 lg:w-28 xl:h-32 xl:w-32 -translate-y-1/2 rotate-12 border-2 border-cyan-200/70 bg-cyan-100/15 shadow-[0_0_22px_rgba(103,232,249,0.2)]" />
+      <span className="pointer-events-none absolute z-[1] bottom-16 right-24 h-24 w-24 lg:h-36 lg:w-36 xl:h-40 xl:w-40 rounded-2xl border-[2.5px] border-orange-100/90 bg-orange-100/10 ring-1 ring-orange-200/70 shadow-[0_0_24px_rgba(251,146,60,0.24)] [clip-path:polygon(25%_6%,75%_6%,100%_50%,75%_94%,25%_94%,0%_50%)]" />
       <motion.div
-        className="text-center mb-12"
+        className="relative z-10 text-center mb-12"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2 }}
@@ -119,7 +123,7 @@ const Contact = () => {
         </motion.p>
       </motion.div>
 
-      <div className="relative w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-start justify-center bg-gradient-to-br from-[#3e3e3e] via-[#454545] to-[#303030] py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8 rounded-2xl shadow-xl border border-white/10 gap-6 lg:gap-8 overflow-hidden">
+      <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-start justify-center bg-gradient-to-br from-[#3e3e3e] via-[#454545] to-[#303030] py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8 rounded-2xl shadow-xl border border-white/10 gap-6 lg:gap-8 overflow-hidden">
         <span className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,rgba(244,114,182,0.18),transparent_40%)]" />
         {/* LEFT: Form */}
         <motion.form
@@ -270,7 +274,7 @@ const Contact = () => {
               <motion.div
                 key={index}
                 onClick={onClick}
-                className="cursor-pointer w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/10 border border-white/25 backdrop-blur-md flex items-center justify-center shadow-lg"
+                className="cursor-pointer w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/35 supports-[backdrop-filter:blur(0px)]:bg-white/10 border border-white/25 supports-[backdrop-filter:blur(0px)]:backdrop-blur-md flex items-center justify-center shadow-lg"
                 variants={iconVariants}
                 initial="hidden"
                 animate="visible"

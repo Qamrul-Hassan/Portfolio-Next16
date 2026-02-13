@@ -59,7 +59,7 @@ const AboutMe = () => {
     >
       <div className="pointer-events-none absolute inset-0">
         <motion.span
-          className="absolute -top-12 right-8 hidden h-44 w-44 rotate-12 rounded-3xl border border-white/35 bg-white/12 backdrop-blur-[1px] lg:block"
+          className="absolute -top-12 right-8 hidden h-44 w-44 rotate-12 rounded-3xl border border-white/35 bg-white/18 supports-[backdrop-filter:blur(0px)]:bg-white/12 supports-[backdrop-filter:blur(0px)]:backdrop-blur-[1px] lg:block"
           initial={{ opacity: 0, y: -20, rotate: 18 }}
           whileInView={{ opacity: 1, y: 0, rotate: 12 }}
           viewport={{ once: true }}

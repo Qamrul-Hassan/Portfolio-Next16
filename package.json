@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "npm run lint:types && npm run lint:eslint",
+    "lint:types": "tsc --noEmit",
+    "lint:eslint": "eslint . --ext .js,.jsx --no-error-on-unmatched-pattern"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
