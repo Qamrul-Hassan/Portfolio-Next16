@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { FaPhone, FaEnvelope, FaAt, FaComment } from "react-icons/fa";
 import Image from "next/image";
@@ -14,15 +14,7 @@ const Contact = () => {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [showSuccessAnim, setShowSuccessAnim] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
-
-  useEffect(() => {
-    setIsMobile(window.innerWidth < 640);
-    const handleResize = () => setIsMobile(window.innerWidth < 640);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -85,7 +77,7 @@ const Contact = () => {
   const showCaptcha = formData.name && formData.email && formData.message;
 
   return (
-    <section id="contact" className="relative bg-[#CECECE] py-8 px-6 lg:px-16 text-gray-900 overflow-hidden">
+    <section id="contact" className="relative bg-[#CECECE] py-8 px-6 lg:px-16 text-gray-900 overflow-visible">
       <span className="pointer-events-none absolute z-[1] -top-8 right-10 h-32 w-32 lg:h-44 lg:w-44 xl:h-52 xl:w-52 rounded-3xl border-2 border-pink-300/70 bg-pink-100/15 rotate-12 shadow-[0_0_28px_rgba(236,72,153,0.28)]" />
       <span className="pointer-events-none absolute z-[1] bottom-10 left-10 h-20 w-20 lg:h-28 lg:w-28 xl:h-32 xl:w-32 rounded-full border-2 border-rose-300/75 bg-rose-200/20 shadow-[0_0_24px_rgba(244,114,182,0.3)]" />
       <span className="pointer-events-none absolute z-[1] top-1/2 left-8 h-20 w-20 lg:h-28 lg:w-28 xl:h-32 xl:w-32 -translate-y-1/2 rotate-12 border-2 border-cyan-200/70 bg-cyan-100/15 shadow-[0_0_22px_rgba(103,232,249,0.2)]" />
@@ -123,7 +115,7 @@ const Contact = () => {
         </motion.p>
       </motion.div>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-start justify-center bg-gradient-to-br from-[#3e3e3e] via-[#454545] to-[#303030] py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8 rounded-2xl shadow-xl border border-white/10 gap-6 lg:gap-8 overflow-hidden">
+      <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-start justify-center bg-gradient-to-br from-[#3e3e3e] via-[#454545] to-[#303030] py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8 rounded-2xl shadow-xl border border-white/10 gap-6 lg:gap-8 overflow-visible">
         <span className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,rgba(244,114,182,0.18),transparent_40%)]" />
         {/* LEFT: Form */}
         <motion.form
@@ -149,13 +141,13 @@ const Contact = () => {
           {/* reCAPTCHA */}
           {showCaptcha && (
             <div className="flex justify-center mb-3 sm:mb-4">
-              <div className="scale-75 sm:scale-90 md:scale-100 transform origin-center">
+              <div className="w-full flex justify-center max-[390px]:scale-[0.78] max-[390px]:origin-center">
                 <ReCAPTCHA
                   ref={recaptchaRef}
                   sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
                   onChange={handleCaptcha}
                   onExpired={handleCaptchaExpired}
-                  size={isMobile ? "compact" : "normal"}
+                  size="normal"
                 />
               </div>
             </div>
