@@ -99,15 +99,15 @@ const Navbar: React.FC = () => {
           {/* Mobile Menu Toggle */}
           <button
             onClick={toggleMenu}
-            className="menu-toggle lg:hidden flex items-center justify-center w-9 h-9 relative z-[60]"
+            className="menu-toggle lg:hidden flex items-center justify-center w-10 h-10 rounded-xl border border-white/15 bg-white/5 supports-[backdrop-filter:blur(0px)]:backdrop-blur-sm shadow-md hover:bg-white/10 transition-all duration-200 relative z-[60]"
           >
             <motion.div
               animate={isMenuOpen ? "open" : "closed"}
-              className="flex flex-col justify-between w-6 h-6"
+              className="flex flex-col justify-between w-6 h-5.5"
             >
               
               <motion.span
-                className="block h-0.5 w-full rounded-sm bg-white"
+                className="block h-[3px] w-full rounded-full bg-white"
                 variants={{
                   closed: { rotate: 0, y: 0 },
                   open: { rotate: -30, y: 5, x: -2 },
@@ -116,16 +116,16 @@ const Navbar: React.FC = () => {
               />
              
               <motion.span
-                className="block h-0.5 w-full rounded-sm bg-pink-500"
+                className="block h-[3px] w-4 ml-auto rounded-full bg-pink-500"
                 variants={{
-                  closed: { x: 0 },
-                  open: { x: -3 },
+                  closed: { x: 0, width: 16 },
+                  open: { x: -3, width: 20 },
                 }}
                 transition={{ duration: 0.35 }}
               />
             
               <motion.span
-                className="block h-0.5 w-full rounded-sm bg-white"
+                className="block h-[3px] w-full rounded-full bg-white"
                 variants={{
                   closed: { rotate: 0, y: 0 },
                   open: { rotate: 30, y: -5, x: -2 },
@@ -158,14 +158,14 @@ const Navbar: React.FC = () => {
           {/* Close Button with animation */}
           <button
             onClick={() => setIsMenuOpen(false)}
-            className="flex items-center justify-center w-10 h-10"
+            className="flex items-center justify-center w-10 h-10 rounded-xl border border-white/15 bg-white/5 supports-[backdrop-filter:blur(0px)]:backdrop-blur-sm shadow-md hover:bg-white/10 transition-all duration-200"
           >
             <motion.div
               animate={isMenuOpen ? "open" : "closed"}
-              className="flex flex-col justify-between w-6 h-6"
+              className="flex flex-col justify-between w-6 h-5.5"
             >
               <motion.span
-                className="block h-0.5 w-full rounded-sm bg-white"
+                className="block h-[3px] w-full rounded-full bg-white"
                 variants={{
                   closed: { rotate: 0, y: 0 },
                   open: { rotate: -30, y: 5, x: -2 },
@@ -173,15 +173,15 @@ const Navbar: React.FC = () => {
                 transition={{ duration: 0.35 }}
               />
               <motion.span
-                className="block h-0.5 w-full rounded-sm bg-pink-500"
+                className="block h-[3px] w-4 ml-auto rounded-full bg-pink-500"
                 variants={{
-                  closed: { x: 0 },
-                  open: { x: -3 },
+                  closed: { x: 0, width: 16 },
+                  open: { x: -3, width: 20 },
                 }}
                 transition={{ duration: 0.35 }}
               />
               <motion.span
-                className="block h-0.5 w-full rounded-sm bg-white"
+                className="block h-[3px] w-full rounded-full bg-white"
                 variants={{
                   closed: { rotate: 0, y: 0 },
                   open: { rotate: 30, y: -5, x: -2 },
