@@ -101,7 +101,7 @@ const Navbar: React.FC = () => {
             onClick={toggleMenu}
             className="menu-toggle lg:hidden flex items-center justify-center w-10 h-10 rounded-xl border border-white/15 bg-white/5 supports-[backdrop-filter:blur(0px)]:backdrop-blur-sm shadow-md hover:bg-white/10 transition-all duration-200 relative z-[60]"
           >
-            <motion.div
+            <motion.span
               animate={isMenuOpen ? "open" : "closed"}
               className="flex flex-col justify-between w-6 h-5.5"
             >
@@ -132,7 +132,7 @@ const Navbar: React.FC = () => {
                 }}
                 transition={{ duration: 0.35 }}
               />
-            </motion.div>
+            </motion.span>
           </button>
         </div>
       </nav>
@@ -160,7 +160,7 @@ const Navbar: React.FC = () => {
             onClick={() => setIsMenuOpen(false)}
             className="flex items-center justify-center w-10 h-10 rounded-xl border border-white/15 bg-white/5 supports-[backdrop-filter:blur(0px)]:backdrop-blur-sm shadow-md hover:bg-white/10 transition-all duration-200"
           >
-            <motion.div
+            <motion.span
               animate={isMenuOpen ? "open" : "closed"}
               className="flex flex-col justify-between w-6 h-5.5"
             >
@@ -188,7 +188,7 @@ const Navbar: React.FC = () => {
                 }}
                 transition={{ duration: 0.35 }}
               />
-            </motion.div>
+            </motion.span>
           </button>
         </div>
 

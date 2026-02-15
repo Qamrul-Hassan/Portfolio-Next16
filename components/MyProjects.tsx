@@ -23,7 +23,7 @@ const projects: Project[] = [
       "A simple, clean live chess-board layout built with HTML, CSS, and JavaScript.",
     link: "https://chess-board-ufj9.onrender.com/",
     tech: "HTML, CSS, JavaScript",
-    image: "/Grandmaster Chess Board.jpg",
+    image: "/grandmaster-chess-board.jpg",
   },
   {
     title: "Ethereum Explorer",
@@ -495,34 +495,6 @@ const MyProjects: React.FC = () => {
         </button>
       </div>
 
-      <style>
-        {`
-          .swiper-button-prev,
-          .swiper-button-next {
-            display: none !important;
-          }
-          .projectsSwiper .swiper-slide {
-            opacity: 0.35;
-            transform: scale(0.88);
-            filter: grayscale(0.7);
-            transition: opacity 350ms ease, transform 350ms ease, filter 350ms ease;
-          }
-          .projectsSwiper .swiper-slide-prev,
-          .projectsSwiper .swiper-slide-next {
-            opacity: 0.6;
-            transform: scale(0.94);
-            filter: grayscale(0.35);
-          }
-          .projectsSwiper .swiper-slide-active {
-            opacity: 1;
-            transform: scale(1);
-            filter: grayscale(0);
-          }
-          .projectsSwiper .swiper-slide-active a {
-            box-shadow: 0 20px 48px rgba(217, 70, 239, 0.28);
-          }
-        `}
-      </style>
     </section>
   );
 };
