@@ -23,7 +23,7 @@ const projects: Project[] = [
       "A simple, clean live chess-board layout built with HTML, CSS, and JavaScript.",
     link: "https://chess-board-ufj9.onrender.com/",
     tech: "HTML, CSS, JavaScript",
-    image: "/grandmaster-chess-board.jpg",
+    image: "/Grandmaster Chess Board.jpg",
   },
   {
     title: "Ethereum Explorer",
