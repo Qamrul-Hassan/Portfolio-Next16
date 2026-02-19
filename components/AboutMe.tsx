@@ -117,7 +117,7 @@ const AboutMe = () => {
             "Building engaging and accessible digital experiences."
           </motion.p>
           <motion.a
-            href="/CV-Front-End-Web-Development-28-01-2026.pdf"
+            href="/CV Front-End Web Development 28-01-2026.pdf"
             download="Qamrul_Hassan_Resume.pdf"
             className="relative inline-flex items-center gap-2 px-9 py-3.5 text-white font-bold rounded-xl overflow-visible border border-pink-300/60 bg-gradient-to-r from-pink-500 to-rose-500 shadow-lg shadow-pink-500/30 transition duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40"
             initial={{ opacity: 0, y: 20 }}
