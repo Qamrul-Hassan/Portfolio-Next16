@@ -1,5 +1,6 @@
-"use client";
+﻿"use client";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -23,7 +24,7 @@ const projects: Project[] = [
       "A simple, clean live chess-board layout built with HTML, CSS, and JavaScript.",
     link: "https://chess-board-ufj9.onrender.com/",
     tech: "HTML, CSS, JavaScript",
-    image: "/Grandmaster Chess Board.jpg",
+    image: "/grandmaster-chess-board.jpg",
   },
   {
     title: "Ethereum Explorer",
@@ -176,7 +177,7 @@ const getSlides = (projectsList: Project[], slidesPerView: number) => {
 };
 
 const MyProjects: React.FC = () => {
-  const [swiperInstance, setSwiperInstance] = useState<any | null>(null);
+  const [swiperInstance, setSwiperInstance] = useState<import("swiper").Swiper | null>(null);
 
   const [buttonsPerSet, setButtonsPerSet] = useState(5);
   const [currentPageSet, setCurrentPageSet] = useState(0);
@@ -360,15 +361,16 @@ const MyProjects: React.FC = () => {
               {project.link === "#" ? (
                 <div className="group relative rounded-2xl overflow-hidden border border-fuchsia-300/35 bg-[linear-gradient(160deg,#1b1320_0%,#26152f_58%,#120d18_100%)] shadow-xl h-full flex flex-col opacity-95 transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(217,70,239,0.3)]">
                   <div className="relative overflow-hidden">
-                    <motion.img
-                      src={project.image}
-                      alt={`${project.title} preview image`}
-                      className="w-full aspect-4/3 object-cover object-center rounded-xl shadow-md"
-                      loading="lazy"
-                      decoding="async"
-                      whileHover={{ scale: 1.04 }}
-                      transition={{ duration: 0.5 }}
-                    />
+                    <div className="relative w-full aspect-[4/3]">
+                      <Image
+                        src={project.image}
+                        alt={`${project.title} preview image`}
+                        fill
+                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                        className="object-cover object-center rounded-xl shadow-md transition-transform duration-500 group-hover:scale-[1.04]"
+                        loading="lazy"
+                      />
+                    </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
                     <div className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-black/60 border border-fuchsia-300/45 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-pink-100">
                       Project Preview
@@ -407,15 +409,16 @@ const MyProjects: React.FC = () => {
                   onMouseLeave={() => swiperInstance?.autoplay?.start()}
                 >
                   <div className="relative overflow-hidden">
-                    <motion.img
-                      src={project.image}
-                      alt={`${project.title} preview image`}
-                      className="w-full aspect-4/3 object-cover object-center rounded-xl shadow-md"
-                      loading="lazy"
-                      decoding="async"
-                      whileHover={{ scale: 1.06 }}
-                      transition={{ duration: 0.5 }}
-                    />
+                    <div className="relative w-full aspect-[4/3]">
+                      <Image
+                        src={project.image}
+                        alt={`${project.title} preview image`}
+                        fill
+                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                        className="object-cover object-center rounded-xl shadow-md transition-transform duration-500 group-hover:scale-[1.06]"
+                        loading="lazy"
+                      />
+                    </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
                     <div className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-black/60 border border-fuchsia-300/45 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-pink-100">
                       Live Demo
@@ -500,3 +503,8 @@ const MyProjects: React.FC = () => {
 };
 
 export default MyProjects;
+
+
+
+
+

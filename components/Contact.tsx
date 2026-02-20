@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
@@ -65,10 +65,10 @@ const Contact = () => {
   };
 
   const iconActions = [
-    { icon: FaPhone, onClick: () => window.open("tel:+8801711844948", "_self") },
-    { icon: FaEnvelope, onClick: () => window.open("mailto:mdqamrul74@gmail.com") },
-    { icon: FaAt, onClick: () => window.open("https://portfolio-next16.vercel.app/", "_blank") },
-    { icon: FaComment, onClick: () => alert("Chat feature coming soon!") },
+    { icon: FaPhone, label: "Call phone", onClick: () => window.open("tel:+8801711844948", "_self") },
+    { icon: FaEnvelope, label: "Send email", onClick: () => window.open("mailto:mdqamrul74@gmail.com") },
+    { icon: FaAt, label: "Open portfolio profile", onClick: () => window.open("https://portfolio-next16.vercel.app/", "_blank") },
+    { icon: FaComment, label: "Open chat info", onClick: () => alert("Chat feature coming soon!") },
   ];
 
   const iconVariants = { hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 } };
@@ -262,8 +262,10 @@ const Contact = () => {
             loading="lazy"
           />
           <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-4 sm:space-x-6 md:space-x-8">
-            {iconActions.map(({ icon: Icon, onClick }, index) => (
-              <motion.div
+            {iconActions.map(({ icon: Icon, label, onClick }, index) => (
+              <motion.button
+                type="button"
+                aria-label={label}
                 key={index}
                 onClick={onClick}
                 className="cursor-pointer w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/35 supports-[backdrop-filter:blur(0px)]:bg-white/10 border border-white/25 supports-[backdrop-filter:blur(0px)]:backdrop-blur-md flex items-center justify-center shadow-lg"
@@ -273,8 +275,8 @@ const Contact = () => {
                 transition={{ delay: index * 0.5, repeat: Infinity, repeatType: "reverse", duration: 1.5 }}
                 whileHover={{ scale: 1.15, y: -2, backgroundColor: "rgba(244, 114, 182, 0.28)" }}
               >
-                <Icon size={24} className="sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" />
-              </motion.div>
+                <Icon size={24} className="sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" aria-hidden="true" />
+              </motion.button>
             ))}
           </div>
         </motion.div>
@@ -286,3 +288,4 @@ const Contact = () => {
 };
 
 export default Contact;
+

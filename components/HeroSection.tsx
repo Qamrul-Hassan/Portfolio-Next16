@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { motion } from "framer-motion";
@@ -118,7 +118,7 @@ const HeroSection: React.FC = () => {
               href="https://www.linkedin.com/in/md-qamrul-hassan-a44b3835b/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white hover:text-blue-400 text-2xl md:text-3xl transition-colors"
+              aria-label="LinkedIn profile" className="text-white hover:text-blue-400 text-2xl md:text-3xl transition-colors"
               whileHover={{ y: -5, scale: 1.1 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -128,7 +128,7 @@ const HeroSection: React.FC = () => {
               href="https://github.com/Qamrul-Hassan"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white hover:text-gray-400 text-2xl md:text-3xl transition-colors"
+              aria-label="GitHub profile" className="text-white hover:text-gray-400 text-2xl md:text-3xl transition-colors"
               whileHover={{ y: -5, scale: 1.1 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -138,7 +138,7 @@ const HeroSection: React.FC = () => {
               href="https://x.com/Shajal1"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white hover:text-blue-400 text-2xl md:text-3xl transition-colors"
+              aria-label="X profile" className="text-white hover:text-blue-400 text-2xl md:text-3xl transition-colors"
               whileHover={{ y: -5, scale: 1.1 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -182,3 +182,5 @@ const HeroSection: React.FC = () => {
 };
 
 export default HeroSection;
+
+

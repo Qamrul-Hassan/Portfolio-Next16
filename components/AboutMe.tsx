@@ -1,5 +1,4 @@
-
-"use client";
+﻿"use client";
 import React from "react";
 import {
   FaHtml5,
@@ -117,7 +116,7 @@ const AboutMe = () => {
             "Building engaging and accessible digital experiences."
           </motion.p>
           <motion.a
-            href="/CV Front-End Web Development 28-01-2026.pdf"
+            href="/cv-front-end-web-development-28-01-2026.pdf"
             download="Qamrul_Hassan_Resume.pdf"
             className="relative inline-flex items-center gap-2 px-9 py-3.5 text-white font-bold rounded-xl overflow-visible border border-pink-300/60 bg-gradient-to-r from-pink-500 to-rose-500 shadow-lg shadow-pink-500/30 transition duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40"
             initial={{ opacity: 0, y: 20 }}
@@ -135,7 +134,7 @@ const AboutMe = () => {
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
         >
-          {skills.map(({ Icon, label, color }, index) => (
+          {skills.map(({ Icon, label, color }, index) =>
             (() => {
               const mobileShape =
                 index % 2 === 0
@@ -149,22 +148,22 @@ const AboutMe = () => {
                   : "md:rounded-none";
 
               return (
-            <motion.div
-              key={index}
-              className={`group relative overflow-hidden flex items-center gap-3 px-4 py-3 ${mobileShape} ${desktopShape} border border-white/10 text-white min-h-[54px] min-w-0 bg-gradient-to-br from-[#222226] via-[#2d2d31] to-[#18181b] shadow-lg`}
-              whileHover={{ y: -4, scale: 1.02 }}
-              transition={{ duration: 0.22, ease: "easeOut" }}
-            >
-              <div className="relative z-10 h-9 w-9 rounded-full bg-white/10 flex items-center justify-center ring-1 ring-white/15 group-hover:bg-white/15 transition">
-                <Icon className={`${color} flex-shrink-0`} size={20} />
-              </div>
-              <span className="text-sm sm:text-base leading-tight break-words whitespace-normal min-w-0 max-w-full">
-                {label}
-              </span>
-            </motion.div>
+                <motion.div
+                  key={index}
+                  className={`group relative overflow-hidden flex items-center gap-3 px-4 py-3 ${mobileShape} ${desktopShape} border border-white/10 text-white min-h-[54px] min-w-0 bg-gradient-to-br from-[#222226] via-[#2d2d31] to-[#18181b] shadow-lg`}
+                  whileHover={{ y: -4, scale: 1.02 }}
+                  transition={{ duration: 0.22, ease: "easeOut" }}
+                >
+                  <div className="relative z-10 h-9 w-9 rounded-full bg-white/10 flex items-center justify-center ring-1 ring-white/15 group-hover:bg-white/15 transition">
+                    <Icon className={`${color} flex-shrink-0`} size={20} />
+                  </div>
+                  <span className="text-sm sm:text-base leading-tight break-words whitespace-normal min-w-0 max-w-full">
+                    {label}
+                  </span>
+                </motion.div>
               );
             })()
-          ))}
+          )}
         </motion.div>
       </div>
     </section>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import Topbar from "../components/Topbar";
@@ -17,7 +17,6 @@ export default function Page() {
       <Topbar />
       <Navbar />
       
-      <div className="h-0"></div>
       <main>
         <HeroSection />   
         <AboutMe />       
