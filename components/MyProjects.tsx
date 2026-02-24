@@ -1,7 +1,7 @@
 ﻿"use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
@@ -19,12 +19,14 @@ type Project = {
 
 const projects: Project[] = [
   {
-    title: "Chess Board",
+    title: "Satck Store- E-Commerce",
     description:
-      "A simple, clean live chess-board layout built with HTML, CSS, and JavaScript.",
-    link: "https://chess-board-ufj9.onrender.com/",
-    tech: "HTML, CSS, JavaScript",
-    image: "/grandmaster-chess-board.jpg",
+      "A full-stack e-commerce application built with Next.js 16, Prisma, NextAuth, Stripe, and Cloudinary with product management, secure authentication, and checkout flow.",
+    link: "https://stack-store.vercel.app/",
+    tech: "Next.js 16, React 19, TypeScript, Prisma, NextAuth v5, Stripe, Cloudinary, Zod, Tailwind CSS",
+    image: "/StactStore.jpg",
+    featured: true,
+    outcome: "Implemented secure auth, database-backed catalog, image handling, and payment-ready checkout architecture.",
   },
   {
     title: "Ethereum Explorer",
@@ -63,6 +65,7 @@ const projects: Project[] = [
     link: "https://dictionary-app-nine-ruby.vercel.app/",
     tech: "Next.js, Tailwind CSS",
     image: "/Dictionary.jpg",
+    featured: true,
   },
   {
     title: "Movie Hub",
@@ -79,6 +82,7 @@ const projects: Project[] = [
     link: "https://weather-app-zeta-seven-71.vercel.app/",
     tech: "React, Tailwind CSS, API",
     image: "/Weather.jpg",
+    featured: true,
   },
   {
     title: "Flash News",
@@ -95,6 +99,7 @@ const projects: Project[] = [
     link: "https://recipe-finder-theta-five.vercel.app/",
     tech: "Next.js, Tailwind CSS, Framer Motion, TypeScript, responsive design",
     image: "/Recipe-Finder.jpg",
+    featured: true,
   },
   {
     title: "E-Commerce Website - Hektto",
@@ -103,6 +108,7 @@ const projects: Project[] = [
     link: "https://hektto.vercel.app/",
     tech: "React, Tailwind CSS, Firebase",
     image: "/hektto.jpg",
+    featured: true,
   },
   {
     title: "Small E-Commerce Landing Page",
@@ -176,6 +182,16 @@ const getSlides = (projectsList: Project[], slidesPerView: number) => {
     : projectsList;
 };
 
+const exclusiveFeaturedTitles = [
+  "Satck Store- E-Commerce",
+  "Ethereum Explorer",
+  "Job Board",
+  "Dictionary",
+  "Weather App",
+  "Recipe Finder",
+  "E-Commerce Website - Hektto",
+];
+
 const MyProjects: React.FC = () => {
   const [swiperInstance, setSwiperInstance] = useState<import("swiper").Swiper | null>(null);
 
@@ -222,16 +238,73 @@ const MyProjects: React.FC = () => {
     currentPageSet * buttonsPerSet + buttonsPerSet
   );
 
-  const featuredProjects = projects.filter((project) => project.featured).slice(0, 3);
-  const getFeaturedCardRadius = (index: number) => {
-    if (index === 0) return "md:rounded-l-full md:rounded-r-none";
-    if (index === 1) return "md:rounded-none";
-    return "md:rounded-r-full md:rounded-l-none";
-  };
-  const getFeaturedTextAlign = (index: number) => {
-    if (index === 0) return "md:text-right";
-    if (index === 1) return "md:text-center";
-    return "text-left";
+  const exclusiveFeaturedProjects = exclusiveFeaturedTitles
+    .map((title) => projects.find((project) => project.title === title))
+    .filter((project): project is Project => Boolean(project));
+
+  const leftFeatured = exclusiveFeaturedProjects[0];
+  const rightFeatured = exclusiveFeaturedProjects[1];
+  const rotatingFeatured = exclusiveFeaturedProjects.slice(2);
+  const [middleIndex, setMiddleIndex] = useState(0);
+  const [isMiddlePaused, setIsMiddlePaused] = useState(false);
+
+  useEffect(() => {
+    if (rotatingFeatured.length <= 1 || isMiddlePaused) return;
+    const intervalId = window.setInterval(() => {
+      setMiddleIndex((prev) => (prev + 1) % rotatingFeatured.length);
+    }, 3400);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [rotatingFeatured.length, isMiddlePaused]);
+
+  const middleFeatured =
+    rotatingFeatured[middleIndex] ?? rightFeatured ?? leftFeatured ?? projects[0];
+
+  const renderFeaturedCard = (
+    project: Project,
+    cardShape: string,
+    textAlign: string
+  ) => {
+    const cardContent = (
+      <>
+        <span className="absolute -top-8 -right-8 h-24 w-24 rounded-2xl rotate-12 bg-fuchsia-400/20 blur-2xl" />
+        <span className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-transparent via-pink-300/70 to-transparent" />
+        <p className="relative text-xs font-semibold uppercase tracking-[0.15em] text-pink-200 mb-2">
+          Featured
+        </p>
+        <h3 className="relative text-xl font-extrabold text-white mb-2">{project.title}</h3>
+        <p className="relative text-sm text-gray-50 mb-3">{project.description}</p>
+        <p className="relative text-sm text-gray-50 mb-2">
+          <span className="font-semibold text-pink-200">Stack:</span> {project.tech}
+        </p>
+        {project.outcome ? (
+          <p className="relative text-sm text-white font-medium">
+            Result: <span className="font-normal">{project.outcome}</span>
+          </p>
+        ) : null}
+      </>
+    );
+
+    const sharedClass =
+      `group relative block w-full h-[300px] overflow-hidden rounded-lg ${cardShape} ${textAlign} border border-fuchsia-300/40 bg-[linear-gradient(155deg,#180f1c_0%,#2a1430_56%,#14101a_100%)] p-5 shadow-[0_16px_35px_rgba(0,0,0,0.35)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_46px_rgba(217,70,239,0.28)]`;
+
+    if (project.link === "#") {
+      return <div className={sharedClass}>{cardContent}</div>;
+    }
+
+    return (
+      <a
+        href={project.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Open featured project ${project.title}`}
+        className={sharedClass}
+      >
+        {cardContent}
+      </a>
+    );
   };
 
   return (
@@ -298,30 +371,62 @@ const MyProjects: React.FC = () => {
       </motion.div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto mb-10 grid grid-cols-1 md:grid-cols-3 gap-5">
-        {featuredProjects.map((project, index) => (
-          <div
-            key={project.title}
-            className={`group relative overflow-hidden rounded-lg ${getFeaturedCardRadius(
-              index
-            )} ${getFeaturedTextAlign(
-              index
-            )} border border-fuchsia-300/40 bg-[linear-gradient(155deg,#180f1c_0%,#2a1430_56%,#14101a_100%)] p-5 shadow-[0_16px_35px_rgba(0,0,0,0.35)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_46px_rgba(217,70,239,0.28)]`}
-          >
-            <span className="absolute -top-8 -right-8 h-24 w-24 rounded-2xl rotate-12 bg-fuchsia-400/20 blur-2xl" />
-            <span className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-transparent via-pink-300/70 to-transparent" />
-            <p className="relative text-xs font-semibold uppercase tracking-[0.15em] text-pink-200 mb-2">
-              Featured
-            </p>
-            <h3 className="relative text-xl font-extrabold text-white mb-2">{project.title}</h3>
-            <p className="relative text-sm text-gray-50 mb-3">{project.description}</p>
-            <p className="relative text-sm text-gray-50 mb-2">
-              <span className="font-semibold text-pink-200">Stack:</span> {project.tech}
-            </p>
-            <p className="relative text-sm text-white font-medium">
-              Result: <span className="font-normal">{project.outcome}</span>
-            </p>
+        {leftFeatured
+          ? renderFeaturedCard(
+              leftFeatured,
+              "md:rounded-l-full md:rounded-r-none",
+              "md:text-right"
+            )
+          : null}
+
+        <div
+          className="relative [perspective:1400px]"
+          onMouseEnter={() => setIsMiddlePaused(true)}
+          onMouseLeave={() => setIsMiddlePaused(false)}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={middleFeatured.title}
+              initial={{ opacity: 0, y: 12, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -12, scale: 0.98 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+              {renderFeaturedCard(middleFeatured, "md:rounded-none", "md:text-center")}
+            </motion.div>
+          </AnimatePresence>
+
+          <div className="mt-3 flex items-center justify-center gap-1.5 sm:gap-2">
+            {rotatingFeatured.map((project, index) => (
+              <button
+                key={project.title}
+                type="button"
+                onClick={() => setMiddleIndex(index)}
+                aria-label={`Show featured project ${index + 1}`}
+                className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold transition-all border ${
+                  middleIndex === index
+                    ? "bg-gradient-to-r from-pink-500 to-rose-500 text-white border-pink-400 scale-110 shadow-lg shadow-pink-500/35"
+                    : "bg-white/70 text-gray-800 border-white hover:bg-white hover:-translate-y-0.5"
+                }`}
+                style={{
+                  clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                  WebkitClipPath:
+                    "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                }}
+              >
+                {index + 1}
+              </button>
+            ))}
           </div>
-        ))}
+        </div>
+
+        {rightFeatured
+          ? renderFeaturedCard(
+              rightFeatured,
+              "md:rounded-r-full md:rounded-l-none",
+              "text-left"
+            )
+          : null}
       </div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto">
