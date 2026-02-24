@@ -1,5 +1,5 @@
 ﻿"use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   FaHtml5,
   FaCss3Alt,
@@ -44,6 +44,95 @@ const AboutMe = () => {
     { Icon: SiVite, label: "Vite", color: "text-yellow-400" },
     { Icon: FaGithub, label: "GitHub", color: "text-white" },
   ];
+
+  const [showResumeForm, setShowResumeForm] = useState(false);
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [requestId, setRequestId] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [cvUrl, setCvUrl] = useState("");
+  const [requestState, setRequestState] = useState<"idle" | "loading" | "success" | "error">(
+    "idle"
+  );
+  const [requestMessage, setRequestMessage] = useState("");
+
+  const handleRequestResume = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setRequestState("loading");
+    setRequestMessage("");
+
+    try {
+      const response = await fetch("/api/cv/request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = (await response.json()) as {
+        requestId?: string;
+        error?: string;
+        expiresInSeconds?: number;
+        delivery?: { accepted?: string[]; rejected?: string[]; response?: string; messageId?: string };
+      };
+
+      if (!response.ok || !data.requestId) {
+        setRequestState("error");
+        setRequestMessage(data.error || "Could not send verification code.");
+        return;
+      }
+
+      setRequestId(data.requestId);
+      setOtpSent(true);
+      setCvUrl("");
+      setRequestState("success");
+      const minutes = Math.floor((data.expiresInSeconds ?? 600) / 60);
+      const acceptedTo = data.delivery?.accepted?.[0];
+      setRequestMessage(
+        acceptedTo
+          ? `Verification code sent to ${acceptedTo}. It expires in ${minutes} minutes.`
+          : `Verification code sent. It expires in ${minutes} minutes.`
+      );
+    } catch {
+      setRequestState("error");
+      setRequestMessage("Request failed. Please try again.");
+    }
+  };
+
+  const handleVerifyOtp = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setRequestState("loading");
+    setRequestMessage("");
+
+    try {
+      const response = await fetch("/api/cv/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, requestId, otp }),
+      });
+
+      const data = (await response.json()) as {
+        url?: string;
+        error?: string;
+        expiresInSeconds?: number;
+      };
+
+      if (!response.ok || !data.url) {
+        setRequestState("error");
+        setRequestMessage(data.error || "Verification failed.");
+        return;
+      }
+
+      setRequestState("success");
+      const minutes = Math.floor((data.expiresInSeconds ?? 900) / 60);
+      setCvUrl(data.url);
+      setRequestMessage(
+        `Verified. Click "Open CV" below (${minutes} min link).`
+      );
+    } catch {
+      setRequestState("error");
+      setRequestMessage("Verification failed. Please try again.");
+    }
+  };
 
   return (
     <section
@@ -115,9 +204,17 @@ const AboutMe = () => {
           >
             "Building engaging and accessible digital experiences."
           </motion.p>
-          <motion.a
-            href="/cv-front-end-web-development-28-01-2026.pdf"
-            download="Qamrul_Hassan_Resume.pdf"
+          <motion.button
+            type="button"
+            onClick={() => {
+              setShowResumeForm((prev) => !prev);
+              setRequestState("idle");
+              setRequestMessage("");
+              setOtp("");
+              setRequestId("");
+              setOtpSent(false);
+              setCvUrl("");
+            }}
             className="relative inline-flex items-center gap-2 px-9 py-3.5 text-white font-bold rounded-xl overflow-visible border border-pink-300/60 bg-gradient-to-r from-pink-500 to-rose-500 shadow-lg shadow-pink-500/30 transition duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -125,8 +222,112 @@ const AboutMe = () => {
             whileTap={{ scale: 0.97 }}
           >
             <FaDownload className="relative z-10" />
-            <span className="relative z-10">Download Resume</span>
-          </motion.a>
+            <span className="relative z-10">Request Resume Access</span>
+          </motion.button>
+          {showResumeForm ? (
+            <motion.form
+              onSubmit={otpSent ? handleVerifyOtp : handleRequestResume}
+              className="mt-4 w-full max-w-md rounded-2xl border border-pink-200 bg-white/85 p-4 shadow-lg"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              <label className="mb-2 block text-sm font-semibold text-gray-800" htmlFor="resume-email">
+                Enter your email to view resume
+              </label>
+              <input
+                id="resume-email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-pink-400"
+                disabled={otpSent}
+              />
+              {otpSent ? (
+                <>
+                  <label className="mb-2 mt-3 block text-sm font-semibold text-gray-800" htmlFor="resume-otp">
+                    Enter 6-digit code sent to your email
+                  </label>
+                  <input
+                    id="resume-otp"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]{6}"
+                    required
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                    placeholder="123456"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-pink-400"
+                  />
+                </>
+              ) : null}
+              <div className="mt-3 flex items-center gap-2">
+                <button
+                  type="submit"
+                  disabled={requestState === "loading"}
+                  className="inline-flex items-center rounded-lg bg-gradient-to-r from-pink-500 to-rose-500 px-4 py-2 text-sm font-bold text-white disabled:opacity-60"
+                >
+                  {requestState === "loading"
+                    ? otpSent
+                      ? "Verifying..."
+                      : "Sending..."
+                    : otpSent
+                    ? "Verify & Open CV"
+                    : "Send Verification Code"}
+                </button>
+                {otpSent ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOtpSent(false);
+                      setOtp("");
+                      setRequestId("");
+                      setCvUrl("");
+                      setRequestState("idle");
+                      setRequestMessage("");
+                    }}
+                    className="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700"
+                  >
+                    Change Email
+                  </button>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowResumeForm(false);
+                    setOtp("");
+                    setRequestId("");
+                    setOtpSent(false);
+                    setCvUrl("");
+                  }}
+                  className="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700"
+                >
+                  Close
+                </button>
+              </div>
+              {cvUrl ? (
+                <a
+                  href={cvUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-flex w-fit items-center rounded-lg border border-pink-300 bg-pink-50 px-4 py-2 text-sm font-bold text-pink-700 hover:bg-pink-100"
+                >
+                  Open CV
+                </a>
+              ) : null}
+              {requestMessage ? (
+                <p
+                  className={`mt-3 text-sm ${
+                    requestState === "error" ? "text-red-600" : "text-emerald-700"
+                  }`}
+                >
+                  {requestMessage}
+                </p>
+              ) : null}
+            </motion.form>
+          ) : null}
         </motion.div>
         <motion.div
           className="lg:w-1/2 grid grid-cols-2 md:grid-cols-3 gap-6"

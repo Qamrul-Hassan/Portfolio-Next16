@@ -72,7 +72,15 @@ const Navbar: React.FC = () => {
       >
         <div className="container mx-auto px-4 sm:px-6 py-2.5 flex justify-between items-center">
           <div className="flex items-center space-x-2 cursor-pointer">
-            <Image src={Logo} alt="Logo" width={44} height={44} className="h-11 w-11 object-contain rounded-lg" />
+            <Image
+              src={Logo}
+              alt="Logo"
+              width={44}
+              height={44}
+              priority
+              loading="eager"
+              className="h-11 w-11 object-contain rounded-lg"
+            />
             <div className="text-2xl sm:text-2xl font-bold text-pink-500 hover:text-pink-400 transition">
               Portfolio
             </div>
@@ -105,7 +113,11 @@ const Navbar: React.FC = () => {
             aria-expanded={isMenuOpen}
             aria-controls="mobile-menu-panel"
             onClick={toggleMenu}
-            className="menu-toggle lg:hidden flex items-center justify-center w-10 h-10 rounded-xl border border-white/15 bg-white/5 supports-[backdrop-filter:blur(0px)]:backdrop-blur-sm shadow-md hover:bg-white/10 transition-all duration-200 relative z-[60]"
+            className={`menu-toggle lg:hidden flex items-center justify-center w-10 h-10 rounded-xl border transition-all duration-200 relative z-[60] ${
+              isMenuOpen
+                ? "border-pink-300/60 bg-gradient-to-r from-pink-500/35 to-fuchsia-500/25 shadow-[0_12px_34px_rgba(236,72,153,0.35)]"
+                : "border-white/15 bg-white/5 shadow-md hover:bg-white/10 hover:shadow-[0_14px_36px_rgba(236,72,153,0.22)]"
+            } supports-[backdrop-filter:blur(0px)]:backdrop-blur-sm`}
           >
             <motion.span animate={isMenuOpen ? "open" : "closed"} className="flex flex-col justify-between w-6 h-5.5">
               <motion.span
@@ -136,13 +148,21 @@ const Navbar: React.FC = () => {
         initial={{ x: "100%" }}
         animate={{ x: isMenuOpen ? 0 : "100%" }}
         transition={{ type: "tween", duration: 0.35 }}
-        className={`fixed top-0 right-0 w-screen h-screen bg-[#272727] bg-opacity-95 flex flex-col text-white z-[60] overflow-hidden ${
+        className={`fixed top-0 right-0 w-screen h-screen flex flex-col text-white z-[60] overflow-hidden bg-[radial-gradient(circle_at_top_right,rgba(236,72,153,0.22),transparent_45%),radial-gradient(circle_at_bottom_left,rgba(168,85,247,0.18),transparent_48%),linear-gradient(180deg,rgba(39,39,39,0.98),rgba(20,20,24,0.98))] ${
           isMenuOpen ? "block" : "hidden"
         }`}
       >
         <div className="flex justify-between items-center px-6 py-4 border-b border-gray-700">
           <div className="flex items-center space-x-2">
-            <Image src={Logo} alt="Logo" width={48} height={48} className="h-12 w-12 object-contain rounded-lg" />
+            <Image
+              src={Logo}
+              alt="Logo"
+              width={48}
+              height={48}
+              priority
+              loading="eager"
+              className="h-12 w-12 object-contain rounded-lg"
+            />
             <div className="text-2xl font-bold text-pink-500">Portfolio</div>
           </div>
 

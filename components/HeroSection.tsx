@@ -6,7 +6,6 @@ import { FaLinkedin, FaGithub, FaTwitter } from "react-icons/fa";
 import { Typewriter } from "react-simple-typewriter";
 import Image from "next/image";
 import profileImage from "../public/Portfolio-9.jpg";
-import backgroundImage from "../public/banner.jpg";
 
 const HeroSection: React.FC = () => {
   const welcomeText = "WELCOME TO MY PORTFOLIO";
@@ -19,21 +18,14 @@ const HeroSection: React.FC = () => {
   return (
     <section
       id="home"
-      className="relative flex min-h-[86svh] items-center justify-center overflow-hidden py-14 sm:min-h-[100svh] sm:py-28 lg:py-20"
+      className="relative flex min-h-[74svh] items-center justify-center overflow-hidden py-8 sm:min-h-[88svh] sm:py-14 lg:min-h-[84svh] lg:py-10"
+      style={{
+        backgroundImage:
+          "linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.45), rgba(0,0,0,0.7)), url('/banner.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "right center",
+      }}
     >
-      {/* Background Image */}
-      <div className="absolute inset-0">
-        <Image
-          src={backgroundImage}
-          alt="Background"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-right sm:object-center"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-black/70"></div>
-      </div>
-
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-5 px-5 sm:gap-10 sm:px-8 lg:flex-row lg:items-center lg:gap-12 lg:px-16">
         {/* Profile Image */}
         <motion.div
