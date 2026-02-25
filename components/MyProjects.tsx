@@ -555,11 +555,11 @@ const MyProjects: React.FC = () => {
         </Swiper>
       </div>
 
-      <div className="relative z-10 mobile-pagination mt-6 no-scrollbar flex w-full flex-wrap items-center justify-center gap-2 px-3 py-1 sm:px-0 sm:gap-4">
+      <div className="relative z-10 mobile-pagination mt-6 no-scrollbar flex w-full flex-wrap items-center justify-center gap-1.5 px-2 py-1 sm:px-0 sm:gap-4">
         <button
           onClick={handlePrevSet}
           aria-label="Previous"
-          className="h-10 w-10 shrink-0 sm:h-11 sm:min-w-11 sm:w-auto sm:px-4 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg shadow-pink-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
+          className="h-9 w-9 shrink-0 sm:h-11 sm:min-w-11 sm:w-auto sm:px-4 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg shadow-pink-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
           disabled={currentPageSet === 0}
         >
           <span className="sm:hidden text-lg leading-none">&lt;</span>
@@ -575,7 +575,7 @@ const MyProjects: React.FC = () => {
                 key={slideIndex}
                 onClick={() => goTo(slideIndex)}
                 aria-label={`Go to project ${slideIndex + 1}`}
-                className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold transition-all border ${
+                className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-[10px] sm:text-sm font-bold transition-all border ${
                   isActive
                     ? "bg-gradient-to-r from-pink-500 to-rose-500 text-white border-pink-400 scale-110 shadow-lg shadow-pink-500/35"
                     : "bg-white/70 text-gray-800 border-white hover:bg-white hover:-translate-y-0.5"
@@ -595,7 +595,7 @@ const MyProjects: React.FC = () => {
         <button
           onClick={handleNextSet}
           aria-label="Next"
-          className="h-10 w-10 shrink-0 sm:h-11 sm:min-w-11 sm:w-auto sm:px-4 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg shadow-pink-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
+          className="h-9 w-9 shrink-0 sm:h-11 sm:min-w-11 sm:w-auto sm:px-4 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg shadow-pink-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
           disabled={currentPageSet === totalSets - 1}
         >
           <span className="sm:hidden text-lg leading-none">&gt;</span>
