@@ -58,7 +58,7 @@ const Chat = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-70">
+    <div className="fixed right-4 z-70 bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px))] sm:bottom-[calc(1rem+env(safe-area-inset-bottom,0px))]">
       {isOpen && (
         <div className="absolute right-0 bottom-20 bg-[#CECECE] rounded-lg shadow-xl sm:w-80 w-64 flex flex-col max-h-[70vh]">
           <header className="flex justify-between items-center bg-pink-600 text-white py-3 px-4 rounded-t-lg">
@@ -123,7 +123,7 @@ const Chat = () => {
 
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center w-14 h-14 bg-pink-600 text-white rounded-full shadow-lg hover:bg-slate-700 transition-all duration-300 animate-[bounce_1.5s_infinite]"
+        className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-pink-600 text-white rounded-full shadow-lg hover:bg-slate-700 transition-all duration-300 animate-[bounce_1.5s_infinite]"
         aria-label={isOpen ? "Close chat" : "Open chat"}
       >
         {isOpen ? <FaTimes className="text-2xl" /> : <FaRegComment className="text-2xl" />}
