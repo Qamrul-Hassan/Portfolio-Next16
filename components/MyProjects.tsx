@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
@@ -555,11 +555,11 @@ const MyProjects: React.FC = () => {
         </Swiper>
       </div>
 
-      <div className="relative z-10 mobile-pagination mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-4">
+      <div className="relative z-10 mobile-pagination mt-6 no-scrollbar flex w-full flex-nowrap items-center justify-start gap-2 overflow-x-auto py-1 sm:flex-wrap sm:justify-center sm:overflow-visible sm:py-0 sm:gap-4">
         <button
           onClick={handlePrevSet}
           aria-label="Previous"
-          className="h-10 w-10 sm:h-11 sm:min-w-11 sm:w-auto sm:px-4 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg shadow-pink-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
+          className="h-10 w-10 shrink-0 sm:h-11 sm:min-w-11 sm:w-auto sm:px-4 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg shadow-pink-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
           disabled={currentPageSet === 0}
         >
           <span className="sm:hidden text-lg leading-none">&lt;</span>
@@ -595,7 +595,7 @@ const MyProjects: React.FC = () => {
         <button
           onClick={handleNextSet}
           aria-label="Next"
-          className="h-10 w-10 sm:h-11 sm:min-w-11 sm:w-auto sm:px-4 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg shadow-pink-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
+          className="h-10 w-10 shrink-0 sm:h-11 sm:min-w-11 sm:w-auto sm:px-4 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg shadow-pink-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
           disabled={currentPageSet === totalSets - 1}
         >
           <span className="sm:hidden text-lg leading-none">&gt;</span>

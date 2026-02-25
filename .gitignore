@@ -26,3 +26,7 @@ Thumbs.db
 .vscode/
 .idea/
 .vercel
+
+# TypeScript build info
+tsconfig.tsbuildinfo
+

@@ -1,4 +1,4 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
 
 :root {
   --background: #ffffff;
@@ -68,5 +68,14 @@ section {
 
 .projectsSwiper .swiper-slide-active a {
   box-shadow: 0 20px 48px rgba(217, 70, 239, 0.28);
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
