@@ -555,7 +555,7 @@ const MyProjects: React.FC = () => {
         </Swiper>
       </div>
 
-      <div className="relative z-10 mobile-pagination mt-6 no-scrollbar flex w-full flex-nowrap items-center justify-start gap-2 overflow-x-auto py-1 sm:flex-wrap sm:justify-center sm:overflow-visible sm:py-0 sm:gap-4">
+      <div className="relative z-10 mobile-pagination mt-6 no-scrollbar flex w-full flex-wrap items-center justify-center gap-2 px-3 py-1 sm:px-0 sm:gap-4">
         <button
           onClick={handlePrevSet}
           aria-label="Previous"

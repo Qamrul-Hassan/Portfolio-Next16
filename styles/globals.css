@@ -37,8 +37,9 @@ html, body {
 
 section {
   width: 100%;
-  max-width: 100vw;
-  overflow: hidden;
+  max-width: 100%;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 .swiper-button-prev,
