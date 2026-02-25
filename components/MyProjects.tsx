@@ -396,28 +396,7 @@ const MyProjects: React.FC = () => {
             </motion.div>
           </AnimatePresence>
 
-          <div className="mt-3 flex items-center justify-center gap-1.5 sm:gap-2">
-            {rotatingFeatured.map((project, index) => (
-              <button
-                key={project.title}
-                type="button"
-                onClick={() => setMiddleIndex(index)}
-                aria-label={`Show featured project ${index + 1}`}
-                className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold transition-all border ${
-                  middleIndex === index
-                    ? "bg-gradient-to-r from-pink-500 to-rose-500 text-white border-pink-400 scale-110 shadow-lg shadow-pink-500/35"
-                    : "bg-white/70 text-gray-800 border-white hover:bg-white hover:-translate-y-0.5"
-                }`}
-                style={{
-                  clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-                  WebkitClipPath:
-                    "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-                }}
-              >
-                {index + 1}
-              </button>
-            ))}
-          </div>
+          {/* Removed numeric featured pagination to simplify layout on small screens */}
         </div>
 
         {rightFeatured
@@ -555,7 +534,7 @@ const MyProjects: React.FC = () => {
         </Swiper>
       </div>
 
-      <div className="relative z-10 mobile-pagination mt-6 no-scrollbar flex w-full flex-wrap items-center justify-center gap-1.5 px-2 py-1 sm:px-0 sm:gap-4">
+      <div className="relative z-10 mobile-pagination mt-6 no-scrollbar flex w-full items-center justify-center gap-1 px-2 py-1 sm:px-0 sm:gap-2 flex-nowrap">
         <button
           onClick={handlePrevSet}
           aria-label="Previous"
@@ -566,7 +545,8 @@ const MyProjects: React.FC = () => {
           <span className="hidden sm:inline">Prev</span>
         </button>
 
-        <div className="flex items-center gap-1.5 sm:gap-2">
+        <div className="flex-none flex items-center justify-center">
+          <div className="inline-flex items-center gap-1 sm:gap-2 overflow-x-auto no-scrollbar px-1">
           {visibleNumbers.map((_, idx) => {
             const slideIndex = currentPageSet * buttonsPerSet + idx;
             const isActive = slideIndex === activeIndex;
@@ -590,6 +570,7 @@ const MyProjects: React.FC = () => {
               </button>
             );
           })}
+          </div>
         </div>
 
         <button
