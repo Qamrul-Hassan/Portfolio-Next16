@@ -255,12 +255,13 @@ const Contact = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1.5 }}
         >
-          <Image 
-            src={ContactImage} 
-            alt="Contact Us" 
-            className="rounded-2xl lg:rounded-r-[64px] lg:rounded-l-none shadow-xl border border-white/10 object-cover w-full h-[280px] sm:h-[420px] md:h-[520px] lg:h-[498px]" 
-            loading="lazy"
-          />
+        <Image 
+  src={ContactImage} 
+  alt="Contact Us" 
+  unoptimized
+  className="rounded-2xl lg:rounded-r-[64px] lg:rounded-l-none shadow-xl border border-white/10 object-cover w-full h-[280px] sm:h-[420px] md:h-[520px] lg:h-[498px]" 
+  loading="lazy"
+/>
           <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-4 sm:space-x-6 md:space-x-8">
             {iconActions.map(({ icon: Icon, label, onClick }, index) => (
               <motion.button
