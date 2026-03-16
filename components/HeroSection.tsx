@@ -42,14 +42,14 @@ const HeroSection: React.FC = () => {
             <span className="absolute -inset-4 rounded-[2rem] bg-pink-500/20 blur-2xl opacity-60" />
             <span className="absolute -inset-2 rounded-[1.7rem] border border-white/20 bg-white/15 supports-[backdrop-filter:blur(0px)]:bg-white/5 supports-[backdrop-filter:blur(0px)]:backdrop-blur-[1px]" />
             <div className="relative h-full w-full overflow-hidden rounded-2xl border-4 border-white/30 shadow-[0_14px_36px_rgba(0,0,0,0.5)]">
-              <Image
-                src={profileImage}
-                alt="Qamrul Hassan"
-                className="object-cover"
-                fill
-                priority
-                sizes="(min-width: 1024px) 464px, (min-width: 768px) 432px, (min-width: 640px) 384px, 64vw"
-              />
+            <Image
+  src="/Portfolio-9.jpg"
+  alt="Qamrul Hassan"
+  fill
+  priority
+  className="object-cover"
+  sizes="(min-width: 1024px) 464px, (min-width: 768px) 432px, (min-width: 640px) 384px, 64vw"
+/>
               <span className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/10" />
             </div>
           </motion.div>
