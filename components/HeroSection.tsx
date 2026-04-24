@@ -21,7 +21,7 @@ const HeroSection: React.FC = () => {
       className="relative flex min-h-[74svh] items-center justify-center overflow-hidden py-8 sm:min-h-[88svh] sm:py-14 lg:min-h-[84svh] lg:py-10"
       style={{
         backgroundImage:
-          "linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.45), rgba(0,0,0,0.7)), url('/bg-1.webp')",
+          "linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.45), rgba(0,0,0,0.7)), url('/banner.webp')",
         backgroundSize: "cover",
         backgroundPosition: "right center",
       }}
