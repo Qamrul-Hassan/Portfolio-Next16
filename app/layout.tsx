@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: "QHSportfolio",
   description: "Next.js 16 Turbopack project",
   icons: {
-    icon: "/Logo-2.webp",
+    icon: "/favicon.ico",
   },
 };
 

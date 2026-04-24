@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { FaLinkedin, FaGithub, FaTwitter } from "react-icons/fa";
 import { Typewriter } from "react-simple-typewriter";
 import Image from "next/image";
-import profileImage from "../public/Portfolio-9.jpg";
+import profileImage from "../public/Portfolio-9.webp";
 
 const HeroSection: React.FC = () => {
   const welcomeText = "WELCOME TO MY PORTFOLIO";
@@ -43,7 +43,7 @@ const HeroSection: React.FC = () => {
             <span className="absolute -inset-2 rounded-[1.7rem] border border-white/20 bg-white/15 supports-[backdrop-filter:blur(0px)]:bg-white/5 supports-[backdrop-filter:blur(0px)]:backdrop-blur-[1px]" />
             <div className="relative h-full w-full overflow-hidden rounded-2xl border-4 border-white/30 shadow-[0_14px_36px_rgba(0,0,0,0.5)]">
 <Image
-  src="/Portfolio-9.jpg"
+  src="/Portfolio-9.webp"
   alt="Qamrul Hassan"
   fill
   priority

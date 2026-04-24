@@ -4,7 +4,7 @@ import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { FaPhone, FaEnvelope, FaAt, FaComment } from "react-icons/fa";
 import Image from "next/image";
-import ContactImage from "../public/Contact.jpg";
+import ContactImage from "../public/Contact.webp";
 import emailjs from "@emailjs/browser";
 import { toast, ToastContainer } from "react-toastify";
 import ReCAPTCHA from "react-google-recaptcha";

@@ -140,7 +140,7 @@ const AboutMe = () => {
       id="about"
       style={{
         backgroundImage:
-          "linear-gradient(120deg, rgba(229,231,235,0.92) 0%, rgba(243,244,246,0.88) 45%, rgba(251,207,232,0.56) 100%), url('/bg-1.jpg')",
+          "linear-gradient(120deg, rgba(229,231,235,0.92) 0%, rgba(243,244,246,0.88) 45%, rgba(251,207,232,0.56) 100%), url('/bg-1.webp')",
         backgroundSize: "cover",
         backgroundPosition: "right center",
       }}

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import Logo from "../public/Logo-2.webp";
+import Logo from "../public/Logo-4.webp";
 
 const NAV_LINKS = [
   { name: "Home", id: "home" },
@@ -70,16 +70,16 @@ const Navbar: React.FC = () => {
             : "relative bg-[#272727cc]"
         } text-white transition-all duration-300`}
       >
-        <div className="container mx-auto px-4 sm:px-6 py-2.5 flex justify-between items-center">
+        <div className="container mx-auto px-2 sm:px-6 py-2.5 flex justify-between items-center">
           <div className="flex items-center space-x-2 cursor-pointer">
             <Image
               src={Logo}
               alt="Logo"
-              width={44}
-              height={44}
+              width={50}
+              height={50}
               priority
               loading="eager"
-              className="h-11 w-11 object-contain rounded-lg"
+              className="h-16 w-18"
             />
             <div className="text-2xl sm:text-2xl font-bold text-pink-500 hover:text-pink-400 transition">
               Portfolio

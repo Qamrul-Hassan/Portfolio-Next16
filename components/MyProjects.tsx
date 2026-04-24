@@ -24,7 +24,7 @@ const projects: Project[] = [
       "A full-stack e-commerce application built with Next.js 16, Prisma, NextAuth, Stripe, and Cloudinary with product management, secure authentication, and checkout flow.",
     link: "https://stack-store.vercel.app/",
     tech: "Next.js 16, React 19, TypeScript, Prisma, NextAuth v5, Stripe, Cloudinary, Zod, Tailwind CSS",
-    image: "/StactStore.jpg",
+    image: "/StactStore.webp",
     featured: true,
     outcome: "Implemented secure auth, database-backed catalog, image handling, and payment-ready checkout architecture.",
   },
@@ -34,7 +34,7 @@ const projects: Project[] = [
       "Built with Next.js, shadcn/ui, and Axios, this feature-rich crypto explorer shows wallet balances, transactions, NFTs, and live prices using Alchemy, Etherscan, and CoinGecko APIs with server-side proxies.",
     link: "https://ethereum-explorer-sepia.vercel.app/",
     tech: "Next.js, TypeScript, Tailwind CSS, shadcn/ui, Axios, Alchemy API, Etherscan API, CoinGecko API",
-    image: "/etherium-explorer.jpg",
+    image: "/etherium-explorer.webp",
     featured: true,
     outcome: "Built with shadcn/ui and Axios to aggregate balances, transfers, NFTs, and live pricing in one dashboard.",
   },
@@ -44,7 +44,7 @@ const projects: Project[] = [
       "A modern countries dashboard built with Next.js 16, React 19, Axios, Radix Slot, CVA, and Tailwind CSS v4 for fast searching, filtering, sorting, and accessible UI patterns.",
     link: "https://countries-dashboard-gamma.vercel.app/",
     tech: "Next.js 16.1.6, React 19.2.3, TypeScript 5, Axios, @radix-ui/react-slot, class-variance-authority, clsx, lucide-react, tailwind-merge, Tailwind CSS v4, tw-animate-css",
-    image: "/countries-dashboard.jpg",
+    image: "/countries-dashboard.webp",
     featured: true,
     outcome: "Delivers fast country search/filter UX with a typed, reusable component architecture.",
   },
@@ -54,7 +54,7 @@ const projects: Project[] = [
       "A responsive job board using public REST APIs, built with modern Next.js tooling and a clean UI.",
     link: "https://job-board-liart-two.vercel.app/",
     tech: "Next.js (App Router), React, TypeScript, Tailwind CSS, shadcn/ui, Axios",
-    image: "/Job-board.jpg",
+    image: "/Job-board.webp",
     featured: true,
     outcome: "Search-driven job discovery flow with responsive, accessible UI patterns.",
   },
@@ -64,7 +64,7 @@ const projects: Project[] = [
       "Discover word meanings, pronunciations, and examples instantly with our sleek and responsive Dictionary App. Built with Next.js and Tailwind CSS for a fast and seamless experience.",
     link: "https://dictionary-app-nine-ruby.vercel.app/",
     tech: "Next.js, Tailwind CSS",
-    image: "/Dictionary.jpg",
+    image: "/Dictionary.webp",
     featured: true,
   },
   {
@@ -73,7 +73,7 @@ const projects: Project[] = [
       "A responsive movie discovery app to browse trending films, search titles, and explore detailed movie information with a clean UI.",
     link: "https://movie-hub-kappa-five.vercel.app/",
     tech: "Next.js, TypeScript, Tailwind CSS, API integration",
-    image: "/Movie-Hub.jpg",
+    image: "/Movie-Hub.webp",
   },
   {
     title: "Weather App",
@@ -81,7 +81,7 @@ const projects: Project[] = [
       "A dynamic weather app powered by Next.js, Zustand for state management, and Framer Motion for smooth, interactive animations, delivering real-time weather updates.",
     link: "https://weather-app-zeta-seven-71.vercel.app/",
     tech: "React, Tailwind CSS, API",
-    image: "/Weather.jpg",
+    image: "/Weather.webp",
     featured: true,
   },
   {
@@ -90,7 +90,7 @@ const projects: Project[] = [
       "Get real-time news updates with this sleek app built with Next.js, Tailwind CSS, and Zustand. It features live API news fetching, smooth animations via Framer Motion, and responsive design for seamless browsing.",
     link: "https://flash-news-app.vercel.app/",
     tech: "Next.js, Tailwind CSS, Framer Motion, Swiper, responsive design",
-    image: "/News.jpg",
+    image: "/News.webp",
   },
   {
     title: "Recipe Finder",
@@ -98,7 +98,7 @@ const projects: Project[] = [
       "A dynamic and responsive web app that helps users discover meals and cocktails in real-time. Built with Next.js, Tailwind CSS, and TypeScript, it fetches live data from public APIs and adapts cleanly across devices.",
     link: "https://recipe-finder-theta-five.vercel.app/",
     tech: "Next.js, Tailwind CSS, Framer Motion, TypeScript, responsive design",
-    image: "/Recipe-Finder.jpg",
+    image: "/Recipe-Finder.webp",
     featured: true,
   },
   {
@@ -107,7 +107,7 @@ const projects: Project[] = [
       "A modern e-commerce platform built with React and Tailwind CSS, featuring seamless payment integration and a responsive design.",
     link: "https://hektto.vercel.app/",
     tech: "React, Tailwind CSS, Firebase",
-    image: "/hektto.jpg",
+    image: "/hektto.webp",
     featured: true,
   },
   {
@@ -116,7 +116,7 @@ const projects: Project[] = [
       "A compact, conversion-focused e-commerce landing page built with HTML and CSS.",
     link: "https://small-e-commerce-page.vercel.app/",
     tech: "HTML, CSS",
-    image: "/small-e-commerce-page.jpg",
+    image: "/small-e-commerce-page.webp",
   },
   {
     title: "Justice Law Firm Landing",
@@ -124,7 +124,7 @@ const projects: Project[] = [
       "A responsive law-firm landing page crafted with Tailwind CSS v4 and a professional layout.",
     link: "https://justice-pi-liart.vercel.app/",
     tech: "Tailwind CSS v4, HTML",
-    image: "/justice.jpg",
+    image: "/justice.webp",
   },
   {
     title: "AgriCulture Template",
@@ -132,7 +132,7 @@ const projects: Project[] = [
       "A fully responsive agriculture template built with HTML, CSS, and Bootstrap.",
     link: "https://agri-culture-template.vercel.app/",
     tech: "HTML, CSS, Bootstrap",
-    image: "/Agriculture.jpg",
+    image: "/Agriculture.webp",
   },
   {
     title: "Woddy Page",
@@ -140,7 +140,7 @@ const projects: Project[] = [
       "A visually captivating wood-related website showcasing fine craftsmanship, woodwork projects, and premium wooden products with a sleek design aesthetic.",
     link: "https://woody-two.vercel.app/",
     tech: "HTML, CSS, Tailwind CSS",
-    image: "/Woddy.jpg",
+    image: "/Woddy.webp",
   },
   {
     title: "Logistica",
@@ -148,7 +148,7 @@ const projects: Project[] = [
       "An innovative logistics webpage showcasing streamlined layouts and adaptive designs for modern transportation solutions.",
     link: "https://logisticia.netlify.app/",
     tech: "HTML, Tailwind CSS",
-    image: "/Logistica.jpg",
+    image: "/Logistica.webp",
   },
   {
     title: "Oreby E-Commerce",
@@ -156,7 +156,7 @@ const projects: Project[] = [
       "A modern and feature-rich e-commerce platform built with React and Tailwind CSS, including user authentication and secure checkout.",
     link: "https://oreby-ecommerce-five.vercel.app/",
     tech: "React, Tailwind CSS, Firebase",
-    image: "/Oreby.jpg",
+    image: "/Oreby.webp",
   },
   {
     title: "Photography Page",
@@ -164,7 +164,7 @@ const projects: Project[] = [
       "A sleek photography portfolio built with Next.js, Tailwind CSS, and Motion for smooth animations and optimized performance.",
     link: "https://qhs-photography-page.vercel.app/",
     tech: "Next.js, Tailwind CSS, Motion",
-    image: "/Photography.jpg",
+    image: "/Photography.webp",
   },
   {
     title: "Consult",
@@ -172,7 +172,7 @@ const projects: Project[] = [
       "A dynamic portfolio website featuring personalized showcases, elegant animations, and a professional touch.",
     link: "#",
     tech: "React, Tailwind CSS",
-    image: "/Consult.jpg",
+    image: "/Consult.webp",
   },
 ];
 
