@@ -313,7 +313,7 @@ const MyProjects: React.FC = () => {
       className="relative overflow-hidden py-20 px-6 lg:px-16 text-gray-900"
       style={{
         backgroundImage:
-          "linear-gradient(140deg, rgba(236,236,242,0.9) 0%, rgba(232,232,238,0.86) 45%, rgba(247,220,234,0.72) 100%), url('/banner.jpg')",
+          "linear-gradient(140deg, rgba(236,236,242,0.9) 0%, rgba(232,232,238,0.86) 45%, rgba(247,220,234,0.72) 100%), url('/banner.webp')",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
