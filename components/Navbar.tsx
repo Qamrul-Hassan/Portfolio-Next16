@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -110,7 +110,7 @@ const Navbar: React.FC = () => {
                   </span>
                 </span>
                 <span className="text-[10px] font-medium tracking-[0.2em] text-gray-400 uppercase group-hover:text-pink-300/60 transition-colors duration-300">
-                  Frontend Dev
+                  Web Developer
                 </span>
               </div>
             </button>
@@ -239,7 +239,7 @@ const Navbar: React.FC = () => {
                     <span className="text-base font-black text-white">
                       QHS<span className="text-pink-500">Portfolio</span>
                     </span>
-                    <span className="text-[9px] tracking-widest text-gray-500 uppercase">Frontend Dev</span>
+                    <span className="text-[9px] tracking-widest text-gray-500 uppercase">Web Dev</span>
                   </div>
                 </div>
                 <button

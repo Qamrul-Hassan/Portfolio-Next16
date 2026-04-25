@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { motion } from "framer-motion";
@@ -9,7 +9,7 @@ import Image from "next/image";
 const HeroSection: React.FC = () => {
   const welcomeText = "WELCOME TO MY PORTFOLIO";
   const typingTexts = [
-    "Passionate Frontend Developer.",
+    "Passionate Web Developer.",
     "React Expert with a Focus on UI/UX.",
     "Creative Problem Solver.",
   ];
