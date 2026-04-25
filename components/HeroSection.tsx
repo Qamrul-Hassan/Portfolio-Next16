@@ -1,11 +1,10 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { motion } from "framer-motion";
 import { FaLinkedin, FaGithub, FaTwitter } from "react-icons/fa";
 import { Typewriter } from "react-simple-typewriter";
 import Image from "next/image";
-import profileImage from "../public/Portfolio-9.webp";
 
 const HeroSection: React.FC = () => {
   const welcomeText = "WELCOME TO MY PORTFOLIO";
@@ -42,15 +41,14 @@ const HeroSection: React.FC = () => {
             <span className="absolute -inset-4 rounded-[2rem] bg-pink-500/20 blur-2xl opacity-60" />
             <span className="absolute -inset-2 rounded-[1.7rem] border border-white/20 bg-white/15 supports-[backdrop-filter:blur(0px)]:bg-white/5 supports-[backdrop-filter:blur(0px)]:backdrop-blur-[1px]" />
             <div className="relative h-full w-full overflow-hidden rounded-2xl border-4 border-white/30 shadow-[0_14px_36px_rgba(0,0,0,0.5)]">
-<Image
-  src="/Portfolio-9.webp"
-  alt="Qamrul Hassan"
-  fill
-  priority
-  unoptimized
-  className="object-cover"
-  sizes="(min-width: 1024px) 464px, (min-width: 768px) 432px, (min-width: 640px) 384px, 64vw"
-/>
+              <Image
+                src="/Portfolio-9.webp"
+                alt="Qamrul Hassan"
+                fill
+                priority
+                className="object-cover"
+                sizes="(min-width: 1024px) 464px, (min-width: 768px) 432px, (min-width: 640px) 384px, 64vw"
+              />
               <span className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/10" />
             </div>
           </motion.div>
@@ -73,7 +71,7 @@ const HeroSection: React.FC = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 0.8 }}
           >
-            Hi, I'm <span className="text-pink-500 whitespace-nowrap">Qamrul Hassan</span>,
+            Hi, I&apos;m <span className="text-pink-500 whitespace-nowrap">Qamrul Hassan</span>,
           </motion.h1>
 
           <div className="flex min-h-12 items-center justify-center text-sm font-medium text-white sm:min-h-16 sm:text-lg md:text-xl lg:justify-start lg:text-2xl">
@@ -111,7 +109,8 @@ const HeroSection: React.FC = () => {
               href="https://www.linkedin.com/in/md-qamrul-hassan-a44b3835b/"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="LinkedIn profile" className="text-white hover:text-blue-400 text-2xl md:text-3xl transition-colors"
+              aria-label="LinkedIn profile"
+              className="text-white hover:text-blue-400 text-2xl md:text-3xl transition-colors"
               whileHover={{ y: -5, scale: 1.1 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -121,7 +120,8 @@ const HeroSection: React.FC = () => {
               href="https://github.com/Qamrul-Hassan"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="GitHub profile" className="text-white hover:text-gray-400 text-2xl md:text-3xl transition-colors"
+              aria-label="GitHub profile"
+              className="text-white hover:text-gray-400 text-2xl md:text-3xl transition-colors"
               whileHover={{ y: -5, scale: 1.1 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -131,7 +131,8 @@ const HeroSection: React.FC = () => {
               href="https://x.com/Shajal1"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="X profile" className="text-white hover:text-blue-400 text-2xl md:text-3xl transition-colors"
+              aria-label="X profile"
+              className="text-white hover:text-blue-400 text-2xl md:text-3xl transition-colors"
               whileHover={{ y: -5, scale: 1.1 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -155,9 +156,7 @@ const HeroSection: React.FC = () => {
                   clipPath:
                     "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
                 }}
-                animate={{
-                  y: [0, -20, 0],
-                }}
+                animate={{ y: [0, -20, 0] }}
                 transition={{
                   duration: 2,
                   repeat: Infinity,
@@ -175,5 +174,3 @@ const HeroSection: React.FC = () => {
 };
 
 export default HeroSection;
-
-

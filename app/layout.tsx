@@ -2,18 +2,23 @@ import '../styles/globals.css';
 import type { Metadata, Viewport } from "next";
 
 export const metadata: Metadata = {
-  title: "QHSportfolio",
-  description: "Next.js 16 Turbopack project",
+  title: "Qamrul Hassan | Frontend Developer",
+  description: "Portfolio of Qamrul Hassan — Frontend Developer specializing in React, Next.js, TypeScript, and Tailwind CSS.",
   icons: {
     icon: "/favicon.ico",
+  },
+  // Preconnect hints help reduce latency
+  other: {
+    "X-DNS-Prefetch-Control": "on",
   },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  viewportFit: "cover"
+  viewportFit: "cover",
 };
+
 export default function RootLayout({
   children,
 }: {
@@ -21,10 +26,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        {/* Preload critical images */}
+        <link rel="preload" as="image" href="/Logo-4.webp" />
+        <link rel="preload" as="image" href="/banner.webp" />
+        <link rel="preload" as="image" href="/Portfolio-9.webp" />
+      </head>
       <body className="bg-white text-gray-900" suppressHydrationWarning>
-        <div className="pt-0"> {/* Add padding top to account for fixed navbar */}
-          {children}
-        </div>
+        {children}
       </body>
     </html>
   );

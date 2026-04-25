@@ -258,7 +258,6 @@ const Contact = () => {
         <Image 
   src={ContactImage} 
   alt="Contact Us" 
-  unoptimized
   className="rounded-2xl lg:rounded-r-[64px] lg:rounded-l-none shadow-xl border border-white/10 object-cover w-full h-[280px] sm:h-[420px] md:h-[520px] lg:h-[498px]" 
   loading="lazy"
 />
