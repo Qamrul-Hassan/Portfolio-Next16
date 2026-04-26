@@ -92,7 +92,9 @@ const GlobalHexBg: React.FC = () => {
 
     let raf: number;
     let lastTime = 0;
-    const FRAME_MS = 1000 / 60;
+    // FIX: Reduce from 60fps to 20fps — the animation is subtle enough that
+    // 20fps is imperceptible while cutting GPU/CPU cost by ~66%.
+    const FRAME_MS = 1000 / 20;
 
     const draw = (timestamp: number) => {
       // Single rAF call at the TOP — this is the only loop driver

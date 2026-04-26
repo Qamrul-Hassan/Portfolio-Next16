@@ -21,7 +21,6 @@ const HeroBg: React.FC = () => {
     if (!ctx) return;
 
     // Skip hero canvas on mobile — saves ~1-2s of main-thread work during LCP.
-    // The banner image is still fully visible without it.
     if (isTouchDevice()) return;
 
     let W = (canvas.width = canvas.offsetWidth);
@@ -92,7 +91,8 @@ const HeroBg: React.FC = () => {
 
     let raf: number;
     let lastTime = 0;
-    const FRAME_MS = 1000 / 30; // cap hero canvas at 30fps
+    // Cap at 24fps on the hero canvas — barely perceptible vs 30fps, saves ~20% CPU
+    const FRAME_MS = 1000 / 24;
 
     const draw = (timestamp: number) => {
       raf = requestAnimationFrame(draw);
@@ -186,21 +186,44 @@ const HeroSection: React.FC = () => {
     <section
       id="home"
       className="relative flex min-h-[74svh] items-center justify-center overflow-hidden py-8 sm:min-h-[88svh] sm:py-14 lg:min-h-[84svh] lg:py-10"
-      style={{
-        backgroundImage:
-          "linear-gradient(to bottom, rgba(0,0,0,0.65), rgba(2,10,20,0.5), rgba(0,0,0,0.75)), url('/banner.webp')",
-        backgroundSize: "cover",
-        backgroundPosition: "right center",
-      }}
     >
+      {/*
+        FIX: LCP — banner.webp was previously set as a CSS background-image,
+        making it invisible to the browser preload scanner. Moving it to a
+        Next.js <Image priority> means the browser discovers and fetches it
+        immediately from the HTML, dramatically improving LCP on mobile.
+        The dark overlay gradients are now layered on top via absolute divs.
+      */}
+      <Image
+        src="/banner.webp"
+        alt=""
+        fill
+        priority
+        fetchPriority="high"
+        className="object-cover object-right"
+        sizes="100vw"
+        aria-hidden="true"
+      />
+      {/* Dark overlay replaces the gradient that was previously in background-image */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(0,0,0,0.65), rgba(2,10,20,0.5), rgba(0,0,0,0.75))",
+          zIndex: 1,
+        }}
+        aria-hidden="true"
+      />
+
       <HeroBg />
+
       {/* Gradient orbs — CSS only, no JS, no forced reflow */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" style={{ zIndex: 2 }}>
         <div className="absolute -left-32 top-1/4 h-96 w-96 rounded-full opacity-20 blur-3xl" style={{ background: "radial-gradient(circle, #0EA5E9 0%, transparent 70%)" }} />
         <div className="absolute -right-24 bottom-1/4 h-72 w-72 rounded-full opacity-15 blur-3xl" style={{ background: "radial-gradient(circle, #14B8A6 0%, transparent 70%)" }} />
       </div>
 
-      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-5 px-5 sm:gap-10 sm:px-8 lg:flex-row lg:items-center lg:gap-12 lg:px-16">
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-5 px-5 sm:gap-10 sm:px-8 lg:flex-row lg:items-center lg:gap-12 lg:px-16" style={{ zIndex: 3 }}>
         {/* Profile image — priority + explicit dimensions prevents layout shift (CLS fix) */}
         <motion.div className="flex w-full justify-center lg:w-1/2 lg:justify-start" initial={{ opacity: 0, x: -100 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 1 }}>
           <motion.div className="relative h-[min(64vw,16rem)] w-[min(64vw,16rem)] sm:h-[24rem] sm:w-[24rem] md:h-[27rem] md:w-[27rem] lg:h-[29rem] lg:w-[29rem]" whileHover={{ y: -4 }} transition={{ duration: 0.25, ease: "easeOut" }}>

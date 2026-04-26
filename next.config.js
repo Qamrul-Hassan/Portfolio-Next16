@@ -1,26 +1,37 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Serve modern image formats — avif is ~50% smaller than webp
   images: {
     formats: ["image/avif", "image/webp"],
-    // Cache static images for 1 year
     minimumCacheTTL: 31536000,
+    deviceSizes: [390, 640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 64, 96, 128, 256, 384],
   },
 
-  // Gzip all responses
   compress: true,
+  reactStrictMode: true,
 
-  // Transpile packages that ship legacy JS — this eliminates the
-  // "Legacy JavaScript" Lighthouse warning (est savings: 14 KiB).
-  // framer-motion and react-simple-typewriter both ship ES2017+ syntax
-  // that older mobile browsers need transpiled.
+  // Transpile heavy packages that ship un-transpiled modern JS
   transpilePackages: [
     "framer-motion",
     "react-simple-typewriter",
+    "swiper",
   ],
 
-  // Strict mode catches double-render issues in development
-  reactStrictMode: true,
+  // HTTP headers for public assets only.
+  // NOTE: /_next/static/** is intentionally excluded — Next.js already sets
+  // "Cache-Control: public, max-age=31536000, immutable" on those files
+  // automatically in production. Adding it manually triggers a warning in
+  // Next.js dev mode and can break HMR. Let Next.js own that header.
+  async headers() {
+    return [
+      {
+        source: "/(.*\\.webp|.*\\.jpg|.*\\.png|.*\\.avif|.*\\.ico|.*\\.svg|.*\\.woff2)",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

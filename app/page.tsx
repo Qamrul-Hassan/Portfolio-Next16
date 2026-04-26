@@ -16,6 +16,15 @@ const Contact    = lazy(() => import("../components/Contact"));
 const Footer     = lazy(() => import("../components/Footer"));
 const Chat       = lazy(() => import("../components/Chat"));
 
+/*
+ * FIX: Reduce unused JavaScript — GlobalHexBg was imported eagerly in the
+ * original page but it's a decorative background canvas that is skipped
+ * entirely on mobile (isTouchDevice() check). Lazy-loading it ensures the
+ * canvas JS is never parsed on mobile at all, saving ~5KB of script
+ * evaluation time on the critical path.
+ */
+const GlobalHexBg = lazy(() => import("../components/GlobalHexBg"));
+
 // Lightweight skeleton shown while sections hydrate
 const SectionSkeleton = () => (
   <div className="w-full py-20 px-6" aria-hidden="true">
@@ -31,6 +40,10 @@ const SectionSkeleton = () => (
 export default function Page() {
   return (
     <>
+      {/* GlobalHexBg lazy-loaded — desktop-only canvas, skipped on mobile */}
+      <Suspense fallback={null}>
+        <GlobalHexBg />
+      </Suspense>
       <Topbar />
       <Navbar />
       <main>

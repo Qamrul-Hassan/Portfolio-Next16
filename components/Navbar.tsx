@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
@@ -21,36 +21,58 @@ const Navbar: React.FC = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   useEffect(() => {
-    // rAF gate: the section-lookup loop reads offsetTop which causes a forced
-    // reflow. Gating it in rAF means it runs at most once per frame instead of
-    // dozens of times per second during fast scrolls.
-    let rafPending = false;
+    /*
+     * FIX: Forced reflow eliminated.
+     *
+     * Previous code read `section.offsetTop` inside the scroll handler which
+     * forces the browser to do a synchronous style + layout calculation
+     * (forced reflow). Lighthouse reported this as 20 ms+ of wasted time.
+     *
+     * Fix: Use IntersectionObserver instead. The browser resolves intersection
+     * geometry asynchronously, off the main thread, so no reflow is triggered.
+     * scrollY / isSticky still use a passive scroll listener but we removed the
+     * offsetTop loop from it entirely.
+     */
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        }
+      },
+      {
+        // Fire when the section crosses 20% into the viewport
+        rootMargin: "-20% 0px -60% 0px",
+        threshold: 0,
+      }
+    );
 
+    NAV_LINKS.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    // Lightweight scroll listener — only reads window.scrollY (no DOM layout read)
+    let rafPending = false;
     const handleScroll = () => {
       if (rafPending) return;
       rafPending = true;
       requestAnimationFrame(() => {
         rafPending = false;
-        const topbarHeight = 50;
         const scrollY = window.scrollY;
-        setIsSticky(scrollY > topbarHeight);
+        setIsSticky(scrollY > 50);
         setScrolled(scrollY > 80);
-
-        const scrollPosition = scrollY + 120;
-        let current = "home";
-        for (const link of NAV_LINKS) {
-          const section = document.getElementById(link.id);
-          if (section && section.offsetTop <= scrollPosition) {
-            current = link.id;
-          }
-        }
-        setActiveSection(current);
       });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   useEffect(() => {
@@ -63,6 +85,11 @@ const Navbar: React.FC = () => {
   const scrollToSection = (id: string) => {
     const section = document.getElementById(id);
     if (!section) return;
+    /*
+     * FIX: getBoundingClientRect() + scrollY is still a layout read, but it
+     * only fires on user click (not on every scroll frame) so the cost is
+     * negligible and acceptable.
+     */
     const offset = 80;
     const targetPosition =
       section.getBoundingClientRect().top + window.scrollY - offset;

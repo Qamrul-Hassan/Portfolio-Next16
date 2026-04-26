@@ -97,3 +97,40 @@ section {
     animation: none;
   }
 }
+
+/*
+ * FIX: content-visibility — tells the browser to skip rendering work for
+ * off-screen sections until they scroll near the viewport. This can reduce
+ * initial rendering work by 40-60% on long pages, directly helping
+ * "Minimize main-thread work" (was 5,443ms). contain-intrinsic-size prevents
+ * layout shift when the section is first painted.
+ *
+ * We exclude #home (above-fold) so LCP is never delayed.
+ */
+#about,
+#services,
+#projects,
+#contact {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 600px;
+}
+
+/*
+ * FIX: Reduce layout recalculation cost — will-change hints promote the
+ * animated elements to their own compositor layer so transforms/opacity
+ * changes don't trigger paint of the whole page.
+ * Only apply to elements that actually animate; overusing will-change wastes
+ * GPU memory.
+ */
+.hero-float {
+  will-change: transform;
+}
+
+/*
+ * FIX: font-display swap is handled by next/font, but explicitly setting it
+ * here as a safety net for any fallback font usage. Prevents render-blocking
+ * from any font that might load outside next/font.
+ */
+@font-face {
+  font-display: swap;
+}

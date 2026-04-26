@@ -42,6 +42,39 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`scroll-smooth ${playfair.variable} ${dmSans.variable}`}>
+      <head>
+        {/*
+          FIX: Preconnect hints — tells the browser to open TCP+TLS connections
+          to these origins as early as possible, reducing latency for the first
+          request to each. Vercel's image-optimization edge and analytics CDN
+          are the two most impactful origins for this portfolio.
+
+          dns-prefetch is a cheaper fallback for browsers that don't support
+          preconnect (rare, but still worth including).
+
+          These replace what Lighthouse flagged under "Network dependency tree"
+          as origins with no preconnect — estimated savings: ~100-200ms per
+          origin on mobile connections.
+        */}
+        <link rel="preconnect" href="https://vercel.com" />
+        <link rel="preconnect" href="https://va.vercel-scripts.com" />
+        <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
+
+        {/*
+          FIX: Preload the LCP image explicitly so the browser's preload scanner
+          finds it in <head> before it parses the JS bundle. Even though
+          HeroSection uses <Image priority>, adding a preload hint here gives
+          an additional ~50-100ms head start on slower connections because it
+          fires before React hydrates.
+        */}
+        <link
+          rel="preload"
+          as="image"
+          href="/banner.webp"
+          type="image/webp"
+          fetchPriority="high"
+        />
+      </head>
       <body
         className="text-gray-900"
         style={{
