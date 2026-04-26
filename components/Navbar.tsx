@@ -21,21 +21,31 @@ const Navbar: React.FC = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const topbarHeight = 50;
-      const scrollY = window.scrollY;
-      setIsSticky(scrollY > topbarHeight);
-      setScrolled(scrollY > 80);
+    // rAF gate: the section-lookup loop reads offsetTop which causes a forced
+    // reflow. Gating it in rAF means it runs at most once per frame instead of
+    // dozens of times per second during fast scrolls.
+    let rafPending = false;
 
-      const scrollPosition = scrollY + 120;
-      let current = "home";
-      for (const link of NAV_LINKS) {
-        const section = document.getElementById(link.id);
-        if (section && section.offsetTop <= scrollPosition) {
-          current = link.id;
+    const handleScroll = () => {
+      if (rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(() => {
+        rafPending = false;
+        const topbarHeight = 50;
+        const scrollY = window.scrollY;
+        setIsSticky(scrollY > topbarHeight);
+        setScrolled(scrollY > 80);
+
+        const scrollPosition = scrollY + 120;
+        let current = "home";
+        for (const link of NAV_LINKS) {
+          const section = document.getElementById(link.id);
+          if (section && section.offsetTop <= scrollPosition) {
+            current = link.id;
+          }
         }
-      }
-      setActiveSection(current);
+        setActiveSection(current);
+      });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -171,7 +181,7 @@ const Navbar: React.FC = () => {
             Hire Me
           </motion.button>
 
-          {/* Mobile burger button — always z-50 via nav, sits above overlay */}
+          {/* Mobile burger */}
           <button
             onClick={toggleMenu}
             className="lg:hidden relative z-[60] flex flex-col gap-1.5 p-2 rounded-lg focus:outline-none"
@@ -214,7 +224,6 @@ const Navbar: React.FC = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
-            {/* Close button inside overlay */}
             <button
               onClick={toggleMenu}
               className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-full text-sky-400 text-2xl font-bold focus:outline-none transition-all duration-300 hover:bg-sky-400/10 hover:scale-110"

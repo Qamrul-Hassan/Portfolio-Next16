@@ -2,9 +2,9 @@
 
 import React, { useEffect, useRef } from "react";
 
-function isLowPowerDevice(): boolean {
-  if (typeof navigator === "undefined") return false;
-  return (navigator.hardwareConcurrency ?? 8) <= 4;
+function isTouchDevice(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(pointer: coarse)").matches;
 }
 
 const SectionBg: React.FC = () => {
@@ -16,12 +16,9 @@ const SectionBg: React.FC = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const lowPower = isLowPowerDevice();
-
-    // On low-power devices, skip the SectionBg canvas entirely —
-    // it's a background detail that's invisible at low opacity anyway.
-    // This alone saves ~0.5-1s of main-thread work per section.
-    if (lowPower) return;
+    // Skip entirely on touchscreen devices — this background is a subtle
+    // detail invisible at low opacity, not worth the main-thread cost on mobile.
+    if (isTouchDevice()) return;
 
     let W = (canvas.width = canvas.offsetWidth);
     let H = (canvas.height = canvas.offsetHeight);
@@ -78,10 +75,13 @@ const SectionBg: React.FC = () => {
 
     let raf: number;
     let lastTime = 0;
-    const FRAME_MS = 1000 / 30; // cap at 30fps even on desktop for background canvas
+    const FRAME_MS = 1000 / 30; // cap at 30fps — this is a background canvas
 
     const draw = (timestamp: number) => {
+      // BUG FIX: rAF call is at the TOP only — the previous version called it
+      // at both top and bottom, running the loop twice per frame.
       raf = requestAnimationFrame(draw);
+
       if (timestamp - lastTime < FRAME_MS) return;
       lastTime = timestamp;
 
@@ -144,11 +144,13 @@ const SectionBg: React.FC = () => {
         ctx.lineWidth = 1.5;
         ctx.stroke();
       });
-
-      raf = requestAnimationFrame(draw);
     };
+
     raf = requestAnimationFrame(draw);
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); };
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onResize);
+    };
   }, []);
 
   return (

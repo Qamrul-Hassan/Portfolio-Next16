@@ -1,21 +1,32 @@
 "use client";
 
-import { FaLinkedin, FaGithub, FaXTwitter, FaEnvelope, FaPhone, FaLocationDot , FaArrowUp } from "react-icons/fa6";
+import { FaLinkedin, FaGithub, FaXTwitter, FaEnvelope, FaPhone, FaLocationDot, FaArrowUp } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRef, useEffect } from "react";
 
-/* ── Starfield + Rising Particles Background ── */
+function isTouchDevice(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(pointer: coarse)").matches;
+}
+
 const FooterBg: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    // Skip on mobile — starfield is a subtle detail, not worth the frame budget
+    if (isTouchDevice()) return;
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     let W = (canvas.width = canvas.offsetWidth);
     let H = (canvas.height = canvas.offsetHeight);
-    const onResize = () => { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; };
+    const onResize = () => {
+      W = canvas.width = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+    };
     window.addEventListener("resize", onResize);
 
     type Star = { x: number; y: number; r: number; alpha: number; blink: number };
@@ -40,8 +51,14 @@ const FooterBg: React.FC = () => {
 
     let frame = 0;
     let raf: number;
+    let lastTime = 0;
+    const FRAME_MS = 1000 / 30; // 30fps cap — footer is below fold, not critical
 
-    const draw = () => {
+    const draw = (timestamp: number) => {
+      raf = requestAnimationFrame(draw);
+      if (timestamp - lastTime < FRAME_MS) return;
+      lastTime = timestamp;
+
       ctx.clearRect(0, 0, W, H);
       frame++;
 
@@ -85,10 +102,7 @@ const FooterBg: React.FC = () => {
         ctx.beginPath();
         ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
         ctx.fillStyle = e.color + e.alpha + ")";
-        ctx.shadowColor = e.color + "0.6)";
-        ctx.shadowBlur = 6;
         ctx.fill();
-        ctx.shadowBlur = 0;
       });
 
       const horizGrad = ctx.createLinearGradient(0, H * 0.7, 0, H);
@@ -96,22 +110,20 @@ const FooterBg: React.FC = () => {
       horizGrad.addColorStop(1, "rgba(14,165,233,0.06)");
       ctx.fillStyle = horizGrad;
       ctx.fillRect(0, H * 0.7, W, H * 0.3);
-
-      raf = requestAnimationFrame(draw);
     };
-    draw();
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); };
+
+    raf = requestAnimationFrame(draw);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onResize);
+    };
   }, []);
   return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ pointerEvents: "none" }} />;
 };
 
-
-
-/* ── Starfield + Rising Particles Background ── */
-
 const socialLinks = [
   { href: "https://www.linkedin.com/in/md-qamrul-hassan-a44b3835b/", label: "LinkedIn profile", icon: <FaLinkedin className="w-5 h-5" />, color: "#0A66C2" },
-  { href: "https://x.com/Shajal1", label: "X profile", icon: <FaXTwitter  className="w-5 h-5" />, color: "#1DA1F2" },
+  { href: "https://x.com/Shajal1", label: "X profile", icon: <FaXTwitter className="w-5 h-5" />, color: "#1DA1F2" },
   { href: "https://github.com/Qamrul-Hassan", label: "GitHub profile", icon: <FaGithub className="w-5 h-5" />, color: "#1DA1F2" },
 ];
 const quickLinks = ["Home", "About", "Services", "Projects", "Contact"];
@@ -124,10 +136,8 @@ const Footer = () => {
       style={{ background: "rgba(4,11,24,0.90)" }}>
       <FooterBg />
 
-      {/* Top accent bar */}
       <div className="h-[3px] w-full relative z-10" style={{ background: "linear-gradient(to right, transparent, #0EA5E9 30%, #14B8A6 70%, transparent)" }} />
 
-      {/* Scroll-to-top */}
       <div className="relative z-10 flex justify-center pt-8 pb-0">
         <motion.button onClick={scrollToTop} aria-label="Scroll to top"
           className="group flex flex-col items-center gap-1 text-xs tracking-widest uppercase text-slate-400 hover:text-white transition-colors"
@@ -140,7 +150,6 @@ const Footer = () => {
         </motion.button>
       </div>
 
-      {/* Main content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-16 pt-12 pb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
 
@@ -148,7 +157,7 @@ const Footer = () => {
           <motion.div className="lg:col-span-1" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
             <div className="flex items-center gap-3 mb-4">
               <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-sky-400 shadow-lg shadow-sky-500/20">
-                <Image src="/Logo-4.webp" alt="QHS Logo" fill priority className="object-cover" />
+                <Image src="/Logo-4.webp" alt="QHS Logo" fill sizes="48px" className="object-cover" />
               </div>
               <div>
                 <div className="font-bold text-base text-white leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>Qamrul Hassan</div>
@@ -161,7 +170,7 @@ const Footer = () => {
                 <motion.a key={social.href} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.label}
                   className="w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300"
                   style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
-                  whileHover={{ scale: 1.1, y: -2, background: "rgba(14,165,233,0.2)", borderColor: "rgba(14,165,233,0.4)" }}
+                  whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}>
                   <span style={{ color: social.color }}>{social.icon}</span>
                 </motion.a>
@@ -173,13 +182,13 @@ const Footer = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}>
             <h3 className="text-sm font-bold uppercase tracking-widest text-sky-400 mb-5">Navigation</h3>
             <ul className="space-y-2.5">
-              {quickLinks.map((link, index) => (
-                <motion.li key={link} initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: 0.2 + index * 0.07 }}>
+              {quickLinks.map((link) => (
+                <li key={link}>
                   <a href={`#${link.toLowerCase()}`} className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm">
                     <span className="w-4 h-[1px] rounded transition-all duration-300 group-hover:w-6" style={{ background: "linear-gradient(to right, #0EA5E9, #14B8A6)" }} />
                     {link}
                   </a>
-                </motion.li>
+                </li>
               ))}
             </ul>
           </motion.div>
@@ -188,13 +197,11 @@ const Footer = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}>
             <h3 className="text-sm font-bold uppercase tracking-widest text-sky-400 mb-5">Expertise</h3>
             <div className="flex flex-wrap gap-2">
-              {skills.map((skill, index) => (
-                <motion.span key={skill} className="px-3 py-1 rounded-full text-xs font-medium text-slate-300 transition-all duration-300 hover:text-white cursor-default"
-                  style={{ background: "rgba(14,165,233,0.08)", border: "1px solid rgba(14,165,233,0.18)" }}
-                  initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.3, delay: 0.3 + index * 0.06 }}
-                  whileHover={{ background: "rgba(14,165,233,0.18)", borderColor: "rgba(14,165,233,0.4)" }}>
+              {skills.map((skill) => (
+                <span key={skill} className="px-3 py-1 rounded-full text-xs font-medium text-slate-300 transition-all duration-300 hover:text-white cursor-default"
+                  style={{ background: "rgba(14,165,233,0.08)", border: "1px solid rgba(14,165,233,0.18)" }}>
                   {skill}
-                </motion.span>
+                </span>
               ))}
             </div>
             <div className="mt-6">
@@ -214,14 +221,14 @@ const Footer = () => {
             <h3 className="text-sm font-bold uppercase tracking-widest text-sky-400 mb-5">Get In Touch</h3>
             <div className="space-y-4">
               <a href="mailto:mdqamrul74@gmail.com" className="group flex items-start gap-3 text-slate-400 hover:text-white transition-colors">
-                <div className="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all"
+                <div className="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
                   style={{ background: "rgba(14,165,233,0.1)", border: "1px solid rgba(14,165,233,0.2)" }}>
                   <FaEnvelope className="w-3.5 h-3.5 text-sky-400" />
                 </div>
                 <div><div className="text-xs text-slate-500 mb-0.5">Email</div><span className="text-sm group-hover:text-sky-400 transition-colors">mdqamrul74@gmail.com</span></div>
               </a>
               <a href="tel:+8801711844948" className="group flex items-start gap-3 text-slate-400 hover:text-white transition-colors">
-                <div className="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all"
+                <div className="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
                   style={{ background: "rgba(20,184,166,0.1)", border: "1px solid rgba(20,184,166,0.2)" }}>
                   <FaPhone className="w-3.5 h-3.5 text-teal-400" />
                 </div>
@@ -230,7 +237,7 @@ const Footer = () => {
               <div className="flex items-start gap-3 text-slate-400">
                 <div className="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
                   style={{ background: "rgba(14,165,233,0.08)", border: "1px solid rgba(14,165,233,0.15)" }}>
-                  <FaLocationDot  className="w-3.5 h-3.5 text-sky-400" />
+                  <FaLocationDot className="w-3.5 h-3.5 text-sky-400" />
                 </div>
                 <div><div className="text-xs text-slate-500 mb-0.5">Location</div><span className="text-sm">Dhaka, Bangladesh</span></div>
               </div>
@@ -239,16 +246,15 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Bottom bar */}
       <div className="relative z-10 w-full" style={{ borderTop: "1px solid rgba(14,165,233,0.1)" }}>
         <div className="w-full max-w-7xl mx-auto px-6 lg:px-16 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-500">
-          <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+          <span>
             &copy; {new Date().getFullYear()}{" "}<span className="text-slate-300 font-medium">Qamrul Hassan Shajal</span>. All Rights Reserved.
-          </motion.span>
-          <motion.div className="flex items-center gap-2" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.15 }}>
+          </span>
+          <div className="flex items-center gap-2">
             <span>Crafted with</span><span className="text-red-400">♥</span><span>using</span>
             <span style={{ background: "linear-gradient(135deg, #38BDF8, #14B8A6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text", fontWeight: 600 }}>Next.js & Tailwind</span>
-          </motion.div>
+          </div>
         </div>
       </div>
     </footer>

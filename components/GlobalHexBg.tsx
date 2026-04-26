@@ -2,12 +2,11 @@
 
 import React, { useEffect, useRef } from "react";
 
-// Detects if the device is low-powered (mobile/tablet) so we can throttle
-// the animation. This avoids the "Minimize main-thread work" Lighthouse flag.
-function isLowPowerDevice(): boolean {
-  if (typeof navigator === "undefined") return false;
-  // navigator.hardwareConcurrency <= 4 is a reliable mobile proxy
-  return (navigator.hardwareConcurrency ?? 8) <= 4;
+// pointer:coarse is the gold-standard mobile signal — catches ALL touchscreen
+// devices regardless of core count (hardwareConcurrency misses many mid-range phones)
+function isTouchDevice(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(pointer: coarse)").matches;
 }
 
 const GlobalHexBg: React.FC = () => {
@@ -16,10 +15,12 @@ const GlobalHexBg: React.FC = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    // Skip the entire canvas on mobile — saves the biggest chunk of main-thread work
+    if (isTouchDevice()) return;
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-
-    const lowPower = isLowPowerDevice();
 
     let W = (canvas.width = canvas.offsetWidth);
     let H = (canvas.height = canvas.offsetHeight);
@@ -30,22 +31,21 @@ const GlobalHexBg: React.FC = () => {
     };
     window.addEventListener("resize", onResize);
 
-    const R = lowPower ? 40 : 30; // Fewer hexes on mobile = fewer draw calls
+    const R = 30;
     const HH = Math.sqrt(3) * R;
     const CW = R * 1.5;
-    // Spawn less frequently on low-power devices
-    const SPAWN_INTERVAL = lowPower ? 35 : 20;
+    const SPAWN_INTERVAL = 20;
 
     const COLS_LEFT: [number, number, number][] = [
-      [56,  189, 248],
-      [14,  165, 233],
-      [34,  211, 238],
-      [6,   182, 212],
-      [20,  184, 166],
+      [56, 189, 248],
+      [14, 165, 233],
+      [34, 211, 238],
+      [6, 182, 212],
+      [20, 184, 166],
     ];
     const COLS_RIGHT: [number, number, number][] = [
       [244, 114, 182],
-      [236,  72, 153],
+      [236, 72, 153],
       [251, 113, 133],
       [249, 168, 212],
       [253, 164, 175],
@@ -92,14 +92,12 @@ const GlobalHexBg: React.FC = () => {
 
     let raf: number;
     let lastTime = 0;
-    // On low-power: cap at ~30fps to halve main-thread animation work
-    const TARGET_FPS = lowPower ? 30 : 60;
-    const FRAME_MS = 1000 / TARGET_FPS;
+    const FRAME_MS = 1000 / 60;
 
     const draw = (timestamp: number) => {
+      // Single rAF call at the TOP — this is the only loop driver
       raf = requestAnimationFrame(draw);
 
-      // Throttle frame rate on mobile
       if (timestamp - lastTime < FRAME_MS) return;
       lastTime = timestamp;
 
@@ -123,14 +121,10 @@ const GlobalHexBg: React.FC = () => {
       }
 
       hexes.forEach((h) => {
-        // Only draw the grid stroke for non-idle hexes or every hex at low opacity
-        // Skip grid stroke on low-power to save draw calls
-        if (!lowPower) {
-          drawHex(h.cx, h.cy, R - 1);
-          ctx.strokeStyle = "rgba(56,189,248,0.08)";
-          ctx.lineWidth = 0.8;
-          ctx.stroke();
-        }
+        drawHex(h.cx, h.cy, R - 1);
+        ctx.strokeStyle = "rgba(56,189,248,0.08)";
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
 
         if (h.phase === "idle") return;
         h.t++;
@@ -159,13 +153,10 @@ const GlobalHexBg: React.FC = () => {
         ctx.lineWidth = 1.5;
         ctx.stroke();
 
-        // Skip inner hex ring on low-power (saves 1/3 of draw calls)
-        if (!lowPower) {
-          drawHex(h.cx, h.cy, (R - 1) * h.scale * 0.55);
-          ctx.strokeStyle = `rgba(${r},${g},${b},${(h.alpha * 0.6).toFixed(3)})`;
-          ctx.lineWidth = 0.8;
-          ctx.stroke();
-        }
+        drawHex(h.cx, h.cy, (R - 1) * h.scale * 0.55);
+        ctx.strokeStyle = `rgba(${r},${g},${b},${(h.alpha * 0.6).toFixed(3)})`;
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
       });
     };
 

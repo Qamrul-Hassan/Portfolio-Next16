@@ -6,9 +6,9 @@ import { FaLinkedin, FaGithub, FaXTwitter } from "react-icons/fa6";
 import { Typewriter } from "react-simple-typewriter";
 import Image from "next/image";
 
-function isLowPowerDevice(): boolean {
-  if (typeof navigator === "undefined") return false;
-  return (navigator.hardwareConcurrency ?? 8) <= 4;
+function isTouchDevice(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(pointer: coarse)").matches;
 }
 
 const HeroBg: React.FC = () => {
@@ -20,10 +20,9 @@ const HeroBg: React.FC = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const lowPower = isLowPowerDevice();
-    // On mobile, skip the hero canvas animation — saves ~1-2s of main-thread work
-    // during the most critical LCP window. The banner image is still visible.
-    if (lowPower) return;
+    // Skip hero canvas on mobile — saves ~1-2s of main-thread work during LCP.
+    // The banner image is still fully visible without it.
+    if (isTouchDevice()) return;
 
     let W = (canvas.width = canvas.offsetWidth);
     let H = (canvas.height = canvas.offsetHeight);
@@ -38,18 +37,18 @@ const HeroBg: React.FC = () => {
     const CW = R * 1.5;
 
     const COLS_LEFT: [number, number, number][] = [
-      [30,  110, 148],
-      [8,   95,  133],
-      [18,  120, 138],
-      [4,   105, 122],
-      [10,  105, 96],
+      [30, 110, 148],
+      [8, 95, 133],
+      [18, 120, 138],
+      [4, 105, 122],
+      [10, 105, 96],
     ];
     const COLS_RIGHT: [number, number, number][] = [
-      [140, 60,  105],
-      [136, 40,  88],
-      [145, 58,  76],
-      [144, 90,  122],
-      [146, 88,  100],
+      [140, 60, 105],
+      [136, 40, 88],
+      [145, 58, 76],
+      [144, 90, 122],
+      [146, 88, 100],
     ];
 
     type Hex = {
@@ -195,7 +194,7 @@ const HeroSection: React.FC = () => {
       }}
     >
       <HeroBg />
-      {/* Gradient orbs — use CSS only, no JS, no forced reflow */}
+      {/* Gradient orbs — CSS only, no JS, no forced reflow */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-32 top-1/4 h-96 w-96 rounded-full opacity-20 blur-3xl" style={{ background: "radial-gradient(circle, #0EA5E9 0%, transparent 70%)" }} />
         <div className="absolute -right-24 bottom-1/4 h-72 w-72 rounded-full opacity-15 blur-3xl" style={{ background: "radial-gradient(circle, #14B8A6 0%, transparent 70%)" }} />
@@ -208,7 +207,6 @@ const HeroSection: React.FC = () => {
             <span className="absolute -inset-4 rounded-[2rem] blur-2xl opacity-50" style={{ background: "rgba(14,165,233,0.25)" }} />
             <span className="absolute -inset-2 rounded-[1.7rem] border border-white/20 bg-white/5 backdrop-blur-sm" />
             <div className="relative h-full w-full overflow-hidden rounded-2xl border-2 border-sky-400/30 shadow-[0_14px_48px_rgba(14,165,233,0.25)]">
-              {/* priority ensures this is the LCP element — fetched immediately */}
               <Image
                 src="/Portfolio-9.webp"
                 alt="Qamrul Hassan"
@@ -250,7 +248,7 @@ const HeroSection: React.FC = () => {
               </motion.a>
             ))}
           </motion.div>
-          {/* Floating hexagons — use CSS animation instead of JS to avoid forced reflow */}
+          {/* Floating hexagons — CSS animation, off JS thread entirely */}
           <div className="relative mt-3 flex justify-center gap-2 sm:mt-8 sm:gap-6 lg:justify-start">
             {[{ colors: "from-sky-400 to-teal-500", delay: "0s" }, { colors: "from-teal-500 to-cyan-400", delay: "0.5s" }, { colors: "from-blue-500 to-sky-400", delay: "1s" }].map((item, index) => (
               <div
