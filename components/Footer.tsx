@@ -18,7 +18,6 @@ const FooterBg: React.FC = () => {
     const onResize = () => { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; };
     window.addEventListener("resize", onResize);
 
-    // Static stars
     type Star = { x: number; y: number; r: number; alpha: number; blink: number };
     const stars: Star[] = Array.from({ length: 60 }, () => ({
       x: Math.random() * 1200, y: Math.random() * 300,
@@ -27,7 +26,6 @@ const FooterBg: React.FC = () => {
       blink: Math.random() * Math.PI * 2,
     }));
 
-    // Rising particles (like embers going up)
     type Ember = { x: number; y: number; r: number; speed: number; alpha: number; color: string };
     const embers: Ember[] = Array.from({ length: 30 }, () => ({
       x: Math.random() * 1200, y: Math.random() * 300,
@@ -37,7 +35,6 @@ const FooterBg: React.FC = () => {
       color: Math.random() > 0.5 ? "rgba(14,165,233," : "rgba(20,184,166,",
     }));
 
-    // Shooting star
     type Shoot = { x: number; y: number; len: number; speed: number; active: boolean; timer: number };
     const shoot: Shoot = { x: 0, y: 0, len: 0, speed: 0, active: false, timer: 0 };
 
@@ -48,7 +45,6 @@ const FooterBg: React.FC = () => {
       ctx.clearRect(0, 0, W, H);
       frame++;
 
-      // Stars
       stars.forEach(s => {
         const a = s.alpha + Math.sin(frame * 0.02 + s.blink) * 0.12;
         ctx.beginPath();
@@ -57,7 +53,6 @@ const FooterBg: React.FC = () => {
         ctx.fill();
       });
 
-      // Shooting star logic
       shoot.timer++;
       if (!shoot.active && shoot.timer > 180) {
         shoot.active = true;
@@ -83,7 +78,6 @@ const FooterBg: React.FC = () => {
         if (shoot.len > 80) { shoot.active = false; shoot.timer = 0; }
       }
 
-      // Rising embers
       embers.forEach(e => {
         e.y -= e.speed;
         e.x += Math.sin(frame * 0.02 + e.y) * 0.3;
@@ -97,7 +91,6 @@ const FooterBg: React.FC = () => {
         ctx.shadowBlur = 0;
       });
 
-      // Horizon glow (bottom)
       const horizGrad = ctx.createLinearGradient(0, H * 0.7, 0, H);
       horizGrad.addColorStop(0, "rgba(14,165,233,0)");
       horizGrad.addColorStop(1, "rgba(14,165,233,0.06)");
@@ -112,6 +105,10 @@ const FooterBg: React.FC = () => {
   return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ pointerEvents: "none" }} />;
 };
 
+
+
+/* ── Starfield + Rising Particles Background ── */
+
 const socialLinks = [
   { href: "https://www.linkedin.com/in/md-qamrul-hassan-a44b3835b/", label: "LinkedIn profile", icon: <FaLinkedin className="w-5 h-5" />, color: "#0A66C2" },
   { href: "https://x.com/Shajal1", label: "X profile", icon: <FaXTwitter  className="w-5 h-5" />, color: "#1DA1F2" },
@@ -124,7 +121,7 @@ const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 const Footer = () => {
   return (
     <footer className="relative overflow-hidden text-white"
-      style={{ background: "linear-gradient(160deg, #040b18 0%, #060f20 50%, #040a17 100%)" }}>
+      style={{ background: "rgba(4,11,24,0.90)" }}>
       <FooterBg />
 
       {/* Top accent bar */}

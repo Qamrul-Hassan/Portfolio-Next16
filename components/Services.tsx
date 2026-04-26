@@ -1,112 +1,9 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import React from "react";
+import SectionBg from "./SectionBg";
 import { motion } from "framer-motion";
 
 /* ── Terminal Grid + Scan Line Background ── */
-const ServicesBg: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    let W = (canvas.width = canvas.offsetWidth);
-    let H = (canvas.height = canvas.offsetHeight);
-    const onResize = () => { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; };
-    window.addEventListener("resize", onResize);
-
-    const CELL = 48;
-    let frame = 0;
-    let scanY = 0;
-    let raf: number;
-
-    // Random node flash data
-    type FlashNode = { col: number; row: number; life: number; maxLife: number };
-    const flashes: FlashNode[] = [];
-    let flashTimer = 0;
-
-    const draw = () => {
-      ctx.clearRect(0, 0, W, H);
-      frame++;
-      scanY = (scanY + 1.2) % H;
-      flashTimer++;
-
-      // Spawn a random flash every ~30 frames
-      if (flashTimer > 30) {
-        flashTimer = 0;
-        const cols = Math.floor(W / CELL);
-        const rows = Math.floor(H / CELL);
-        flashes.push({ col: Math.floor(Math.random() * cols), row: Math.floor(Math.random() * rows), life: 0, maxLife: 50 });
-        if (flashes.length > 12) flashes.shift();
-      }
-
-      // Grid lines
-      ctx.strokeStyle = "rgba(14,165,233,0.07)";
-      ctx.lineWidth = 1;
-      for (let x = 0; x <= W; x += CELL) {
-        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
-      }
-      for (let y = 0; y <= H; y += CELL) {
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-      }
-
-      // Grid node dots at intersections
-      for (let x = 0; x <= W; x += CELL) {
-        for (let y = 0; y <= H; y += CELL) {
-          const dist = Math.abs(y - scanY);
-          const glow = Math.max(0, 1 - dist / 80);
-          ctx.beginPath();
-          ctx.arc(x, y, 1.5, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(14,165,233,${0.12 + glow * 0.3})`;
-          ctx.fill();
-        }
-      }
-
-      // Flashing nodes (highlighted cells)
-      flashes.forEach(f => {
-        f.life++;
-        const progress = f.life / f.maxLife;
-        const alpha = Math.sin(progress * Math.PI) * 0.45;
-        const cx = f.col * CELL + CELL / 2;
-        const cy = f.row * CELL + CELL / 2;
-        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, CELL * 0.7);
-        grad.addColorStop(0, `rgba(20,184,166,${alpha})`);
-        grad.addColorStop(1, "rgba(20,184,166,0)");
-        ctx.fillStyle = grad;
-        ctx.fillRect(f.col * CELL, f.row * CELL, CELL, CELL);
-
-        // Dot at center
-        ctx.beginPath();
-        ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(56,189,248,${alpha * 1.5})`;
-        ctx.shadowColor = "rgba(14,165,233,0.8)";
-        ctx.shadowBlur = 10;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      });
-
-      // Horizontal scan line
-      const scanGrad = ctx.createLinearGradient(0, scanY - 40, 0, scanY + 40);
-      scanGrad.addColorStop(0, "rgba(14,165,233,0)");
-      scanGrad.addColorStop(0.5, "rgba(14,165,233,0.06)");
-      scanGrad.addColorStop(1, "rgba(14,165,233,0)");
-      ctx.fillStyle = scanGrad;
-      ctx.fillRect(0, scanY - 40, W, 80);
-
-      // Bright scan line edge
-      ctx.beginPath();
-      ctx.moveTo(0, scanY); ctx.lineTo(W, scanY);
-      ctx.strokeStyle = "rgba(14,165,233,0.18)";
-      ctx.lineWidth = 1;
-      ctx.stroke();
-
-      raf = requestAnimationFrame(draw);
-    };
-    draw();
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); };
-  }, []);
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ pointerEvents: "none" }} />;
-};
 
 const services = [
   { title: "Web Development", description: "Developing modern and responsive websites using HTML, CSS, JavaScript, React, and Next.js. Ensuring cross-browser compatibility and smooth user experiences.", icon: "🌐" },
@@ -126,8 +23,8 @@ const MyServices = () => {
 
   return (
     <section id="services" className="relative overflow-hidden py-20 px-6 lg:px-16 text-gray-100"
-      style={{ background: "linear-gradient(160deg, #070d1c 0%, #0b1525 50%, #07111f 100%)" }}>
-      <ServicesBg />
+      style={{ background: "rgba(7,13,28,0.85)" }}>
+      <SectionBg />
 
       {/* Corner accent blobs */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">

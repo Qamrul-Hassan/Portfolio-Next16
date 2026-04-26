@@ -39,8 +39,11 @@ export default function RootLayout({
         <link rel="preload" as="image" href="/Portfolio-9.webp" />
       </head>
       <body
-        className="bg-white text-gray-900"
-        style={{ fontFamily: "'DM Sans', sans-serif" }}
+        className="text-gray-900"
+        style={{
+          fontFamily: "'DM Sans', sans-serif",
+          background: "#050d1a",
+        }}
         suppressHydrationWarning
       >
         {children}

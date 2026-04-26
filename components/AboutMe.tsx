@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
+import SectionBg from "./SectionBg";
 import {
   FaHtml5, FaCss3Alt, FaJs, FaReact, FaGithub, FaBootstrap, FaEnvelope, FaDownload,
 } from "react-icons/fa";
@@ -8,90 +9,6 @@ import {
 } from "react-icons/si";
 import { motion } from "framer-motion";
 
-/* ── Morphing Blob + Floating Particles (light theme) ── */
-const AboutBg: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    let W = (canvas.width = canvas.offsetWidth);
-    let H = (canvas.height = canvas.offsetHeight);
-    const onResize = () => { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; };
-    window.addEventListener("resize", onResize);
-
-    // Floating skill dots
-    type Dot = { x: number; y: number; r: number; vx: number; vy: number; color: string; alpha: number };
-    const colors = ["rgba(14,165,233,", "rgba(20,184,166,", "rgba(56,189,248,", "rgba(6,182,212,"];
-    const dots: Dot[] = Array.from({ length: 22 }, () => ({
-      x: Math.random() * W, y: Math.random() * H,
-      r: Math.random() * 6 + 3,
-      vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      alpha: Math.random() * 0.25 + 0.05,
-    }));
-
-    // Connection lines between nearby dots
-    let frame = 0;
-    let raf: number;
-    const draw = () => {
-      ctx.clearRect(0, 0, W, H);
-      frame++;
-
-      // Update + draw dots
-      dots.forEach(d => {
-        d.x += d.vx; d.y += d.vy;
-        if (d.x < 0 || d.x > W) d.vx *= -1;
-        if (d.y < 0 || d.y > H) d.vy *= -1;
-        ctx.beginPath();
-        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-        ctx.fillStyle = d.color + d.alpha + ")";
-        ctx.shadowColor = d.color + "0.5)";
-        ctx.shadowBlur = 10;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      });
-
-      // Lines
-      for (let i = 0; i < dots.length; i++) {
-        for (let j = i + 1; j < dots.length; j++) {
-          const dx = dots[i].x - dots[j].x, dy = dots[i].y - dots[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 130) {
-            ctx.beginPath();
-            ctx.moveTo(dots[i].x, dots[i].y);
-            ctx.lineTo(dots[j].x, dots[j].y);
-            ctx.strokeStyle = `rgba(14,165,233,${0.08 * (1 - dist / 130)})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        }
-      }
-
-      // Morphing blobs (very soft, light palette)
-      const t = frame * 0.008;
-      [
-        { cx: W * 0.9, cy: H * 0.1, r: 120, hue: 200 },
-        { cx: W * 0.05, cy: H * 0.85, r: 90, hue: 175 },
-      ].forEach(blob => {
-        const r = blob.r + Math.sin(t + blob.cx) * 20;
-        const g = ctx.createRadialGradient(blob.cx, blob.cy, 0, blob.cx, blob.cy, r);
-        g.addColorStop(0, `hsla(${blob.hue},80%,60%,0.18)`);
-        g.addColorStop(1, `hsla(${blob.hue},80%,60%,0)`);
-        ctx.beginPath();
-        ctx.arc(blob.cx + Math.sin(t * 0.6) * 18, blob.cy + Math.cos(t * 0.8) * 14, r, 0, Math.PI * 2);
-        ctx.fillStyle = g;
-        ctx.fill();
-      });
-
-      raf = requestAnimationFrame(draw);
-    };
-    draw();
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); };
-  }, []);
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ pointerEvents: "none" }} />;
-};
 
 const AboutMe = () => {
   const skills = [
@@ -151,8 +68,8 @@ const AboutMe = () => {
 
   return (
     <section id="about" className="relative overflow-hidden py-20 px-6 lg:px-16 text-gray-100"
-      style={{ background: "linear-gradient(160deg, #0a0f1e 0%, #0d1b2a 50%, #0a1628 100%)" }}>
-      <AboutBg />
+      style={{ background: "rgba(10,15,30,0.85)" }}>
+      <SectionBg />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 items-start">
         {/* Left: text + resume */}
