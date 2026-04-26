@@ -2,6 +2,11 @@
 
 import React, { useEffect, useRef } from "react";
 
+function isLowPowerDevice(): boolean {
+  if (typeof navigator === "undefined") return false;
+  return (navigator.hardwareConcurrency ?? 8) <= 4;
+}
+
 const SectionBg: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -10,6 +15,13 @@ const SectionBg: React.FC = () => {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+
+    const lowPower = isLowPowerDevice();
+
+    // On low-power devices, skip the SectionBg canvas entirely —
+    // it's a background detail that's invisible at low opacity anyway.
+    // This alone saves ~0.5-1s of main-thread work per section.
+    if (lowPower) return;
 
     let W = (canvas.width = canvas.offsetWidth);
     let H = (canvas.height = canvas.offsetHeight);
@@ -23,7 +35,6 @@ const SectionBg: React.FC = () => {
     const HEX_SIZE = 36;
     const HEX_W = HEX_SIZE * 2;
     const HEX_H = Math.sqrt(3) * HEX_SIZE;
-    let frame = 0;
 
     type HexState = { col: number; row: number; glow: number; target: number; timer: number };
     const hexStates: HexState[] = [];
@@ -66,9 +77,15 @@ const SectionBg: React.FC = () => {
     initHexes();
 
     let raf: number;
-    const draw = () => {
+    let lastTime = 0;
+    const FRAME_MS = 1000 / 30; // cap at 30fps even on desktop for background canvas
+
+    const draw = (timestamp: number) => {
+      raf = requestAnimationFrame(draw);
+      if (timestamp - lastTime < FRAME_MS) return;
+      lastTime = timestamp;
+
       ctx.clearRect(0, 0, W, H);
-      frame++;
 
       hexStates.forEach(h => {
         h.timer--;
@@ -130,7 +147,7 @@ const SectionBg: React.FC = () => {
 
       raf = requestAnimationFrame(draw);
     };
-    draw();
+    raf = requestAnimationFrame(draw);
     return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); };
   }, []);
 

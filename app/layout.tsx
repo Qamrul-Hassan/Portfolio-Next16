@@ -26,17 +26,19 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        {/* Google Fonts */}
+        {/* Preconnect to font CDN — eliminates render-blocking network roundtrip */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* display=swap prevents FOIT; only load weights actually used */}
         <link
-          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500;600&display=swap"
           rel="stylesheet"
         />
-        {/* Preload critical images */}
-        <link rel="preload" as="image" href="/Logo-4.webp" />
-        <link rel="preload" as="image" href="/banner.webp" />
-        <link rel="preload" as="image" href="/Portfolio-9.webp" />
+        {/* NOTE: LCP image (/Portfolio-9.webp) and logo (/Logo-4.webp) are preloaded
+            automatically by Next.js via the priority + fetchPriority props on <Image>.
+            Manual <link rel="preload"> for these would target the raw URL, which mismatches
+            the optimised URL (with ?w=&q= params) that Next.js actually serves — causing
+            the "preloaded but not used" browser warning. Let Next.js handle it. */}
       </head>
       <body
         className="text-gray-900"

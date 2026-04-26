@@ -80,3 +80,20 @@ section {
   display: none;
 }
 
+
+/* CSS-only floating animation — replaces Framer Motion JS animate loop on hero hexagons.
+   This moves animation off the JS main thread entirely (compositor thread only). */
+@keyframes hero-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-20px); }
+}
+.hero-float {
+  animation: hero-float 2s ease-in-out infinite;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .hero-float {
+    animation: none;
+  }
+}

@@ -97,6 +97,7 @@ const Navbar: React.FC = () => {
                 alt="QHS Logo"
                 fill
                 priority
+                sizes="48px"
                 className="object-cover"
               />
             </div>

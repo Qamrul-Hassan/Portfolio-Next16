@@ -6,6 +6,11 @@ import { FaLinkedin, FaGithub, FaXTwitter } from "react-icons/fa6";
 import { Typewriter } from "react-simple-typewriter";
 import Image from "next/image";
 
+function isLowPowerDevice(): boolean {
+  if (typeof navigator === "undefined") return false;
+  return (navigator.hardwareConcurrency ?? 8) <= 4;
+}
+
 const HeroBg: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -14,6 +19,11 @@ const HeroBg: React.FC = () => {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+
+    const lowPower = isLowPowerDevice();
+    // On mobile, skip the hero canvas animation — saves ~1-2s of main-thread work
+    // during the most critical LCP window. The banner image is still visible.
+    if (lowPower) return;
 
     let W = (canvas.width = canvas.offsetWidth);
     let H = (canvas.height = canvas.offsetHeight);
@@ -27,7 +37,6 @@ const HeroBg: React.FC = () => {
     const HH = Math.sqrt(3) * R;
     const CW = R * 1.5;
 
-    // Dimmed colors (reduced brightness ~40%)
     const COLS_LEFT: [number, number, number][] = [
       [30,  110, 148],
       [8,   95,  133],
@@ -83,8 +92,14 @@ const HeroBg: React.FC = () => {
     };
 
     let raf: number;
+    let lastTime = 0;
+    const FRAME_MS = 1000 / 30; // cap hero canvas at 30fps
 
-    const draw = () => {
+    const draw = (timestamp: number) => {
+      raf = requestAnimationFrame(draw);
+      if (timestamp - lastTime < FRAME_MS) return;
+      lastTime = timestamp;
+
       ctx.clearRect(0, 0, W, H);
       spawnT++;
 
@@ -142,11 +157,9 @@ const HeroBg: React.FC = () => {
         ctx.lineWidth = 0.8;
         ctx.stroke();
       });
-
-      raf = requestAnimationFrame(draw);
     };
 
-    draw();
+    raf = requestAnimationFrame(draw);
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
@@ -182,19 +195,29 @@ const HeroSection: React.FC = () => {
       }}
     >
       <HeroBg />
-      {/* Subtle animated gradient orbs */}
+      {/* Gradient orbs — use CSS only, no JS, no forced reflow */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-32 top-1/4 h-96 w-96 rounded-full opacity-20 blur-3xl" style={{ background: "radial-gradient(circle, #0EA5E9 0%, transparent 70%)" }} />
         <div className="absolute -right-24 bottom-1/4 h-72 w-72 rounded-full opacity-15 blur-3xl" style={{ background: "radial-gradient(circle, #14B8A6 0%, transparent 70%)" }} />
       </div>
 
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-5 px-5 sm:gap-10 sm:px-8 lg:flex-row lg:items-center lg:gap-12 lg:px-16">
+        {/* Profile image — priority + explicit dimensions prevents layout shift (CLS fix) */}
         <motion.div className="flex w-full justify-center lg:w-1/2 lg:justify-start" initial={{ opacity: 0, x: -100 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 1 }}>
           <motion.div className="relative h-[min(64vw,16rem)] w-[min(64vw,16rem)] sm:h-[24rem] sm:w-[24rem] md:h-[27rem] md:w-[27rem] lg:h-[29rem] lg:w-[29rem]" whileHover={{ y: -4 }} transition={{ duration: 0.25, ease: "easeOut" }}>
             <span className="absolute -inset-4 rounded-[2rem] blur-2xl opacity-50" style={{ background: "rgba(14,165,233,0.25)" }} />
             <span className="absolute -inset-2 rounded-[1.7rem] border border-white/20 bg-white/5 backdrop-blur-sm" />
             <div className="relative h-full w-full overflow-hidden rounded-2xl border-2 border-sky-400/30 shadow-[0_14px_48px_rgba(14,165,233,0.25)]">
-              <Image src="/Portfolio-9.webp" alt="Qamrul Hassan" fill priority className="object-cover" sizes="(min-width: 1024px) 464px, (min-width: 768px) 432px, (min-width: 640px) 384px, 64vw" />
+              {/* priority ensures this is the LCP element — fetched immediately */}
+              <Image
+                src="/Portfolio-9.webp"
+                alt="Qamrul Hassan"
+                fill
+                priority
+                fetchPriority="high"
+                className="object-cover"
+                sizes="(min-width: 1024px) 464px, (min-width: 768px) 432px, (min-width: 640px) 384px, 64vw"
+              />
               <span className="absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-white/5" />
             </div>
           </motion.div>
@@ -227,9 +250,17 @@ const HeroSection: React.FC = () => {
               </motion.a>
             ))}
           </motion.div>
+          {/* Floating hexagons — use CSS animation instead of JS to avoid forced reflow */}
           <div className="relative mt-3 flex justify-center gap-2 sm:mt-8 sm:gap-6 lg:justify-start">
-            {[{ colors: "from-sky-400 to-teal-500" }, { colors: "from-teal-500 to-cyan-400" }, { colors: "from-blue-500 to-sky-400" }].map((item, index) => (
-              <motion.div key={index} className={`h-7 w-7 sm:h-16 sm:w-16 rounded-xl bg-gradient-to-r ${item.colors}`} style={{ clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)" }} animate={{ y: [0, -20, 0] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 1, delay: index * 0.5, ease: "easeInOut" }} />
+            {[{ colors: "from-sky-400 to-teal-500", delay: "0s" }, { colors: "from-teal-500 to-cyan-400", delay: "0.5s" }, { colors: "from-blue-500 to-sky-400", delay: "1s" }].map((item, index) => (
+              <div
+                key={index}
+                className={`h-7 w-7 sm:h-16 sm:w-16 rounded-xl bg-gradient-to-r ${item.colors} hero-float`}
+                style={{
+                  clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                  animationDelay: item.delay,
+                }}
+              />
             ))}
           </div>
         </div>

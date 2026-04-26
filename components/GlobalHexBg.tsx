@@ -2,6 +2,14 @@
 
 import React, { useEffect, useRef } from "react";
 
+// Detects if the device is low-powered (mobile/tablet) so we can throttle
+// the animation. This avoids the "Minimize main-thread work" Lighthouse flag.
+function isLowPowerDevice(): boolean {
+  if (typeof navigator === "undefined") return false;
+  // navigator.hardwareConcurrency <= 4 is a reliable mobile proxy
+  return (navigator.hardwareConcurrency ?? 8) <= 4;
+}
+
 const GlobalHexBg: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -10,6 +18,8 @@ const GlobalHexBg: React.FC = () => {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+
+    const lowPower = isLowPowerDevice();
 
     let W = (canvas.width = canvas.offsetWidth);
     let H = (canvas.height = canvas.offsetHeight);
@@ -20,23 +30,25 @@ const GlobalHexBg: React.FC = () => {
     };
     window.addEventListener("resize", onResize);
 
-    const R = 30;
+    const R = lowPower ? 40 : 30; // Fewer hexes on mobile = fewer draw calls
     const HH = Math.sqrt(3) * R;
     const CW = R * 1.5;
+    // Spawn less frequently on low-power devices
+    const SPAWN_INTERVAL = lowPower ? 35 : 20;
 
     const COLS_LEFT: [number, number, number][] = [
-      [56,  189, 248],  // sky-400
-      [14,  165, 233],  // sky-500
-      [34,  211, 238],  // cyan-400
-      [6,   182, 212],  // cyan-500
-      [20,  184, 166],  // teal-500
+      [56,  189, 248],
+      [14,  165, 233],
+      [34,  211, 238],
+      [6,   182, 212],
+      [20,  184, 166],
     ];
     const COLS_RIGHT: [number, number, number][] = [
-      [244, 114, 182],  // pink-400
-      [236,  72, 153],  // pink-500
-      [251, 113, 133],  // rose-400
-      [249, 168, 212],  // pink-300
-      [253, 164, 175],  // rose-300
+      [244, 114, 182],
+      [236,  72, 153],
+      [251, 113, 133],
+      [249, 168, 212],
+      [253, 164, 175],
     ];
 
     type Hex = {
@@ -79,12 +91,22 @@ const GlobalHexBg: React.FC = () => {
     };
 
     let raf: number;
+    let lastTime = 0;
+    // On low-power: cap at ~30fps to halve main-thread animation work
+    const TARGET_FPS = lowPower ? 30 : 60;
+    const FRAME_MS = 1000 / TARGET_FPS;
 
-    const draw = () => {
+    const draw = (timestamp: number) => {
+      raf = requestAnimationFrame(draw);
+
+      // Throttle frame rate on mobile
+      if (timestamp - lastTime < FRAME_MS) return;
+      lastTime = timestamp;
+
       ctx.clearRect(0, 0, W, H);
       spawnT++;
 
-      if (spawnT >= 20) {
+      if (spawnT >= SPAWN_INTERVAL) {
         spawnT = 0;
         const idle = hexes.filter((h) => h.phase === "idle");
         if (idle.length) {
@@ -101,10 +123,14 @@ const GlobalHexBg: React.FC = () => {
       }
 
       hexes.forEach((h) => {
-        drawHex(h.cx, h.cy, R - 1);
-        ctx.strokeStyle = "rgba(56,189,248,0.08)";
-        ctx.lineWidth = 0.8;
-        ctx.stroke();
+        // Only draw the grid stroke for non-idle hexes or every hex at low opacity
+        // Skip grid stroke on low-power to save draw calls
+        if (!lowPower) {
+          drawHex(h.cx, h.cy, R - 1);
+          ctx.strokeStyle = "rgba(56,189,248,0.08)";
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
 
         if (h.phase === "idle") return;
         h.t++;
@@ -133,16 +159,17 @@ const GlobalHexBg: React.FC = () => {
         ctx.lineWidth = 1.5;
         ctx.stroke();
 
-        drawHex(h.cx, h.cy, (R - 1) * h.scale * 0.55);
-        ctx.strokeStyle = `rgba(${r},${g},${b},${(h.alpha * 0.6).toFixed(3)})`;
-        ctx.lineWidth = 0.8;
-        ctx.stroke();
+        // Skip inner hex ring on low-power (saves 1/3 of draw calls)
+        if (!lowPower) {
+          drawHex(h.cx, h.cy, (R - 1) * h.scale * 0.55);
+          ctx.strokeStyle = `rgba(${r},${g},${b},${(h.alpha * 0.6).toFixed(3)})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
       });
-
-      raf = requestAnimationFrame(draw);
     };
 
-    draw();
+    raf = requestAnimationFrame(draw);
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
