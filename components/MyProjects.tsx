@@ -133,8 +133,8 @@ const ProjectsBg: React.FC = () => {
   }, []);
   return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ pointerEvents: "none" }} />;
 };
-import "swiper/css";
-import "swiper/css/effect-coverflow";
+import 'swiper/css';
+import 'swiper/css/effect-coverflow';
 import { Navigation, Pagination, Autoplay, EffectCoverflow } from "swiper/modules";
 
 type Project = {
