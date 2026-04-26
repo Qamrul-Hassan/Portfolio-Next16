@@ -1,8 +1,138 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
+
+/* ── Hex + Wave Background for Projects ── */
+const ProjectsBg: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    let W = (canvas.width = canvas.offsetWidth);
+    let H = (canvas.height = canvas.offsetHeight);
+    const onResize = () => { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; };
+    window.addEventListener("resize", onResize);
+
+    const HEX_SIZE = 36;
+    const HEX_W = HEX_SIZE * 2;
+    const HEX_H = Math.sqrt(3) * HEX_SIZE;
+    let frame = 0;
+
+    // Hex glow state per hex
+    type HexState = { col: number; row: number; glow: number; target: number; timer: number };
+    const hexStates: HexState[] = [];
+
+    // Wave lines data
+    type WaveLine = { y: number; amplitude: number; freq: number; speed: number; phase: number; color: string };
+    const waves: WaveLine[] = [
+      { y: H * 0.3, amplitude: 18, freq: 0.012, speed: 0.018, phase: 0, color: "rgba(14,165,233,0.09)" },
+      { y: H * 0.55, amplitude: 14, freq: 0.018, speed: -0.014, phase: 1.5, color: "rgba(20,184,166,0.07)" },
+      { y: H * 0.75, amplitude: 22, freq: 0.009, speed: 0.011, phase: 3.1, color: "rgba(56,189,248,0.06)" },
+    ];
+
+    const drawHex = (cx: number, cy: number, size: number, alpha: number) => {
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const angle = (Math.PI / 3) * i - Math.PI / 6;
+        const x = cx + size * Math.cos(angle);
+        const y = cy + size * Math.sin(angle);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = `rgba(14,165,233,${alpha})`;
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+    };
+
+    // Init random hex glows
+    const initHexes = () => {
+      hexStates.length = 0;
+      const cols = Math.ceil(W / (HEX_W * 0.75)) + 2;
+      const rows = Math.ceil(H / HEX_H) + 2;
+      for (let i = 0; i < 8; i++) {
+        hexStates.push({ col: Math.floor(Math.random() * cols), row: Math.floor(Math.random() * rows), glow: 0, target: Math.random() * 0.35 + 0.1, timer: Math.floor(Math.random() * 80) });
+      }
+    };
+    initHexes();
+
+    let raf: number;
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H);
+      frame++;
+
+      // Update hex glow states
+      hexStates.forEach(h => {
+        h.timer--;
+        if (h.timer <= 0) {
+          h.glow += (h.target - h.glow) * 0.08;
+          if (Math.abs(h.glow - h.target) < 0.01) {
+            h.target = h.target > 0.1 ? 0 : Math.random() * 0.35 + 0.1;
+            h.timer = Math.floor(Math.random() * 60 + 20);
+            if (Math.random() < 0.2) {
+              const cols = Math.ceil(W / (HEX_W * 0.75)) + 2;
+              const rows = Math.ceil(H / HEX_H) + 2;
+              h.col = Math.floor(Math.random() * cols);
+              h.row = Math.floor(Math.random() * rows);
+            }
+          }
+        }
+      });
+
+      // Draw hex grid
+      const cols = Math.ceil(W / (HEX_W * 0.75)) + 2;
+      const rows = Math.ceil(H / HEX_H) + 2;
+      for (let col = -1; col < cols; col++) {
+        for (let row = -1; row < rows; row++) {
+          const cx = col * HEX_W * 0.75;
+          const cy = row * HEX_H + (col % 2 === 0 ? 0 : HEX_H / 2);
+          // Check if this hex is glowing
+          const glowHex = hexStates.find(h => h.col === col && h.row === row);
+          const baseAlpha = 0.04;
+          const alpha = glowHex ? baseAlpha + glowHex.glow : baseAlpha;
+          drawHex(cx, cy, HEX_SIZE - 2, alpha);
+
+          if (glowHex && glowHex.glow > 0.05) {
+            const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, HEX_SIZE);
+            g.addColorStop(0, `rgba(14,165,233,${glowHex.glow * 0.3})`);
+            g.addColorStop(1, "rgba(14,165,233,0)");
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            for (let i = 0; i < 6; i++) {
+              const angle = (Math.PI / 3) * i - Math.PI / 6;
+              const x = cx + (HEX_SIZE - 2) * Math.cos(angle);
+              const y = cy + (HEX_SIZE - 2) * Math.sin(angle);
+              i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.fill();
+          }
+        }
+      }
+
+      // Animated wave lines
+      waves.forEach(wave => {
+        wave.phase += wave.speed;
+        ctx.beginPath();
+        for (let x = 0; x <= W; x += 4) {
+          const y = wave.y + Math.sin(x * wave.freq + wave.phase) * wave.amplitude;
+          x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = wave.color;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      });
+
+      raf = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); };
+  }, []);
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ pointerEvents: "none" }} />;
+};
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import { Navigation, Pagination, Autoplay, EffectCoverflow } from "swiper/modules";
@@ -19,7 +149,7 @@ type Project = {
 
 const projects: Project[] = [
   {
-    title: "Satck Store- E-Commerce",
+    title: "Stack Store — E-Commerce",
     description:
       "A full-stack e-commerce application built with Next.js 16, Prisma, NextAuth, Stripe, and Cloudinary with product management, secure authentication, and checkout flow.",
     link: "https://stack-store.vercel.app/",
@@ -31,7 +161,7 @@ const projects: Project[] = [
   {
     title: "Ethereum Explorer",
     description:
-      "Built with Next.js, shadcn/ui, and Axios, this feature-rich crypto explorer shows wallet balances, transactions, NFTs, and live prices using Alchemy, Etherscan, and CoinGecko APIs with server-side proxies.",
+      "Built with Next.js, shadcn/ui, and Axios, this feature-rich crypto explorer shows wallet balances, transactions, NFTs, and live prices using Alchemy, Etherscan, and CoinGecko APIs.",
     link: "https://ethereum-explorer-sepia.vercel.app/",
     tech: "Next.js, TypeScript, Tailwind CSS, shadcn/ui, Axios, Alchemy API, Etherscan API, CoinGecko API",
     image: "/etherium-explorer.webp",
@@ -43,7 +173,7 @@ const projects: Project[] = [
     description:
       "A modern countries dashboard built with Next.js 16, React 19, Axios, Radix Slot, CVA, and Tailwind CSS v4 for fast searching, filtering, sorting, and accessible UI patterns.",
     link: "https://countries-dashboard-gamma.vercel.app/",
-    tech: "Next.js 16.1.6, React 19.2.3, TypeScript 5, Axios, @radix-ui/react-slot, class-variance-authority, clsx, lucide-react, tailwind-merge, Tailwind CSS v4, tw-animate-css",
+    tech: "Next.js 16, React 19, TypeScript 5, Axios, Radix UI, Tailwind CSS v4",
     image: "/countries-dashboard.webp",
     featured: true,
     outcome: "Delivers fast country search/filter UX with a typed, reusable component architecture.",
@@ -78,31 +208,31 @@ const projects: Project[] = [
   {
     title: "Weather App",
     description:
-      "A dynamic weather app powered by Next.js, Zustand for state management, and Framer Motion for smooth, interactive animations, delivering real-time weather updates.",
+      "A dynamic weather app powered by Next.js and Framer Motion, delivering real-time weather updates with smooth, interactive animations.",
     link: "https://weather-app-zeta-seven-71.vercel.app/",
-    tech: "React, Tailwind CSS, API",
+    tech: "React, Tailwind CSS, Weather API",
     image: "/Weather.webp",
     featured: true,
   },
   {
     title: "Flash News",
     description:
-      "Get real-time news updates with this sleek app built with Next.js, Tailwind CSS, and Zustand. It features live API news fetching, smooth animations via Framer Motion, and responsive design for seamless browsing.",
+      "Get real-time news updates with this sleek app built with Next.js and Tailwind CSS. Features live API news fetching and smooth Framer Motion animations.",
     link: "https://flash-news-app.vercel.app/",
-    tech: "Next.js, Tailwind CSS, Framer Motion, Swiper, responsive design",
+    tech: "Next.js, Tailwind CSS, Framer Motion, Swiper",
     image: "/News.webp",
   },
   {
     title: "Recipe Finder",
     description:
-      "A dynamic and responsive web app that helps users discover meals and cocktails in real-time. Built with Next.js, Tailwind CSS, and TypeScript, it fetches live data from public APIs and adapts cleanly across devices.",
+      "A dynamic and responsive web app that helps users discover meals and cocktails in real-time. Fetches live data from public APIs and adapts cleanly across devices.",
     link: "https://recipe-finder-theta-five.vercel.app/",
-    tech: "Next.js, Tailwind CSS, Framer Motion, TypeScript, responsive design",
+    tech: "Next.js, Tailwind CSS, Framer Motion, TypeScript",
     image: "/Recipe-Finder.webp",
     featured: true,
   },
   {
-    title: "E-Commerce Website - Hektto",
+    title: "E-Commerce Website — Hektto",
     description:
       "A modern e-commerce platform built with React and Tailwind CSS, featuring seamless payment integration and a responsive design.",
     link: "https://hektto.vercel.app/",
@@ -161,7 +291,7 @@ const projects: Project[] = [
   {
     title: "Photography Page",
     description:
-      "A sleek photography portfolio built with Next.js, Tailwind CSS, and Motion for smooth animations and optimized performance.",
+      "A sleek photography portfolio built with Next.js, Tailwind CSS, and Framer Motion for smooth animations and optimized performance.",
     link: "https://qhs-photography-page.vercel.app/",
     tech: "Next.js, Tailwind CSS, Motion",
     image: "/Photography.webp",
@@ -183,18 +313,17 @@ const getSlides = (projectsList: Project[], slidesPerView: number) => {
 };
 
 const exclusiveFeaturedTitles = [
-  "Satck Store- E-Commerce",
+  "Stack Store — E-Commerce",
   "Ethereum Explorer",
   "Job Board",
   "Dictionary",
   "Weather App",
   "Recipe Finder",
-  "E-Commerce Website - Hektto",
+  "E-Commerce Website — Hektto",
 ];
 
 const MyProjects: React.FC = () => {
   const [swiperInstance, setSwiperInstance] = useState<import("swiper").Swiper | null>(null);
-
   const [buttonsPerSet, setButtonsPerSet] = useState(5);
   const [currentPageSet, setCurrentPageSet] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -239,8 +368,8 @@ const MyProjects: React.FC = () => {
   );
 
   const exclusiveFeaturedProjects = exclusiveFeaturedTitles
-    .map((title) => projects.find((project) => project.title === title))
-    .filter((project): project is Project => Boolean(project));
+    .map((title) => projects.find((p) => p.title === title))
+    .filter((p): p is Project => Boolean(p));
 
   const leftFeatured = exclusiveFeaturedProjects[0];
   const rightFeatured = exclusiveFeaturedProjects[1];
@@ -253,10 +382,7 @@ const MyProjects: React.FC = () => {
     const intervalId = window.setInterval(() => {
       setMiddleIndex((prev) => (prev + 1) % rotatingFeatured.length);
     }, 3400);
-
-    return () => {
-      window.clearInterval(intervalId);
-    };
+    return () => window.clearInterval(intervalId);
   }, [rotatingFeatured.length, isMiddlePaused]);
 
   const middleFeatured =
@@ -269,39 +395,58 @@ const MyProjects: React.FC = () => {
   ) => {
     const cardContent = (
       <>
-        <span className="absolute -top-8 -right-8 h-24 w-24 rounded-2xl rotate-12 bg-fuchsia-400/20 blur-2xl" />
-        <span className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-transparent via-pink-300/70 to-transparent" />
-        <p className="relative text-xs font-semibold uppercase tracking-[0.15em] text-pink-200 mb-2">
+        {/* Top glow blob */}
+        <span className="absolute -top-8 -right-8 h-24 w-24 rounded-2xl rotate-12 blur-2xl"
+          style={{ background: "rgba(14,165,233,0.25)" }} />
+        {/* Top accent line */}
+        <span className="absolute top-0 left-0 h-[2px] w-full"
+          style={{ background: "linear-gradient(to right, transparent, #0EA5E9, #14B8A6, transparent)" }} />
+
+        <p className="relative text-xs font-semibold uppercase tracking-[0.15em] mb-2"
+          style={{ color: "#38BDF8" }}>
           Featured
         </p>
         <h3 className="relative text-xl font-extrabold text-white mb-2">{project.title}</h3>
-        <p className="relative text-sm text-gray-50 mb-3">{project.description}</p>
-        <p className="relative text-sm text-gray-50 mb-2">
-          <span className="font-semibold text-pink-200">Stack:</span> {project.tech}
+        <p className="relative text-sm mb-3" style={{ color: "#cbd5e1" }}>{project.description}</p>
+        <p className="relative text-sm mb-2" style={{ color: "#94a3b8" }}>
+          <span className="font-semibold" style={{ color: "#38BDF8" }}>Stack:</span>{" "}
+          {project.tech}
         </p>
-        {project.outcome ? (
-          <p className="relative text-sm text-white font-medium">
-            Result: <span className="font-normal">{project.outcome}</span>
+        {project.outcome && (
+          <p className="relative text-sm font-medium text-white">
+            Result: <span className="font-normal" style={{ color: "#cbd5e1" }}>{project.outcome}</span>
           </p>
-        ) : null}
+        )}
+        {/* Bottom hover line */}
+        <span className="absolute bottom-0 left-1/2 h-[2px] w-0 group-hover:w-1/2 -translate-x-1/2 rounded-full transition-all duration-500"
+          style={{ background: "linear-gradient(to right, #0EA5E9, #14B8A6)" }} />
       </>
     );
 
-    const sharedClass =
-      `group relative block w-full h-[300px] overflow-hidden rounded-lg ${cardShape} ${textAlign} border border-fuchsia-300/40 bg-[linear-gradient(155deg,#180f1c_0%,#2a1430_56%,#14101a_100%)] p-5 shadow-[0_16px_35px_rgba(0,0,0,0.35)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_46px_rgba(217,70,239,0.28)]`;
+    const sharedStyle: React.CSSProperties = {
+      background: "linear-gradient(155deg, #0c1827 0%, #0f2235 56%, #0a1520 100%)",
+      border: "1px solid rgba(14,165,233,0.2)",
+      boxShadow: "0 16px 35px rgba(0,0,0,0.35)",
+    };
+
+    const sharedClass = `group relative block w-full h-[300px] overflow-hidden rounded-lg ${cardShape} ${textAlign} p-5 transition duration-300 hover:-translate-y-1`;
 
     if (project.link === "#") {
-      return <div className={sharedClass}>{cardContent}</div>;
+      return (
+        <div className={sharedClass} style={sharedStyle}
+          onMouseEnter={e => (e.currentTarget as HTMLElement).style.boxShadow = "0 22px 46px rgba(14,165,233,0.25)"}
+          onMouseLeave={e => (e.currentTarget as HTMLElement).style.boxShadow = "0 16px 35px rgba(0,0,0,0.35)"}>
+          {cardContent}
+        </div>
+      );
     }
 
     return (
-      <a
-        href={project.link}
-        target="_blank"
-        rel="noopener noreferrer"
+      <a href={project.link} target="_blank" rel="noopener noreferrer"
         aria-label={`Open featured project ${project.title}`}
-        className={sharedClass}
-      >
+        className={sharedClass} style={sharedStyle}
+        onMouseEnter={e => (e.currentTarget as HTMLElement).style.boxShadow = "0 22px 46px rgba(14,165,233,0.25)"}
+        onMouseLeave={e => (e.currentTarget as HTMLElement).style.boxShadow = "0 16px 35px rgba(0,0,0,0.35)"}>
         {cardContent}
       </a>
     );
@@ -310,74 +455,75 @@ const MyProjects: React.FC = () => {
   return (
     <section
       id="projects"
-      className="relative overflow-hidden py-20 px-6 lg:px-16 text-gray-900"
+      className="relative overflow-hidden py-20 px-6 lg:px-16 text-gray-100"
       style={{
-        backgroundImage:
-          "linear-gradient(140deg, rgba(236,236,242,0.9) 0%, rgba(232,232,238,0.86) 45%, rgba(247,220,234,0.72) 100%), url('/banner.webp')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        background: "linear-gradient(160deg, #06101e 0%, #091626 50%, #060e1a 100%)",
       }}
     >
-      <div className="pointer-events-none absolute inset-0">
-        <span className="absolute top-8 right-10 hidden h-24 w-60 rotate-6 rounded-2xl border border-pink-300/35 bg-pink-300/10 lg:block" />
-        <span className="absolute bottom-10 left-10 hidden h-36 w-36 -rotate-12 rounded-3xl border border-fuchsia-300/30 bg-fuchsia-300/10 lg:block" />
-        <span
-          className="absolute top-16 left-[7%] hidden h-44 w-44 border border-pink-300/35 bg-gradient-to-br from-pink-300/30 to-fuchsia-400/20 lg:block"
-          style={{
-            clipPath:
-              "polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%)",
-          }}
-        />
-        <span
-          className="absolute bottom-14 right-[10%] hidden h-56 w-56 border border-fuchsia-300/35 bg-gradient-to-br from-fuchsia-300/25 to-pink-500/20 lg:block"
-          style={{
-            clipPath:
-              "polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%)",
-          }}
-        />
+      <ProjectsBg />
+      {/* Corner accent blobs */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-24 right-0 h-72 w-72 rounded-full blur-3xl" style={{ background: "radial-gradient(circle, rgba(14,165,233,0.1), transparent 70%)" }} />
+        <div className="absolute bottom-0 left-0 h-60 w-60 rounded-full blur-3xl" style={{ background: "radial-gradient(circle, rgba(20,184,166,0.08), transparent 70%)" }} />
       </div>
-      <motion.div
-        className="relative z-10 text-center mb-12 max-w-7xl mx-auto"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2 }}
-      >
+
+      <div className="relative z-10 w-full max-w-7xl mx-auto text-center mb-12">
+        {/* Badge */}
         <motion.span
-          className="inline-block mb-2 px-3 py-1 rounded-full text-xs font-bold tracking-[0.2em] uppercase text-pink-600 bg-pink-100/70 border border-pink-200"
+          className="inline-block mb-2 px-3 py-1 rounded-full text-xs font-bold tracking-[0.2em] uppercase"
+          style={{ color: "#38BDF8", background: "rgba(14,165,233,0.1)", border: "1px solid rgba(14,165,233,0.25)" }}
           initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
           Portfolio Work
         </motion.span>
+
         <motion.h2
           className="text-4xl md:text-5xl font-extrabold mb-3"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2 }}
+          style={{ fontFamily: "'Playfair Display', serif" }}
+          initial={{ opacity: 0, y: -30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
         >
-          <span className="text-pink-500">My</span>{" "}
-          <span className="text-gray-800">Projects</span>
+          <span style={{
+            background: "linear-gradient(135deg, #38BDF8 0%, #14B8A6 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+          }}>
+            My
+          </span>{" "}
+          <span className="text-white">Projects</span>
         </motion.h2>
+
+        {/* Gradient divider line */}
         <motion.div
-          className="h-1 w-28 mx-auto rounded-full bg-gradient-to-r from-pink-500 via-rose-400 to-orange-300 mb-10"
+          className="h-1 w-28 mx-auto rounded-full mb-10"
+          style={{ background: "linear-gradient(to right, #0EA5E9, #14B8A6)" }}
           initial={{ width: 0, opacity: 0 }}
-          animate={{ width: 112, opacity: 1 }}
+          whileInView={{ width: 112, opacity: 1 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         />
-        <p className="text-xl mt-4 max-w-2xl mx-auto px-4 py-2 text-gray-800 text-center md:text-2xl">
-          I am a passionate Frontend Developer with expertise in modern web technologies.
-        </p>
-      </motion.div>
 
+        <motion.p
+          className="text-base sm:text-lg mb-10 max-w-3xl mx-auto"
+          style={{ color: "#94a3b8" }}
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+        >
+          A selection of projects built with modern web technologies — focused on performance, clean UX, and maintainable code.
+        </motion.p>
+      </div>
+
+      {/* Featured cards row */}
       <div className="relative z-10 w-full max-w-7xl mx-auto mb-10 grid grid-cols-1 md:grid-cols-3 gap-5">
-        {leftFeatured
-          ? renderFeaturedCard(
-              leftFeatured,
-              "md:rounded-l-full md:rounded-r-none",
-              "md:text-right"
-            )
-          : null}
+        {leftFeatured && renderFeaturedCard(leftFeatured, "md:rounded-l-full md:rounded-r-none", "md:text-right")}
 
         <div
           className="relative [perspective:1400px]"
@@ -395,19 +541,12 @@ const MyProjects: React.FC = () => {
               {renderFeaturedCard(middleFeatured, "md:rounded-none", "md:text-center")}
             </motion.div>
           </AnimatePresence>
-
-          {/* Removed numeric featured pagination to simplify layout on small screens */}
         </div>
 
-        {rightFeatured
-          ? renderFeaturedCard(
-              rightFeatured,
-              "md:rounded-r-full md:rounded-l-none",
-              "text-left"
-            )
-          : null}
+        {rightFeatured && renderFeaturedCard(rightFeatured, "md:rounded-r-full md:rounded-l-none", "text-left")}
       </div>
 
+      {/* Swiper carousel */}
       <div className="relative z-10 w-full max-w-7xl mx-auto">
         <Swiper
           modules={[Navigation, Pagination, Autoplay, EffectCoverflow]}
@@ -440,113 +579,108 @@ const MyProjects: React.FC = () => {
           }}
           className="mySwiper projectsSwiper"
         >
-          {getSlides(projects, 2.3).map((project, index) => (
-            <SwiperSlide key={index} className="h-full">
-              {project.link === "#" ? (
-                <div className="group relative rounded-2xl overflow-hidden border border-fuchsia-300/35 bg-[linear-gradient(160deg,#1b1320_0%,#26152f_58%,#120d18_100%)] shadow-xl h-full flex flex-col opacity-95 transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(217,70,239,0.3)]">
-                  <div className="relative overflow-hidden">
-                    <div className="relative w-full aspect-[4/3]">
-                      <Image
-                        src={project.image}
-                        alt={`${project.title} preview image`}
-                        fill
-                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                        className="object-cover object-center rounded-xl shadow-md transition-transform duration-500 group-hover:scale-[1.04]"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
-                    <div className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-black/60 border border-fuchsia-300/45 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-pink-100">
-                      Project Preview
-                    </div>
+          {getSlides(projects, 2.3).map((project, index) => {
+            const cardStyle: React.CSSProperties = {
+              background: "linear-gradient(160deg, #0c1827 0%, #10233a 58%, #091520 100%)",
+              border: "1px solid rgba(14,165,233,0.2)",
+              boxShadow: "0 0 0 transparent",
+              transition: "box-shadow 0.3s, transform 0.3s",
+            };
+
+            const cardContent = (
+              <>
+                <div className="relative overflow-hidden">
+                  <div className="relative w-full aspect-[4/3]">
+                    <Image
+                      src={project.image}
+                      alt={`${project.title} preview image`}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover object-center rounded-xl shadow-md transition-transform duration-500 group-hover:scale-[1.06]"
+                      loading="lazy"
+                    />
                   </div>
-                  <div className="p-4 sm:p-5 md:p-6 flex-1">
-                    <h3 className="text-xl sm:text-2xl font-bold text-pink-300 mb-2">
-                      {project.title}
-                    </h3>
-                    <p className="text-gray-50 mb-2 text-sm sm:text-base min-h-[72px]">
-                      {project.description}
-                    </p>
-                    <p className="text-gray-100 text-xs sm:text-sm">
-                      Tech: {project.tech}
-                    </p>
-                    {project.title === "Ethereum Explorer" && (
-                      <p className="mt-2 text-xs sm:text-sm font-semibold text-pink-200">
-                        Built with shadcn/ui and Axios.
-                      </p>
-                    )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+                  {/* Badge */}
+                  <div className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wide"
+                    style={{ background: "rgba(0,0,0,0.6)", border: "1px solid rgba(14,165,233,0.45)", color: "#7dd3fc" }}>
+                    {project.link === "#" ? "Project Preview" : "Live Demo"}
                   </div>
+                  {/* Top accent line on image */}
+                  <span className="absolute top-0 left-0 h-[2px] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ background: "linear-gradient(to right, #0EA5E9, #14B8A6)" }} />
                 </div>
-              ) : (
-                <motion.a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Open live demo for ${project.title}`}
-                  className="group relative rounded-2xl overflow-hidden border border-fuchsia-300/35 bg-[linear-gradient(160deg,#1f1525_0%,#2d1735_58%,#150f1d_100%)] shadow-xl transform transition-all hover:scale-[1.02] hover:-translate-y-1 hover:shadow-[0_22px_52px_rgba(217,70,239,0.32)] h-full flex flex-col"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.95 }}
-                  initial={{ opacity: 0, scale: 0.8, y: 50 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ duration: 1.2, delay: index * 0.03 }}
-                  onMouseEnter={() => swiperInstance?.autoplay?.stop()}
-                  onMouseLeave={() => swiperInstance?.autoplay?.start()}
-                >
-                  <div className="relative overflow-hidden">
-                    <div className="relative w-full aspect-[4/3]">
-                      <Image
-                        src={project.image}
-                        alt={`${project.title} preview image`}
-                        fill
-                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                        className="object-cover object-center rounded-xl shadow-md transition-transform duration-500 group-hover:scale-[1.06]"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
-                    <div className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-black/60 border border-fuchsia-300/45 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-pink-100">
-                      Live Demo
-                    </div>
-                  </div>
-                  <div className="p-4 sm:p-5 md:p-6 flex-1">
-                    <h3 className="text-xl sm:text-2xl font-bold text-pink-300 mb-2">
-                      {project.title}
-                    </h3>
-                    <p className="text-gray-50 mb-2 text-sm sm:text-base min-h-[72px]">
-                      {project.description}
-                    </p>
-                    <p className="text-gray-100 text-xs sm:text-sm">
-                      Tech: {project.tech}
-                    </p>
-                    {project.title === "Ethereum Explorer" && (
-                      <p className="mt-2 text-xs sm:text-sm font-semibold text-pink-200">
-                        Built with shadcn/ui and Axios.
-                      </p>
-                    )}
-                    <span className="mt-3 inline-flex items-center rounded-full border border-fuchsia-300/45 bg-fuchsia-500/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-pink-100">
+                <div className="p-4 sm:p-5 md:p-6 flex-1">
+                  <h3 className="text-xl sm:text-2xl font-bold mb-2" style={{ color: "#38BDF8" }}>
+                    {project.title}
+                  </h3>
+                  <p className="mb-2 text-sm sm:text-base min-h-[72px]" style={{ color: "#e2e8f0" }}>
+                    {project.description}
+                  </p>
+                  <p className="text-xs sm:text-sm" style={{ color: "#94a3b8" }}>
+                    Tech: {project.tech}
+                  </p>
+                  {project.link !== "#" && (
+                    <span className="mt-3 inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wide"
+                      style={{ border: "1px solid rgba(14,165,233,0.45)", background: "rgba(14,165,233,0.08)", color: "#7dd3fc" }}>
                       View Project
                     </span>
+                  )}
+                </div>
+                {/* Radial hover glow */}
+                <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                  style={{ background: "radial-gradient(circle at top right, rgba(14,165,233,0.15), transparent 60%)" }} />
+              </>
+            );
+
+            return (
+              <SwiperSlide key={index} className="h-full">
+                {project.link === "#" ? (
+                  <div
+                    className="group relative rounded-2xl overflow-hidden shadow-xl h-full flex flex-col"
+                    style={cardStyle}
+                  >
+                    {cardContent}
                   </div>
-                </motion.a>
-              )}
-            </SwiperSlide>
-          ))}
+                ) : (
+                  <motion.a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Open live demo for ${project.title}`}
+                    className="group relative rounded-2xl overflow-hidden shadow-xl h-full flex flex-col"
+                    style={cardStyle}
+                    whileHover={{ scale: 1.02, y: -4 }}
+                    whileTap={{ scale: 0.97 }}
+                    initial={{ opacity: 0, scale: 0.8, y: 50 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ duration: 1.2, delay: index * 0.03 }}
+                    onMouseEnter={() => swiperInstance?.autoplay?.stop()}
+                    onMouseLeave={() => swiperInstance?.autoplay?.start()}
+                  >
+                    {cardContent}
+                  </motion.a>
+                )}
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       </div>
 
-      <div className="relative z-10 mobile-pagination mt-6 no-scrollbar flex w-full items-center justify-center gap-1 px-2 py-1 sm:px-0 sm:gap-2 flex-nowrap">
+      {/* Pagination */}
+      <div className="relative z-10 mt-6 flex w-full items-center justify-center gap-1 px-2 py-1 sm:px-0 sm:gap-2 flex-nowrap">
         <button
           onClick={handlePrevSet}
           aria-label="Previous"
-          className="h-9 w-9 shrink-0 sm:h-11 sm:min-w-11 sm:w-auto sm:px-4 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg shadow-pink-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
           disabled={currentPageSet === 0}
+          className="h-9 w-9 shrink-0 sm:h-11 sm:min-w-11 sm:w-auto sm:px-4 rounded-full text-white font-semibold transition-all hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
+          style={{ background: "linear-gradient(to right, #0EA5E9, #14B8A6)", boxShadow: "0 4px 14px rgba(14,165,233,0.35)" }}
         >
           <span className="sm:hidden text-lg leading-none">&lt;</span>
           <span className="hidden sm:inline">Prev</span>
         </button>
 
-        <div className="flex-none flex items-center justify-center">
-          <div className="inline-flex items-center gap-1 sm:gap-2 overflow-x-auto no-scrollbar px-1">
+        <div className="inline-flex items-center gap-1 sm:gap-2 overflow-x-auto px-1" style={{ scrollbarWidth: "none" }}>
           {visibleNumbers.map((_, idx) => {
             const slideIndex = currentPageSet * buttonsPerSet + idx;
             const isActive = slideIndex === activeIndex;
@@ -555,42 +689,38 @@ const MyProjects: React.FC = () => {
                 key={slideIndex}
                 onClick={() => goTo(slideIndex)}
                 aria-label={`Go to project ${slideIndex + 1}`}
-                className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-[10px] sm:text-sm font-bold transition-all border ${
-                  isActive
-                    ? "bg-gradient-to-r from-pink-500 to-rose-500 text-white border-pink-400 scale-110 shadow-lg shadow-pink-500/35"
-                    : "bg-white/70 text-gray-800 border-white hover:bg-white hover:-translate-y-0.5"
-                }`}
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-[10px] sm:text-sm font-bold transition-all"
                 style={{
                   clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-                  WebkitClipPath:
-                    "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                  WebkitClipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                  background: isActive
+                    ? "linear-gradient(135deg, #0EA5E9, #14B8A6)"
+                    : "rgba(14,165,233,0.12)",
+                  color: isActive ? "#ffffff" : "#7dd3fc",
+                  border: isActive ? "none" : "1px solid rgba(14,165,233,0.3)",
+                  transform: isActive ? "scale(1.1)" : "scale(1)",
+                  boxShadow: isActive ? "0 4px 14px rgba(14,165,233,0.4)" : "none",
                 }}
               >
                 {slideIndex + 1}
               </button>
             );
           })}
-          </div>
         </div>
 
         <button
           onClick={handleNextSet}
           aria-label="Next"
-          className="h-9 w-9 shrink-0 sm:h-11 sm:min-w-11 sm:w-auto sm:px-4 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg shadow-pink-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/40 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
           disabled={currentPageSet === totalSets - 1}
+          className="h-9 w-9 shrink-0 sm:h-11 sm:min-w-11 sm:w-auto sm:px-4 rounded-full text-white font-semibold transition-all hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
+          style={{ background: "linear-gradient(to right, #0EA5E9, #14B8A6)", boxShadow: "0 4px 14px rgba(14,165,233,0.35)" }}
         >
           <span className="sm:hidden text-lg leading-none">&gt;</span>
           <span className="hidden sm:inline">Next</span>
         </button>
       </div>
-
     </section>
   );
 };
 
 export default MyProjects;
-
-
-
-
-

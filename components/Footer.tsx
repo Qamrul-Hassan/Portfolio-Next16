@@ -1,147 +1,259 @@
-﻿"use client";
-import React from "react";
-import { FaLinkedin, FaGithub, FaTwitter, FaEnvelope, FaPhoneAlt } from "react-icons/fa";
+"use client";
+
+import { FaLinkedin, FaGithub, FaXTwitter, FaEnvelope, FaPhone, FaLocationDot , FaArrowUp } from "react-icons/fa6";
 import { motion } from "framer-motion";
+import Image from "next/image";
+import { useRef, useEffect } from "react";
+
+/* ── Starfield + Rising Particles Background ── */
+const FooterBg: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    let W = (canvas.width = canvas.offsetWidth);
+    let H = (canvas.height = canvas.offsetHeight);
+    const onResize = () => { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; };
+    window.addEventListener("resize", onResize);
+
+    // Static stars
+    type Star = { x: number; y: number; r: number; alpha: number; blink: number };
+    const stars: Star[] = Array.from({ length: 60 }, () => ({
+      x: Math.random() * 1200, y: Math.random() * 300,
+      r: Math.random() * 1.5 + 0.3,
+      alpha: Math.random() * 0.5 + 0.1,
+      blink: Math.random() * Math.PI * 2,
+    }));
+
+    // Rising particles (like embers going up)
+    type Ember = { x: number; y: number; r: number; speed: number; alpha: number; color: string };
+    const embers: Ember[] = Array.from({ length: 30 }, () => ({
+      x: Math.random() * 1200, y: Math.random() * 300,
+      r: Math.random() * 2 + 1,
+      speed: Math.random() * 0.6 + 0.2,
+      alpha: Math.random() * 0.4 + 0.05,
+      color: Math.random() > 0.5 ? "rgba(14,165,233," : "rgba(20,184,166,",
+    }));
+
+    // Shooting star
+    type Shoot = { x: number; y: number; len: number; speed: number; active: boolean; timer: number };
+    const shoot: Shoot = { x: 0, y: 0, len: 0, speed: 0, active: false, timer: 0 };
+
+    let frame = 0;
+    let raf: number;
+
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H);
+      frame++;
+
+      // Stars
+      stars.forEach(s => {
+        const a = s.alpha + Math.sin(frame * 0.02 + s.blink) * 0.12;
+        ctx.beginPath();
+        ctx.arc(s.x % W, s.y % H, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(200,220,255,${Math.max(0, a)})`;
+        ctx.fill();
+      });
+
+      // Shooting star logic
+      shoot.timer++;
+      if (!shoot.active && shoot.timer > 180) {
+        shoot.active = true;
+        shoot.x = Math.random() * W * 0.6 + W * 0.2;
+        shoot.y = Math.random() * H * 0.4;
+        shoot.len = 0;
+        shoot.speed = 8;
+        shoot.timer = 0;
+      }
+      if (shoot.active) {
+        shoot.len += shoot.speed;
+        shoot.x += shoot.speed * 2;
+        shoot.y += shoot.speed * 0.5;
+        const tailGrad = ctx.createLinearGradient(shoot.x - shoot.len * 2, shoot.y - shoot.len * 0.5, shoot.x, shoot.y);
+        tailGrad.addColorStop(0, "rgba(14,165,233,0)");
+        tailGrad.addColorStop(1, "rgba(200,230,255,0.6)");
+        ctx.beginPath();
+        ctx.moveTo(shoot.x - shoot.len * 2, shoot.y - shoot.len * 0.5);
+        ctx.lineTo(shoot.x, shoot.y);
+        ctx.strokeStyle = tailGrad;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        if (shoot.len > 80) { shoot.active = false; shoot.timer = 0; }
+      }
+
+      // Rising embers
+      embers.forEach(e => {
+        e.y -= e.speed;
+        e.x += Math.sin(frame * 0.02 + e.y) * 0.3;
+        if (e.y < -10) { e.y = H + 5; e.x = Math.random() * W; }
+        ctx.beginPath();
+        ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+        ctx.fillStyle = e.color + e.alpha + ")";
+        ctx.shadowColor = e.color + "0.6)";
+        ctx.shadowBlur = 6;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+
+      // Horizon glow (bottom)
+      const horizGrad = ctx.createLinearGradient(0, H * 0.7, 0, H);
+      horizGrad.addColorStop(0, "rgba(14,165,233,0)");
+      horizGrad.addColorStop(1, "rgba(14,165,233,0.06)");
+      ctx.fillStyle = horizGrad;
+      ctx.fillRect(0, H * 0.7, W, H * 0.3);
+
+      raf = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); };
+  }, []);
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ pointerEvents: "none" }} />;
+};
 
 const socialLinks = [
-  {
-    href: "https://www.linkedin.com/in/md-qamrul-hassan-a44b3835b/",
-    label: "LinkedIn profile",
-    icon: <FaLinkedin className="w-6 h-6 text-gray-100 hover:text-blue-500" />,
-  },
-  {
-    href: "https://x.com/Shajal1",
-    label: "X profile",
-    icon: <FaTwitter className="w-6 h-6 text-gray-100 hover:text-blue-400" />,
-  },
-  {
-    href: "https://github.com/Qamrul-Hassan",
-    label: "GitHub profile",
-    icon: <FaGithub className="w-6 h-6 text-gray-100 hover:text-blue-400" />,
-  },
+  { href: "https://www.linkedin.com/in/md-qamrul-hassan-a44b3835b/", label: "LinkedIn profile", icon: <FaLinkedin className="w-5 h-5" />, color: "#0A66C2" },
+  { href: "https://x.com/Shajal1", label: "X profile", icon: <FaXTwitter  className="w-5 h-5" />, color: "#1DA1F2" },
+  { href: "https://github.com/Qamrul-Hassan", label: "GitHub profile", icon: <FaGithub className="w-5 h-5" />, color: "#1DA1F2" },
 ];
+const quickLinks = ["Home", "About", "Services", "Projects", "Contact"];
+const skills = ["React", "Next.js", "TypeScript", "Tailwind CSS", "Bootstrap", "shadcn/UI", "Axios", "Redux", "Zustand", "State mgmt", "Firebase", "Figma", "GIT", "GitHub"];
+const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
 const Footer = () => {
   return (
-    <footer className="bg-gradient-to-r from-[#1B1B1B] via-[#3F3F3F] to-[#505050] text-white py-12 w-full">
-      <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-6 lg:px-16 items-start">
-        <div>
-          <motion.h3
-            className="text-2xl font-semibold mb-4 text-pink-500"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            About
-          </motion.h3>
-          <motion.p
-            className="text-gray-100 leading-relaxed"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            QHSPortfolio is your one-stop solution for smart and professional web development.
-            We focus on delivering unique and creative solutions tailored to your needs.
-          </motion.p>
-        </div>
+    <footer className="relative overflow-hidden text-white"
+      style={{ background: "linear-gradient(160deg, #040b18 0%, #060f20 50%, #040a17 100%)" }}>
+      <FooterBg />
 
-        <div>
-          <motion.h3
-            className="text-2xl font-semibold mb-4 text-pink-500"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            Quick Links
-          </motion.h3>
-          <ul className="space-y-3">
-            {["Home", "About", "Services", "Projects", "Contact"].map((link, index) => (
-              <motion.li
-                key={link}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-              >
-                <a href={`#${link.toLowerCase()}`} className="hover:text-pink-400 transition-colors text-gray-100">
-                  {link}
-                </a>
-              </motion.li>
-            ))}
-          </ul>
-        </div>
+      {/* Top accent bar */}
+      <div className="h-[3px] w-full relative z-10" style={{ background: "linear-gradient(to right, transparent, #0EA5E9 30%, #14B8A6 70%, transparent)" }} />
 
-        <div>
-          <motion.h3
-            className="text-2xl font-semibold mb-4 text-pink-500"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-          >
-            Contact Info
-          </motion.h3>
-
-          <div className="space-y-3">
-            <div className="flex items-center text-gray-100">
-              <motion.div
-                className="mr-3 w-7 h-7 text-gray-100 hover:text-pink-400 transition-all transform hover:translate-y-1 hover:animate-bounce"
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ rotate: 15 }}
-                aria-hidden="true"
-              >
-                <FaEnvelope />
-              </motion.div>
-              <a href="mailto:mdqamrul74@gmail.com" className="hover:text-pink-400 transition-colors">
-                mdqamrul74@gmail.com
-              </a>
-            </div>
-            <div className="flex items-center text-gray-100">
-              <motion.div
-                className="mr-3 w-7 h-7 text-gray-100 hover:text-green-400 transition-all transform hover:translate-y-1 hover:animate-bounce"
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ rotate: 15 }}
-                aria-hidden="true"
-              >
-                <FaPhoneAlt />
-              </motion.div>
-              <a href="tel:+8801711844948" className="hover:text-pink-400 transition-colors">
-                +880 (1711) 844-948
-              </a>
-            </div>
+      {/* Scroll-to-top */}
+      <div className="relative z-10 flex justify-center pt-8 pb-0">
+        <motion.button onClick={scrollToTop} aria-label="Scroll to top"
+          className="group flex flex-col items-center gap-1 text-xs tracking-widest uppercase text-slate-400 hover:text-white transition-colors"
+          whileHover={{ y: -2 }}>
+          <div className="w-10 h-10 rounded-full flex items-center justify-center mb-1 transition-all duration-300 group-hover:shadow-lg"
+            style={{ background: "linear-gradient(135deg, #0EA5E9, #14B8A6)", boxShadow: "0 0 20px rgba(14,165,233,0.3)" }}>
+            <FaArrowUp className="w-4 h-4 text-white" />
           </div>
+          Back to top
+        </motion.button>
+      </div>
 
-          <div className="mt-4 flex space-x-5">
-            {socialLinks.map((social) => (
-              <motion.a
-                key={social.href}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={social.label}
-                className="p-4 bg-transparent border-2 border-gray-500 rounded-full hover:bg-gray-700 transition-all ease-in-out duration-300 transform hover:translate-y-1 hover:animate-bounce"
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ rotate: 15 }}
-              >
-                {social.icon}
-              </motion.a>
-            ))}
-          </div>
+      {/* Main content */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-16 pt-12 pb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+
+          {/* Brand */}
+          <motion.div className="lg:col-span-1" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-sky-400 shadow-lg shadow-sky-500/20">
+                <Image src="/Logo-4.webp" alt="QHS Logo" fill priority className="object-cover" />
+              </div>
+              <div>
+                <div className="font-bold text-base text-white leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>Qamrul Hassan</div>
+                <div className="text-xs text-sky-400 tracking-wider">Web Developer</div>
+              </div>
+            </div>
+            <p className="text-slate-400 text-sm leading-relaxed mb-5">Crafting modern, responsive web experiences with a passion for clean code and beautiful interfaces. Open to collaborations and new opportunities.</p>
+            <div className="flex gap-3">
+              {socialLinks.map(social => (
+                <motion.a key={social.href} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.label}
+                  className="w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300"
+                  style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
+                  whileHover={{ scale: 1.1, y: -2, background: "rgba(14,165,233,0.2)", borderColor: "rgba(14,165,233,0.4)" }}
+                  whileTap={{ scale: 0.95 }}>
+                  <span style={{ color: social.color }}>{social.icon}</span>
+                </motion.a>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Navigation */}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}>
+            <h3 className="text-sm font-bold uppercase tracking-widest text-sky-400 mb-5">Navigation</h3>
+            <ul className="space-y-2.5">
+              {quickLinks.map((link, index) => (
+                <motion.li key={link} initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: 0.2 + index * 0.07 }}>
+                  <a href={`#${link.toLowerCase()}`} className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm">
+                    <span className="w-4 h-[1px] rounded transition-all duration-300 group-hover:w-6" style={{ background: "linear-gradient(to right, #0EA5E9, #14B8A6)" }} />
+                    {link}
+                  </a>
+                </motion.li>
+              ))}
+            </ul>
+          </motion.div>
+
+          {/* Expertise */}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}>
+            <h3 className="text-sm font-bold uppercase tracking-widest text-sky-400 mb-5">Expertise</h3>
+            <div className="flex flex-wrap gap-2">
+              {skills.map((skill, index) => (
+                <motion.span key={skill} className="px-3 py-1 rounded-full text-xs font-medium text-slate-300 transition-all duration-300 hover:text-white cursor-default"
+                  style={{ background: "rgba(14,165,233,0.08)", border: "1px solid rgba(14,165,233,0.18)" }}
+                  initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.3, delay: 0.3 + index * 0.06 }}
+                  whileHover={{ background: "rgba(14,165,233,0.18)", borderColor: "rgba(14,165,233,0.4)" }}>
+                  {skill}
+                </motion.span>
+              ))}
+            </div>
+            <div className="mt-6">
+              <h3 className="text-sm font-bold uppercase tracking-widest text-sky-400 mb-3">Availability</h3>
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: "#14B8A6" }} />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5" style={{ background: "#14B8A6" }} />
+                </span>
+                <span className="text-sm text-teal-300 font-medium">Available for freelance work</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Contact */}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.3 }}>
+            <h3 className="text-sm font-bold uppercase tracking-widest text-sky-400 mb-5">Get In Touch</h3>
+            <div className="space-y-4">
+              <a href="mailto:mdqamrul74@gmail.com" className="group flex items-start gap-3 text-slate-400 hover:text-white transition-colors">
+                <div className="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all"
+                  style={{ background: "rgba(14,165,233,0.1)", border: "1px solid rgba(14,165,233,0.2)" }}>
+                  <FaEnvelope className="w-3.5 h-3.5 text-sky-400" />
+                </div>
+                <div><div className="text-xs text-slate-500 mb-0.5">Email</div><span className="text-sm group-hover:text-sky-400 transition-colors">mdqamrul74@gmail.com</span></div>
+              </a>
+              <a href="tel:+8801711844948" className="group flex items-start gap-3 text-slate-400 hover:text-white transition-colors">
+                <div className="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all"
+                  style={{ background: "rgba(20,184,166,0.1)", border: "1px solid rgba(20,184,166,0.2)" }}>
+                  <FaPhone className="w-3.5 h-3.5 text-teal-400" />
+                </div>
+                <div><div className="text-xs text-slate-500 mb-0.5">Phone</div><span className="text-sm group-hover:text-teal-400 transition-colors">+880 1711-844948</span></div>
+              </a>
+              <div className="flex items-start gap-3 text-slate-400">
+                <div className="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ background: "rgba(14,165,233,0.08)", border: "1px solid rgba(14,165,233,0.15)" }}>
+                  <FaLocationDot  className="w-3.5 h-3.5 text-sky-400" />
+                </div>
+                <div><div className="text-xs text-slate-500 mb-0.5">Location</div><span className="text-sm">Dhaka, Bangladesh</span></div>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
 
-      <motion.div
-        className="mt-12 border-t border-gray-500 pt-6 text-center text-gray-100 text-sm w-full max-w-7xl mx-auto px-6 lg:px-16"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 1.3 }}
-      >
-        &copy; {new Date().getFullYear()} Qamrul Hassan Shajal. All Rights Reserved.
-      </motion.div>
+      {/* Bottom bar */}
+      <div className="relative z-10 w-full" style={{ borderTop: "1px solid rgba(14,165,233,0.1)" }}>
+        <div className="w-full max-w-7xl mx-auto px-6 lg:px-16 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-500">
+          <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+            &copy; {new Date().getFullYear()}{" "}<span className="text-slate-300 font-medium">Qamrul Hassan Shajal</span>. All Rights Reserved.
+          </motion.span>
+          <motion.div className="flex items-center gap-2" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.15 }}>
+            <span>Crafted with</span><span className="text-red-400">♥</span><span>using</span>
+            <span style={{ background: "linear-gradient(135deg, #38BDF8, #14B8A6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text", fontWeight: 600 }}>Next.js & Tailwind</span>
+          </motion.div>
+        </div>
+      </div>
     </footer>
   );
 };

@@ -7,7 +7,6 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
   },
-  // Preconnect hints help reduce latency
   other: {
     "X-DNS-Prefetch-Control": "on",
   },
@@ -27,12 +26,23 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
+        {/* Google Fonts */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
         {/* Preload critical images */}
         <link rel="preload" as="image" href="/Logo-4.webp" />
         <link rel="preload" as="image" href="/banner.webp" />
         <link rel="preload" as="image" href="/Portfolio-9.webp" />
       </head>
-      <body className="bg-white text-gray-900" suppressHydrationWarning>
+      <body
+        className="bg-white text-gray-900"
+        style={{ fontFamily: "'DM Sans', sans-serif" }}
+        suppressHydrationWarning
+      >
         {children}
       </body>
     </html>

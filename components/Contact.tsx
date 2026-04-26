@@ -1,15 +1,240 @@
-﻿"use client";
+"use client";
 
-import React, { useState, useRef } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { FaPhone, FaEnvelope, FaAt, FaComment } from "react-icons/fa";
 import Image from "next/image";
 import ContactImage from "../public/Contact.webp";
 import emailjs from "@emailjs/browser";
-import { toast, ToastContainer } from "react-toastify";
 import ReCAPTCHA from "react-google-recaptcha";
-import "react-toastify/dist/ReactToastify.css";
 
+/* ─── Custom Toast System ─────────────────────────────────────────────── */
+type ToastType = "success" | "error" | "info";
+type ToastItem = { id: number; type: ToastType; message: string };
+
+let toastIdCounter = 0;
+let globalAddToast: ((type: ToastType, message: string) => void) | null = null;
+
+const toast = {
+  success: (msg: string) => globalAddToast?.("success", msg),
+  error:   (msg: string) => globalAddToast?.("error",   msg),
+  info:    (msg: string) => globalAddToast?.("info",    msg),
+};
+
+const ICONS: Record<ToastType, React.ReactNode> = {
+  success: (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <circle cx="11" cy="11" r="10" stroke="#14B8A6" strokeWidth="1.5" fill="rgba(20,184,166,0.12)" />
+      <motion.path d="M6.5 11.2l3 3 6-6" stroke="#14B8A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+        initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.4, delay: 0.1 }} />
+    </svg>
+  ),
+  error: (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <circle cx="11" cy="11" r="10" stroke="#F87171" strokeWidth="1.5" fill="rgba(248,113,113,0.12)" />
+      <motion.path d="M7.5 7.5l7 7M14.5 7.5l-7 7" stroke="#F87171" strokeWidth="2" strokeLinecap="round"
+        initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.35 }} />
+    </svg>
+  ),
+  info: (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <circle cx="11" cy="11" r="10" stroke="#38BDF8" strokeWidth="1.5" fill="rgba(56,189,248,0.12)" />
+      <motion.path d="M11 8v2M11 12v3" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round"
+        initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.3 }} />
+      <circle cx="11" cy="7" r="0.8" fill="#38BDF8" />
+    </svg>
+  ),
+};
+
+const COLORS: Record<ToastType, { border: string; glow: string; bar: string; text: string }> = {
+  success: { border: "rgba(20,184,166,0.35)",  glow: "rgba(20,184,166,0.12)",  bar: "linear-gradient(to right,#14B8A6,#0EA5E9)", text: "#5eead4" },
+  error:   { border: "rgba(248,113,113,0.35)", glow: "rgba(248,113,113,0.1)",  bar: "linear-gradient(to right,#F87171,#fb923c)", text: "#fca5a5" },
+  info:    { border: "rgba(56,189,248,0.35)",  glow: "rgba(56,189,248,0.1)",   bar: "linear-gradient(to right,#38BDF8,#818cf8)", text: "#7dd3fc" },
+};
+
+const SingleToast: React.FC<{ item: ToastItem; onDone: (id: number) => void }> = ({ item, onDone }) => {
+  const c = COLORS[item.type];
+  useEffect(() => {
+    const t = setTimeout(() => onDone(item.id), 4200);
+    return () => clearTimeout(t);
+  }, [item.id, onDone]);
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: -28, scale: 0.88 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -16, scale: 0.9, transition: { duration: 0.25 } }}
+      transition={{ type: "spring", stiffness: 380, damping: 28 }}
+      className="relative overflow-hidden flex items-start gap-3 px-4 py-3 rounded-2xl shadow-2xl w-[320px] max-w-[90vw] cursor-pointer select-none"
+      style={{
+        background: "linear-gradient(135deg, rgba(10,15,30,0.97) 0%, rgba(15,25,45,0.97) 100%)",
+        border: `1px solid ${c.border}`,
+        boxShadow: `0 8px 32px ${c.glow}, 0 2px 8px rgba(0,0,0,0.5)`,
+        backdropFilter: "blur(16px)",
+      }}
+      onClick={() => onDone(item.id)}
+    >
+      {/* Shimmer top line */}
+      <div className="absolute top-0 left-0 right-0 h-[1.5px] rounded-t-2xl" style={{ background: c.bar }} />
+
+      {/* Glow blob */}
+      <div className="absolute -top-6 -left-6 w-20 h-20 rounded-full blur-2xl pointer-events-none"
+        style={{ background: c.glow }} />
+
+      {/* Icon */}
+      <div className="flex-shrink-0 mt-0.5">{ICONS[item.type]}</div>
+
+      {/* Text */}
+      <div className="flex-1 min-w-0">
+        <p className="text-[13px] font-semibold leading-snug" style={{ color: c.text }}>
+          {item.type === "success" ? "Success" : item.type === "error" ? "Error" : "Info"}
+        </p>
+        <p className="text-[12px] text-slate-300 leading-snug mt-0.5 break-words">{item.message}</p>
+      </div>
+
+      {/* Close × */}
+      <button
+        className="flex-shrink-0 text-slate-500 hover:text-slate-300 transition-colors text-base leading-none mt-0.5"
+        onClick={(e) => { e.stopPropagation(); onDone(item.id); }}
+        aria-label="Close">×</button>
+
+      {/* Progress bar */}
+      <motion.div
+        className="absolute bottom-0 left-0 h-[2px] rounded-full"
+        style={{ background: c.bar }}
+        initial={{ width: "100%" }}
+        animate={{ width: "0%" }}
+        transition={{ duration: 4, ease: "linear" }}
+      />
+    </motion.div>
+  );
+};
+
+const ToastContainer: React.FC = () => {
+  const [toasts, setToasts] = useState<ToastItem[]>([]);
+
+  const add = useCallback((type: ToastType, message: string) => {
+    const id = ++toastIdCounter;
+    setToasts(prev => [{ id, type, message }, ...prev].slice(0, 5));
+  }, []);
+
+  useEffect(() => { globalAddToast = add; return () => { globalAddToast = null; }; }, [add]);
+
+  const remove = useCallback((id: number) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
+  }, []);
+
+  return (
+    <div className="fixed top-5 right-5 z-[9999] flex flex-col gap-2 items-end pointer-events-none">
+      <AnimatePresence mode="popLayout">
+        {toasts.map(item => (
+          <div key={item.id} className="pointer-events-auto">
+            <SingleToast item={item} onDone={remove} />
+          </div>
+        ))}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+/* ─── Animated Background Canvas ─────────────────────────────────────── */
+const AnimatedBg: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let W = (canvas.width = canvas.offsetWidth);
+    let H = (canvas.height = canvas.offsetHeight);
+
+    const resize = () => {
+      W = canvas.width = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+    };
+    window.addEventListener("resize", resize);
+
+    const CHARS = ["{ }", "</>", "() =>", "tsx", "//", "[ ]", "const", "async", "return", "import", "export", "type"];
+    type Particle = { x: number; y: number; vx: number; vy: number; label: string; alpha: number; size: number; hue: number };
+    const particles: Particle[] = Array.from({ length: 28 }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
+      label: CHARS[Math.floor(Math.random() * CHARS.length)],
+      alpha: Math.random() * 0.35 + 0.08, size: Math.random() * 10 + 9,
+      hue: Math.random() > 0.5 ? 200 : 175,
+    }));
+
+    type Ring = { cx: number; cy: number; r: number; speed: number; dotAngle: number; color: string };
+    const rings: Ring[] = [
+      { cx: W * 0.82, cy: H * 0.22, r: 55, speed: 0.008, dotAngle: 0, color: "rgba(14,165,233,0.55)" },
+      { cx: W * 0.82, cy: H * 0.22, r: 85, speed: -0.005, dotAngle: Math.PI, color: "rgba(20,184,166,0.4)" },
+      { cx: W * 0.18, cy: H * 0.75, r: 40, speed: 0.012, dotAngle: 1.2, color: "rgba(56,189,248,0.45)" },
+    ];
+
+    type Pulse = { r: number; alpha: number };
+    const pulses: Pulse[] = [{ r: 0, alpha: 0.5 }, { r: 60, alpha: 0.25 }, { r: 120, alpha: 0.1 }];
+    const radarCX = W * 0.5, radarCY = H * 0.85;
+    let frame = 0, raf: number;
+
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H);
+      frame++;
+
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < -60) p.x = W + 20; if (p.x > W + 60) p.x = -20;
+        if (p.y < -30) p.y = H + 10; if (p.y > H + 30) p.y = -10;
+        ctx.save();
+        ctx.globalAlpha = p.alpha + Math.sin(frame * 0.02 + p.x) * 0.06;
+        ctx.font = `${p.size}px 'Courier New', monospace`;
+        ctx.fillStyle = `hsl(${p.hue}, 80%, 65%)`;
+        ctx.shadowColor = `hsl(${p.hue}, 90%, 60%)`;
+        ctx.shadowBlur = 8;
+        ctx.fillText(p.label, p.x, p.y);
+        ctx.restore();
+      });
+
+      rings.forEach(ring => {
+        ring.dotAngle += ring.speed;
+        ctx.save();
+        ctx.beginPath(); ctx.arc(ring.cx, ring.cy, ring.r, 0, Math.PI * 2);
+        ctx.strokeStyle = ring.color; ctx.lineWidth = 1; ctx.setLineDash([4, 8]); ctx.stroke(); ctx.setLineDash([]);
+        const dx = ring.cx + Math.cos(ring.dotAngle) * ring.r;
+        const dy = ring.cy + Math.sin(ring.dotAngle) * ring.r;
+        ctx.beginPath(); ctx.arc(dx, dy, 4, 0, Math.PI * 2);
+        ctx.fillStyle = ring.color.replace(/[\d.]+\)$/, "1)");
+        ctx.shadowColor = ring.color; ctx.shadowBlur = 12; ctx.fill();
+        ctx.restore();
+      });
+
+      pulses.forEach((pulse, i) => {
+        pulse.r += 0.7; pulse.alpha -= 0.003;
+        if (pulse.r > 180 || pulse.alpha <= 0) { pulse.r = i * 55; pulse.alpha = 0.45 - i * 0.12; }
+        ctx.save(); ctx.beginPath(); ctx.arc(radarCX, radarCY, pulse.r, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(14,165,233,${pulse.alpha})`; ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore();
+      });
+
+      const t = frame * 0.012;
+      ctx.save(); ctx.globalAlpha = 0.08;
+      const blobR = 90 + Math.sin(t) * 18;
+      const grad = ctx.createRadialGradient(80, 80, 0, 80, 80, blobR);
+      grad.addColorStop(0, "rgba(14,165,233,1)"); grad.addColorStop(1, "rgba(20,184,166,0)");
+      ctx.beginPath(); ctx.arc(80 + Math.sin(t * 0.7) * 15, 80 + Math.cos(t * 0.9) * 12, blobR, 0, Math.PI * 2);
+      ctx.fillStyle = grad; ctx.fill(); ctx.restore();
+
+      raf = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ pointerEvents: "none" }} />;
+};
+
+/* ─── Main Component ─────────────────────────────────────────────────── */
 const Contact = () => {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
@@ -72,220 +297,204 @@ const Contact = () => {
   ];
 
   const iconVariants = { hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 } };
-
-  // Show reCAPTCHA only when all fields are filled
   const showCaptcha = formData.name && formData.email && formData.message;
 
   return (
-    <section id="contact" className="relative bg-[#CECECE] py-8 px-6 lg:px-16 text-gray-900 overflow-visible">
-      <span className="pointer-events-none absolute z-[1] -top-8 right-10 h-32 w-32 lg:h-44 lg:w-44 xl:h-52 xl:w-52 rounded-3xl border-2 border-pink-300/70 bg-pink-100/15 rotate-12 shadow-[0_0_28px_rgba(236,72,153,0.28)]" />
-      <span className="pointer-events-none absolute z-[1] bottom-10 left-10 h-20 w-20 lg:h-28 lg:w-28 xl:h-32 xl:w-32 rounded-full border-2 border-rose-300/75 bg-rose-200/20 shadow-[0_0_24px_rgba(244,114,182,0.3)]" />
-      <span className="pointer-events-none absolute z-[1] top-1/2 left-8 h-20 w-20 lg:h-28 lg:w-28 xl:h-32 xl:w-32 -translate-y-1/2 rotate-12 border-2 border-cyan-200/70 bg-cyan-100/15 shadow-[0_0_22px_rgba(103,232,249,0.2)]" />
-      <span className="pointer-events-none absolute z-[1] bottom-16 right-24 h-24 w-24 lg:h-36 lg:w-36 xl:h-40 xl:w-40 rounded-2xl border-[2.5px] border-orange-100/90 bg-orange-100/10 ring-1 ring-orange-200/70 shadow-[0_0_24px_rgba(251,146,60,0.24)] [clip-path:polygon(25%_6%,75%_6%,100%_50%,75%_94%,25%_94%,0%_50%)]" />
+    <section
+      id="contact"
+      className="relative py-16 px-6 lg:px-16 text-gray-900 overflow-hidden"
+      style={{ background: "linear-gradient(160deg, #e0f2fe 0%, #f0fdfa 50%, #e8f4f8 100%)" }}
+    >
+      {/* Custom toast portal */}
+      <ToastContainer />
+
+      {/* Decorative shapes */}
+      <span className="pointer-events-none absolute z-[1] -top-8 right-10 h-32 w-32 lg:h-44 lg:w-44 rounded-3xl rotate-12" style={{ border: "2px solid rgba(14,165,233,0.3)", background: "rgba(14,165,233,0.06)", boxShadow: "0 0 28px rgba(14,165,233,0.15)" }} />
+      <span className="pointer-events-none absolute z-[1] bottom-10 left-10 h-20 w-20 lg:h-28 lg:w-28 rounded-full" style={{ border: "2px solid rgba(20,184,166,0.4)", background: "rgba(20,184,166,0.08)", boxShadow: "0 0 24px rgba(20,184,166,0.15)" }} />
+      <span className="pointer-events-none absolute z-[1] top-1/2 left-8 h-20 w-20 lg:h-28 lg:w-28 -translate-y-1/2 rotate-12" style={{ border: "2px solid rgba(14,165,233,0.25)", background: "rgba(14,165,233,0.06)" }} />
+
       <motion.div
         className="relative z-10 text-center mb-12"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2 }}
+        initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
       >
         <motion.span
-          className="inline-block mb-2 px-3 py-1 rounded-full text-xs font-bold tracking-[0.2em] uppercase text-pink-600 bg-pink-100/70 border border-pink-200"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          className="inline-block mb-2 px-3 py-1 rounded-full text-xs font-bold tracking-[0.2em] uppercase"
+          style={{ color: "#0EA5E9", background: "rgba(14,165,233,0.1)", border: "1px solid rgba(14,165,233,0.3)" }}
+          initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
         >
-          Let's Connect
+          Let&apos;s Connect
         </motion.span>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-3">
-          <span className="text-pink-500">Get</span> <span className="text-gray-800">In Touch</span>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <span style={{ background: "linear-gradient(135deg, #0EA5E9 0%, #14B8A6 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Get</span>{" "}
+          <span className="text-gray-800">In Touch</span>
         </h2>
-        <motion.div
-          className="h-1 w-28 mx-auto rounded-full bg-gradient-to-r from-pink-500 via-rose-400 to-orange-300 mb-4"
-          initial={{ width: 0, opacity: 0 }}
-          animate={{ width: 112, opacity: 1 }}
-          transition={{ duration: 0.7 }}
-        />
-        <motion.p
-          className="text-base sm:text-lg md:text-2xl text-gray-800"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5, delay: 0.5 }}
-        >
-          Have a project or question? Let's make something amazing together!
+        <motion.div className="h-1 w-28 mx-auto rounded-full mb-4" style={{ background: "linear-gradient(to right, #0EA5E9, #14B8A6)" }}
+          initial={{ width: 0, opacity: 0 }} whileInView={{ width: 112, opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7 }} />
+        <motion.p className="text-base sm:text-lg md:text-xl text-gray-600"
+          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 1, delay: 0.3 }}>
+          Have a project or question? Let&apos;s make something amazing together!
         </motion.p>
       </motion.div>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-start justify-center bg-gradient-to-br from-[#3e3e3e] via-[#454545] to-[#303030] py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8 rounded-2xl shadow-xl border border-white/10 gap-6 lg:gap-8 overflow-visible">
-        <span className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,rgba(244,114,182,0.18),transparent_40%)]" />
-        {/* LEFT: Form */}
+      {/* Main card */}
+      <div
+        className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-stretch justify-center rounded-2xl shadow-xl border overflow-hidden"
+        style={{ background: "linear-gradient(135deg, #0a0f1e 0%, #0d1b2a 60%, #0a1628 100%)", borderColor: "rgba(14,165,233,0.15)" }}
+      >
+        <AnimatedBg />
+        <span className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at top right, rgba(14,165,233,0.12), transparent 45%)" }} />
+
+        {/* Form */}
         <motion.form
           onSubmit={handleSubmit}
-          className="relative z-10 w-full lg:w-2/5 bg-gradient-to-br from-[#c1c1c1] via-[#b9b9b9] to-[#aeaeae] p-4 sm:p-6 md:p-8 rounded-2xl lg:rounded-l-[64px] lg:rounded-r-none shadow-xl border border-white/40 flex flex-col gap-4 text-left lg:text-right"
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.5 }}
+          className="relative z-10 w-full lg:w-2/5 p-5 sm:p-7 md:p-9 flex flex-col gap-4 text-left lg:text-right"
+          style={{ background: "linear-gradient(135deg, rgba(15,23,42,0.9) 0%, rgba(30,41,59,0.9) 100%)", borderRight: "1px solid rgba(14,165,233,0.15)" }}
+          initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 1 }}
         >
+          {["name", "email"].map((field) => (
+            <div key={field}>
+              <label htmlFor={field} className="block text-sm font-semibold mb-1"
+                style={{ color: formData[field as keyof typeof formData] ? "#38BDF8" : "#94a3b8" }}>
+                {field === "name" ? "Your Name" : "Your Email"}
+              </label>
+              <input
+                type={field === "email" ? "email" : "text"} name={field} id={field} autoComplete={field}
+                value={formData[field as keyof typeof formData]} onChange={handleChange}
+                className="w-full p-3 rounded-lg text-sm text-gray-100 outline-none transition placeholder-slate-500 text-left lg:text-right"
+                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(14,165,233,0.2)" }}
+                onFocus={(e) => { e.target.style.borderColor = "#0EA5E9"; e.target.style.boxShadow = "0 0 0 3px rgba(14,165,233,0.1)"; }}
+                onBlur={(e) => { e.target.style.borderColor = "rgba(14,165,233,0.2)"; e.target.style.boxShadow = "none"; }}
+                placeholder={field === "name" ? "Enter your full name" : "Enter your email"}
+              />
+            </div>
+          ))}
+
           <div>
-            <label htmlFor="name" className={`block text-base sm:text-lg font-semibold ${formData.name ? "text-pink-500" : "text-gray-700"}`}>Your Name</label>
-            <input type="text" name="name" id="name" autoComplete="name" value={formData.name} onChange={handleChange} className="w-full p-2 sm:p-3 mt-1 sm:mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300 text-sm sm:text-base text-left lg:text-right placeholder:text-left lg:placeholder:text-right" placeholder="Enter your full name" />
-          </div>
-          <div>
-            <label htmlFor="email" className={`block text-base sm:text-lg font-semibold ${formData.email ? "text-pink-500" : "text-gray-700"}`}>Your Email</label>
-            <input type="email" name="email" id="email" autoComplete="email" value={formData.email} onChange={handleChange} className="w-full p-2 sm:p-3 mt-1 sm:mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300 text-sm sm:text-base text-left lg:text-right placeholder:text-left lg:placeholder:text-right" placeholder="Enter your email" />
-          </div>
-          <div>
-            <label htmlFor="message" className={`block text-base sm:text-lg font-semibold ${formData.message ? "text-pink-500" : "text-gray-700"}`}>Your Message</label>
-            <textarea name="message" id="message" autoComplete="off" rows={4} value={formData.message} onChange={handleChange} className="w-full p-2 sm:p-3 mt-1 sm:mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-black bg-neutral-300 text-sm sm:text-base text-left lg:text-right placeholder:text-left lg:placeholder:text-right" placeholder="Write your message here"></textarea>
+            <label htmlFor="message" className="block text-sm font-semibold mb-1"
+              style={{ color: formData.message ? "#38BDF8" : "#94a3b8" }}>Your Message</label>
+            <textarea name="message" id="message" autoComplete="off" rows={4}
+              value={formData.message} onChange={handleChange}
+              className="w-full p-3 rounded-lg text-sm text-gray-100 outline-none transition placeholder-slate-500 resize-none text-left lg:text-right"
+              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(14,165,233,0.2)" }}
+              onFocus={(e) => { e.target.style.borderColor = "#0EA5E9"; e.target.style.boxShadow = "0 0 0 3px rgba(14,165,233,0.1)"; }}
+              onBlur={(e) => { e.target.style.borderColor = "rgba(14,165,233,0.2)"; e.target.style.boxShadow = "none"; }}
+              placeholder="Write your message here" />
           </div>
 
-          {/* reCAPTCHA */}
           {showCaptcha && (
-            <div className="flex justify-center mb-3 sm:mb-4">
+            <div className="flex justify-center mb-1">
               <div className="w-full flex justify-center max-[390px]:scale-[0.78] max-[390px]:origin-center">
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-                  onChange={handleCaptcha}
-                  onExpired={handleCaptchaExpired}
-                  size="normal"
-                />
+                <ReCAPTCHA ref={recaptchaRef} sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+                  onChange={handleCaptcha} onExpired={handleCaptchaExpired} size="normal" />
               </div>
             </div>
           )}
 
           {captchaToken && (
-            <div className="text-center mb-3 sm:mb-4">
-              <p className="text-xs text-gray-600 px-4">
-                Protected by reCAPTCHA - <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:underline">Privacy</a> & <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:underline">Terms</a>
+            <div className="text-center mb-1">
+              <p className="text-xs text-slate-400 px-4">
+                Protected by reCAPTCHA —{" "}
+                <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "#38BDF8" }}>Privacy</a>{" "}&amp;{" "}
+                <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "#38BDF8" }}>Terms</a>
               </p>
             </div>
           )}
 
-          <button
-            type="submit"
-            className={`w-full py-2 sm:py-3 px-4 sm:px-6 bg-pink-500 text-white font-semibold rounded-lg transition duration-300 text-sm sm:text-base
-              ${!captchaToken ? "opacity-50 cursor-not-allowed" : "hover:bg-pink-400"}`}
-            disabled={!captchaToken}
-          >
+          <button type="submit"
+            className="w-full py-3 px-6 font-semibold rounded-xl transition duration-300 text-white"
+            style={{ background: captchaToken ? "linear-gradient(135deg, #0EA5E9 0%, #14B8A6 100%)" : "rgba(14,165,233,0.3)", cursor: captchaToken ? "pointer" : "not-allowed", opacity: captchaToken ? 1 : 0.6 }}
+            disabled={!captchaToken}>
             Send Message
           </button>
 
+          {/* Van animation */}
           {showSuccessAnim && (
-            <div className="relative w-full h-14 mt-3 overflow-hidden rounded-full bg-gradient-to-r from-[#1c1f2e] via-[#23283b] to-[#1c1f2e] border border-white/10 shadow-inner">
-              {/* Progress glow */}
-              <motion.div
-                className="absolute inset-y-0 left-0 bg-pink-500/20 blur-md"
-                initial={{ width: "0%" }}
-                animate={{ width: "100%" }}
-                transition={{ duration: 4.2, ease: "easeInOut" }}
-              />
-
-              {/* Envelope starts */}
-              <motion.div
-                className="absolute left-3 top-1/2 -translate-y-1/2"
-                initial={{ x: 0, opacity: 1, scale: 1 }}
-                animate={{ x: [0, 60, 120], opacity: [1, 1, 0], scale: [1, 0.95, 0.8] }}
-                transition={{ duration: 2.2, ease: "easeInOut" }}
-              >
-                <div className="w-6 h-4 bg-yellow-300 rounded-sm shadow-sm relative">
-                  <div className="absolute inset-x-0 top-0 h-0 border-l-[12px] border-r-[12px] border-t-[8px] border-transparent border-t-yellow-200" />
-                </div>
+            <div className="relative w-full mt-3 overflow-hidden rounded-2xl" style={{ background: "linear-gradient(135deg, #050e1c 0%, #0d1f35 100%)", border: "1px solid rgba(14,165,233,0.25)", height: "110px" }}>
+              <div className="absolute bottom-0 left-0 right-0 h-[28px]" style={{ background: "linear-gradient(to bottom, #1a2744, #111d33)" }} />
+              <motion.div className="absolute bottom-[10px] left-0 flex gap-3"
+                animate={{ x: [0, -80] }} transition={{ duration: 0.5, repeat: Infinity, ease: "linear" }}>
+                {Array.from({ length: 16 }).map((_, i) => (
+                  <div key={i} className="h-[3px] w-10 rounded-full flex-shrink-0" style={{ background: "rgba(14,165,233,0.4)" }} />
+                ))}
               </motion.div>
-
-              {/* Courier vehicle */}
-              <motion.div
-                className="absolute left-16 top-1/2 -translate-y-1/2"
-                initial={{ x: 0, opacity: 1 }}
-                animate={{ x: [0, 0, 240], opacity: [1, 1, 0] }}
-                transition={{ duration: 5, ease: "easeInOut" }}
-              >
-                <div className="relative w-20 h-9">
-                  {/* Cargo box */}
-                  <div className="absolute left-0 top-0 w-14 h-9 rounded-sm bg-gradient-to-b from-white to-gray-200 shadow-md" />
-                  <div className="absolute left-1 top-2 w-8 h-[2px] bg-gray-300/80 rounded-full" />
-                  {/* Door close */}
-                  <motion.div
-                    className="absolute left-0 top-0 h-9 bg-white"
-                    initial={{ width: 12 }}
-                    animate={{ width: [12, 12, 0] }}
-                    transition={{ duration: 0.7, ease: "easeInOut", delay: 2.1 }}
-                  />
-                  {/* Cab */}
-                  <div className="absolute right-0 top-1 w-6 h-7 bg-pink-500 rounded-sm shadow-md" />
-                  <div className="absolute right-1 top-2 w-3 h-2 bg-cyan-100/80 rounded-sm" />
-                  <div className="absolute right-0 top-4 w-1 h-3 bg-red-600 rounded-sm" />
-                  {/* Bumper */}
-                  <div className="absolute right-0 bottom-0 w-2 h-2 bg-gray-800 rounded-sm" />
-                  {/* Wheels */}
-                  <div className="absolute left-3 bottom-[-2px] w-4 h-4 bg-gray-900 rounded-full shadow">
-                    <div className="absolute inset-1 bg-gray-500 rounded-full" />
-                  </div>
-                  <div className="absolute right-3 bottom-[-2px] w-4 h-4 bg-gray-900 rounded-full shadow">
-                    <div className="absolute inset-1 bg-gray-500 rounded-full" />
-                  </div>
-                  {/* Headlight beam */}
-                  <motion.div
-                    className="absolute right-[-14px] top-3 w-5 h-5"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 0, 1] }}
-                    transition={{ duration: 0.6, ease: "easeInOut", delay: 3.6 }}
-                  >
-                    <div className="w-0 h-0 border-t-[7px] border-b-[7px] border-l-[14px] border-transparent border-l-yellow-300 opacity-80" />
-                  </motion.div>
-                </div>
+              {[{ x: "12%", y: "16%" }, { x: "32%", y: "10%" }, { x: "58%", y: "18%" }, { x: "78%", y: "11%" }, { x: "91%", y: "20%" }].map((s, i) => (
+                <motion.div key={i} className="absolute w-1 h-1 rounded-full bg-white" style={{ left: s.x, top: s.y }}
+                  animate={{ opacity: [0.2, 1, 0.2] }} transition={{ duration: 1.5, delay: i * 0.3, repeat: Infinity }} />
+              ))}
+              <motion.div className="absolute bottom-[24px]"
+                initial={{ x: -140 }}
+                animate={{ x: ["-140px", "28%", "28%", "110%"] }}
+                transition={{ duration: 4.8, times: [0, 0.35, 0.62, 1], ease: ["easeOut", "linear", "easeIn", "easeIn"] }}>
+                <svg width="110" height="56" viewBox="0 0 110 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="5" y="14" width="92" height="32" rx="5" fill="#0EA5E9"/>
+                  <path d="M62 14 L62 5 Q71 1 83 5 L97 14 Z" fill="#0284C7"/>
+                  <path d="M65 13 L65 7 Q72 4 81 7 L93 13 Z" fill="#BAE6FD" opacity="0.85"/>
+                  <rect x="28" y="18" width="30" height="13" rx="2" fill="#BAE6FD" opacity="0.6"/>
+                  <text x="33" y="30" fontSize="9" fill="white" fontWeight="bold" opacity="0.95">✉ MAIL</text>
+                  <rect x="94" y="36" width="8" height="5" rx="1" fill="#0369A1"/>
+                  <rect x="5" y="36" width="6" height="5" rx="1" fill="#0369A1"/>
+                  <motion.ellipse cx="101" cy="28" rx="4" ry="3" fill="#FDE68A"
+                    animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 0.6, repeat: Infinity }}/>
+                  <motion.path d="M104 26 L118 20 M104 28 L120 28 M104 30 L118 36"
+                    stroke="#FDE68A" strokeWidth="1.5" strokeOpacity="0.5"
+                    animate={{ opacity: [0.2, 0.8, 0.2] }} transition={{ duration: 0.6, repeat: Infinity }}/>
+                  <rect x="5" y="26" width="4" height="8" rx="1" fill="#F87171" opacity="0.9"/>
+                  <circle cx="24" cy="46" r="9" fill="#1e293b"/><circle cx="24" cy="46" r="5" fill="#334155"/><circle cx="24" cy="46" r="2" fill="#64748b"/>
+                  <circle cx="82" cy="46" r="9" fill="#1e293b"/><circle cx="82" cy="46" r="5" fill="#334155"/><circle cx="82" cy="46" r="2" fill="#64748b"/>
+                  <motion.g animate={{ rotate: 360 }} transition={{ duration: 0.35, repeat: Infinity, ease: "linear" }} style={{ transformOrigin: "24px 46px" }}>
+                    <line x1="24" y1="41" x2="24" y2="44" stroke="#94a3b8" strokeWidth="1.2"/>
+                    <line x1="24" y1="48" x2="24" y2="51" stroke="#94a3b8" strokeWidth="1.2"/>
+                    <line x1="19" y1="46" x2="22" y2="46" stroke="#94a3b8" strokeWidth="1.2"/>
+                    <line x1="26" y1="46" x2="29" y2="46" stroke="#94a3b8" strokeWidth="1.2"/>
+                  </motion.g>
+                  <motion.g animate={{ rotate: 360 }} transition={{ duration: 0.35, repeat: Infinity, ease: "linear" }} style={{ transformOrigin: "82px 46px" }}>
+                    <line x1="82" y1="41" x2="82" y2="44" stroke="#94a3b8" strokeWidth="1.2"/>
+                    <line x1="82" y1="48" x2="82" y2="51" stroke="#94a3b8" strokeWidth="1.2"/>
+                    <line x1="77" y1="46" x2="80" y2="46" stroke="#94a3b8" strokeWidth="1.2"/>
+                    <line x1="84" y1="46" x2="87" y2="46" stroke="#94a3b8" strokeWidth="1.2"/>
+                  </motion.g>
+                  <motion.rect x="6" y="14" width="17" height="32" rx="3" fill="#0EA5E9"
+                    animate={{ scaleX: [1, 1, 0.08, 0.08, 1] }}
+                    style={{ transformOrigin: "6px 30px" }}
+                    transition={{ duration: 4.8, times: [0, 0.32, 0.4, 0.6, 0.68] }}/>
+                  <circle cx="19" cy="30" r="1.5" fill="#7dd3fc"/>
+                </svg>
               </motion.div>
-
-              {/* Success text */}
-              <motion.div
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-xs sm:text-sm text-white/90 font-semibold"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: [0, 0, 1], x: [-20, -20, 0] }}
-                transition={{ duration: 0.8, ease: "easeInOut", delay: 5.2 }}
-              >
-                Message sent successfully
+              <motion.div className="absolute top-2 left-0 right-0 flex justify-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 0, 1, 1, 0] }}
+                transition={{ duration: 4.8, times: [0, 0.3, 0.44, 0.6, 0.72] }}>
+                <span className="text-xs font-bold tracking-wide px-3 py-1 rounded-full" style={{ color: "#38BDF8", background: "rgba(14,165,233,0.12)", border: "1px solid rgba(14,165,233,0.3)" }}>
+                  ✓ Mail loaded! Message on its way.
+                </span>
               </motion.div>
             </div>
           )}
         </motion.form>
 
-        {/* RIGHT: Image with Icons */}
+        {/* Image */}
         <motion.div
-          className="relative z-10 w-full lg:w-3/5 flex justify-center items-center"
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.5 }}
+          className="relative z-10 w-full lg:w-3/5 min-h-[280px] sm:min-h-[380px]"
+          initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 1 }}
         >
-        <Image 
-  src={ContactImage} 
-  alt="Contact Us" 
-  className="rounded-2xl lg:rounded-r-[64px] lg:rounded-l-none shadow-xl border border-white/10 object-cover w-full h-[280px] sm:h-[420px] md:h-[520px] lg:h-[498px]" 
-  loading="lazy"
-/>
-          <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-4 sm:space-x-6 md:space-x-8">
+          <Image src={ContactImage} alt="Contact Us" fill sizes="(max-width: 1024px) 100vw, 60vw" className="object-cover" loading="lazy" />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(10,15,30,0.7) 0%, transparent 50%)" }} />
+          <div className="absolute bottom-5 sm:bottom-7 left-1/2 -translate-x-1/2 flex space-x-4 sm:space-x-6 z-10">
             {iconActions.map(({ icon: Icon, label, onClick }, index) => (
-              <motion.button
-                type="button"
-                aria-label={label}
-                key={index}
-                onClick={onClick}
-                className="cursor-pointer w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/35 supports-[backdrop-filter:blur(0px)]:bg-white/10 border border-white/25 supports-[backdrop-filter:blur(0px)]:backdrop-blur-md flex items-center justify-center shadow-lg"
-                variants={iconVariants}
-                initial="hidden"
-                animate="visible"
+              <motion.button type="button" aria-label={label} key={index} onClick={onClick}
+                className="cursor-pointer w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-lg backdrop-blur-md"
+                style={{ background: "rgba(10,15,30,0.6)", border: "1px solid rgba(14,165,233,0.3)" }}
+                variants={iconVariants} initial="hidden" animate="visible"
                 transition={{ delay: index * 0.5, repeat: Infinity, repeatType: "reverse", duration: 1.5 }}
-                whileHover={{ scale: 1.15, y: -2, backgroundColor: "rgba(244, 114, 182, 0.28)" }}
-              >
-                <Icon size={24} className="sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" aria-hidden="true" />
+                whileHover={{ scale: 1.15, y: -2, backgroundColor: "rgba(14,165,233,0.3)" }}>
+                <Icon size={22} className="text-white" aria-hidden="true" />
               </motion.button>
             ))}
           </div>
         </motion.div>
       </div>
-
-      <ToastContainer position="top-center" />
     </section>
   );
 };
 
 export default Contact;
-

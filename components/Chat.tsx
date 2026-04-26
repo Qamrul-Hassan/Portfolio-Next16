@@ -61,7 +61,7 @@ const Chat = () => {
     <div className="fixed bottom-4 right-4 z-70">
       {isOpen && (
         <div className="absolute right-0 bottom-20 bg-[#CECECE] rounded-lg shadow-xl sm:w-80 w-64 flex flex-col max-h-[70vh]">
-          <header className="flex justify-between items-center bg-pink-600 text-white py-3 px-4 rounded-t-lg">
+          <header className="flex justify-between items-center bg-sky-400 text-white py-3 px-4 rounded-t-lg">
             <h3 className="text-lg font-semibold">Chat with Qamrul</h3>
             <button onClick={() => setIsOpen(false)} aria-label="Close chat">
               <FaTimes className="text-white hover:text-gray-200" />
@@ -101,7 +101,7 @@ const Chat = () => {
             <input
               ref={inputRef}
               type="text"
-              className="grow border p-2 rounded-l-md text-sm outline-none focus:ring-1 focus:ring-pink-500 text-gray-900 placeholder:text-gray-400 caret-pink-600 bg-white"
+              className="grow border p-2 rounded-l-md text-sm outline-none focus:ring-1 focus:ring-sky-400 text-gray-900 placeholder:text-gray-400 caret-pink-600 bg-white"
               placeholder="Ask something..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -109,8 +109,8 @@ const Chat = () => {
             />
             <button
               onClick={handleSendMessage}
-              className={`px-4 py-2 bg-pink-600 text-white rounded-r-md ${
-                !input.trim() ? "opacity-50 cursor-not-allowed" : "hover:bg-pink-700"
+              className={`px-4 py-2 bg-sky-400 text-white rounded-r-md ${
+                !input.trim() ? "opacity-50 cursor-not-allowed" : "hover:bg-sky-500"
               }`}
               disabled={!input.trim()}
               aria-label="Send chat message"
@@ -123,7 +123,7 @@ const Chat = () => {
 
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center w-14 h-14 bg-pink-600 text-white rounded-full shadow-lg hover:bg-slate-700 transition-all duration-300 animate-[bounce_1.5s_infinite]"
+        className="flex items-center justify-center w-14 h-14 bg-sky-400 text-white rounded-full shadow-lg hover:bg-slate-700 transition-all duration-300 animate-[bounce_1.5s_infinite]"
         aria-label={isOpen ? "Close chat" : "Open chat"}
       >
         {isOpen ? <FaTimes className="text-2xl" /> : <FaRegComment className="text-2xl" />}
