@@ -1,6 +1,6 @@
 "use client";
 
-import { FaLinkedin, FaGithub, FaXTwitter, FaEnvelope, FaPhone, FaLocationDot , FaArrowUp } from "react-icons/fa6";
+import { FaLinkedin, FaGithub, FaXTwitter, FaWhatsapp, FaTelegram, FaEnvelope, FaPhone, FaLocationDot , FaArrowUp } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRef, useEffect } from "react";
@@ -113,9 +113,11 @@ const FooterBg: React.FC = () => {
 };
 
 const socialLinks = [
-  { href: "https://www.linkedin.com/in/md-qamrul-hassan-a44b3835b/", label: "LinkedIn profile", icon: <FaLinkedin className="w-5 h-5" />, color: "#0A66C2" },
+  { href: "https://www.linkedin.com/in/md-qamrul-hassan-a44b3835b/", label: "LinkedIn profile", icon: <FaLinkedin className="w-5 h-5" />, color: "#0077B5" },
   { href: "https://x.com/Shajal1", label: "X profile", icon: <FaXTwitter  className="w-5 h-5" />, color: "#1DA1F2" },
-  { href: "https://github.com/Qamrul-Hassan", label: "GitHub profile", icon: <FaGithub className="w-5 h-5" />, color: "#1DA1F2" },
+  { href: "https://github.com/Qamrul-Hassan", label: "GitHub profile", icon: <FaGithub className="w-5 h-5" />, color: "#0077B5" },
+  { href: "https://wa.me/8801712345678", label: "WhatsApp", icon: <FaWhatsapp className="w-5 h-5" />, color: "#25D366" },
+  { href: "https://t.me/QHS73", label: "Telegram", icon: <FaTelegram className="w-5 h-5" />, color: "#0088CC" },
 ];
 const quickLinks = ["Home", "About", "Services", "Projects", "Contact"];
 const skills = ["React", "Next.js", "TypeScript", "Tailwind CSS", "Bootstrap", "shadcn/UI", "Axios", "Redux", "Zustand", "State mgmt", "Firebase", "Figma", "GIT", "GitHub"];
