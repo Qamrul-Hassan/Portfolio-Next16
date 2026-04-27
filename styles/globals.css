@@ -110,6 +110,17 @@ section::after {
 
 footer { position: relative; z-index: 1; }
 
+/*
+ * ── content-visibility: auto — skip rendering off-screen sections ──────
+ * The browser skips layout/paint for sections outside the viewport.
+ * contain-intrinsic-size prevents layout shift when the section enters view.
+ * Only apply to below-fold sections (not hero/home).
+ */
+#about, #services, #projects, #contact {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 800px;
+}
+
 /* ── Swiper ──────────────────────────────────────────────────────── */
 .swiper-button-prev,
 .swiper-button-next { display: none !important; }
