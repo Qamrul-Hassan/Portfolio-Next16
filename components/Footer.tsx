@@ -1,6 +1,6 @@
 "use client";
 
-import { FaLinkedin, FaGithub, FaXTwitter, FaWhatsapp, FaTelegram, FaEnvelope, FaPhone, FaLocationDot , FaArrowUp } from "react-icons/fa6";
+import { FaLinkedin, FaGithub, FaXTwitter, FaEnvelope, FaPhone, FaLocationDot , FaArrowUp } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRef, useEffect } from "react";
@@ -20,7 +20,7 @@ const FooterBg: React.FC = () => {
 
     // Static stars
     type Star = { x: number; y: number; r: number; alpha: number; blink: number };
-    const stars: Star[] = Array.from({ length: 60 }, () => ({
+    const stars: Star[] = Array.from({ length: 40 }, () => ({
       x: Math.random() * 1200, y: Math.random() * 300,
       r: Math.random() * 1.5 + 0.3,
       alpha: Math.random() * 0.5 + 0.1,
@@ -29,7 +29,7 @@ const FooterBg: React.FC = () => {
 
     // Rising particles (like embers going up)
     type Ember = { x: number; y: number; r: number; speed: number; alpha: number; color: string };
-    const embers: Ember[] = Array.from({ length: 30 }, () => ({
+    const embers: Ember[] = Array.from({ length: 20 }, () => ({
       x: Math.random() * 1200, y: Math.random() * 300,
       r: Math.random() * 2 + 1,
       speed: Math.random() * 0.6 + 0.2,
@@ -109,15 +109,13 @@ const FooterBg: React.FC = () => {
     draw();
     return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); };
   }, []);
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ pointerEvents: "none" }} />;
+  return <canvas ref={canvasRef} aria-hidden="true" className="absolute inset-0 w-full h-full" style={{ pointerEvents: "none" }} />;
 };
 
 const socialLinks = [
-  { href: "https://www.linkedin.com/in/md-qamrul-hassan-a44b3835b/", label: "LinkedIn profile", icon: <FaLinkedin className="w-5 h-5" />, color: "#0077B5" },
+  { href: "https://www.linkedin.com/in/md-qamrul-hassan-a44b3835b/", label: "LinkedIn profile", icon: <FaLinkedin className="w-5 h-5" />, color: "#0A66C2" },
   { href: "https://x.com/Shajal1", label: "X profile", icon: <FaXTwitter  className="w-5 h-5" />, color: "#1DA1F2" },
-  { href: "https://github.com/Qamrul-Hassan", label: "GitHub profile", icon: <FaGithub className="w-5 h-5" />, color: "#0077B5" },
-  { href: "https://wa.me/8801712345678", label: "WhatsApp", icon: <FaWhatsapp className="w-5 h-5" />, color: "#25D366" },
-  { href: "https://t.me/QHS73", label: "Telegram", icon: <FaTelegram className="w-5 h-5" />, color: "#0088CC" },
+  { href: "https://github.com/Qamrul-Hassan", label: "GitHub profile", icon: <FaGithub className="w-5 h-5" />, color: "#1DA1F2" },
 ];
 const quickLinks = ["Home", "About", "Services", "Projects", "Contact"];
 const skills = ["React", "Next.js", "TypeScript", "Tailwind CSS", "Bootstrap", "shadcn/UI", "Axios", "Redux", "Zustand", "State mgmt", "Firebase", "Figma", "GIT", "GitHub"];
@@ -129,8 +127,14 @@ const Footer = () => {
       style={{ background: "linear-gradient(160deg, #040b18 0%, #060f20 50%, #040a17 100%)" }}>
       <FooterBg />
 
-      {/* Top accent bar */}
-      <div className="h-[3px] w-full relative z-10" style={{ background: "linear-gradient(to right, transparent, #0EA5E9 30%, #14B8A6 70%, transparent)" }} />
+      {/* Top blend — merges with Contact section above */}
+      <div
+        className="pointer-events-none absolute top-0 left-0 right-0 h-24 z-10"
+        style={{ background: "linear-gradient(to bottom, #050c18, transparent)" }}
+        aria-hidden="true"
+      />
+      {/* Thin accent line below the blend */}
+      <div className="h-[1px] w-full relative z-20 mt-24" style={{ background: "linear-gradient(to right, transparent, rgba(14,165,233,0.4) 30%, rgba(20,184,166,0.4) 70%, transparent)" }} />
 
       {/* Scroll-to-top */}
       <div className="relative z-10 flex justify-center pt-8 pb-0">

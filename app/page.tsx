@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import Topbar from "../components/Topbar";
@@ -16,13 +16,17 @@ export default function Page() {
     <>
       <Topbar />
       <Navbar />
-      
-      <main>
-        <HeroSection />   
-        <AboutMe />       
-        <Services />    
-        <MyProjects />   
-        <Contact />       
+      {/*
+       * id="main-content" matches the skip-link in layout.tsx
+       * Wrapping all sections in one <main> gives screen readers a landmark
+       * and improves Accessibility score.
+       */}
+      <main id="main-content" tabIndex={-1} style={{ outline: "none" }}>
+        <HeroSection />
+        <AboutMe />
+        <Services />
+        <MyProjects />
+        <Contact />
       </main>
       <Footer />
       <Chat />

@@ -37,17 +37,8 @@ const MyServices = () => (
   <section
     id="services"
     className="relative overflow-hidden py-20 px-6 lg:px-16 text-gray-100"
-    style={{ background: "linear-gradient(160deg, #070d1c 0%, #0b1525 50%, #07111f 100%)" }}
-  >
-    <HexGridBg hexSize={28} frameSkip={1} />
-
-    {/* Corner blobs */}
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-      <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full blur-3xl"
-        style={{ background: "radial-gradient(circle, rgba(14,165,233,0.12), transparent 70%)" }} />
-      <div className="absolute -bottom-16 -right-16 h-60 w-60 rounded-full blur-3xl"
-        style={{ background: "radial-gradient(circle, rgba(20,184,166,0.10), transparent 70%)" }} />
-    </div>
+>
+    <HexGridBg hexSize={30} />
 
     <div className="relative z-10 w-full max-w-7xl mx-auto text-center">
       <motion.span

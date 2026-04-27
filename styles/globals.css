@@ -1,29 +1,23 @@
 @import "tailwindcss";
 
-/* ── Design tokens ─────────────────────────────────────────────────── */
 :root {
-  --color-bg-deep:    #040b18;
-  --color-bg-base:    #050d1a;
-  --color-bg-mid:     #060f20;
-  --color-accent:     #0EA5E9;   /* sky-500  */
-  --color-accent-2:   #14B8A6;   /* teal-500 */
-  --color-accent-3:   #38BDF8;   /* sky-400  */
-  --font-display:     'Playfair Display', Georgia, serif;
-  --font-body:        'DM Sans', system-ui, sans-serif;
+  --bg:            #050c18;
+  --bg-mid:        #060e1c;
+  --color-accent:  #0EA5E9;
+  --color-accent2: #14B8A6;
+  --color-accent3: #38BDF8;
+  --font-display:  'Playfair Display', Georgia, serif;
+  --font-body:     'DM Sans', system-ui, sans-serif;
 }
 
-/* ── Base ──────────────────────────────────────────────────────────── */
-*,
-*::before,
-*::after { box-sizing: border-box; }
+*, *::before, *::after { box-sizing: border-box; }
 
 html {
-  /* Allow user zoom (a11y); canvases resize to CSS px so they stay sharp */
   scroll-behavior: smooth;
+  background: var(--bg);
 }
 
-html,
-body {
+html, body {
   max-width: 100%;
   overflow-x: hidden;
   margin: 0;
@@ -31,23 +25,92 @@ body {
 }
 
 body {
-  background: var(--color-bg-base);
+  background: var(--bg);
   color: #f1f5f9;
   font-family: var(--font-body);
-  /* Smooth font rendering */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Sections must not clip their canvas backgrounds on the y axis */
+/*
+ * ── Seamless section blending ────────────────────────────────────────
+ * Each section has its own rich tinted background so it doesn't look
+ * flat. The ::before / ::after fade overlays dissolve the hard edges
+ * between sections — no visible join lines anywhere.
+ */
 section {
+  position: relative;
   width: 100%;
   max-width: 100%;
   overflow-x: clip;
   overflow-y: visible;
 }
 
-/* ── Swiper overrides ──────────────────────────────────────────────── */
+/* Fade top edge to transparent (so prev section bleeds through) */
+section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 100px;
+  background: linear-gradient(to bottom, var(--bg), transparent);
+  z-index: 6;
+  pointer-events: none;
+}
+
+/* Fade bottom edge to transparent */
+section::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 100px;
+  background: linear-gradient(to top, var(--bg), transparent);
+  z-index: 6;
+  pointer-events: none;
+}
+
+/* Hero — no top fade, deeper bottom fade */
+#home::before { display: none; }
+#home::after  { height: 140px; }
+
+/* About — subtle cyan tint */
+#about {
+  background: radial-gradient(ellipse 80% 60% at 10% 50%,
+    rgba(14,165,233,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 90% 20%,
+    rgba(20,184,166,0.05) 0%, transparent 70%),
+    var(--bg) !important;
+}
+
+/* Services — violet/purple tint from top-right */
+#services {
+  background: radial-gradient(ellipse 70% 50% at 95% 10%,
+    rgba(168,85,247,0.08) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 60% at 5% 80%,
+    rgba(14,165,233,0.06) 0%, transparent 60%),
+    var(--bg) !important;
+}
+
+/* Projects — deep teal tint bottom-left */
+#projects {
+  background: radial-gradient(ellipse 70% 50% at 0% 90%,
+    rgba(20,184,166,0.08) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 40% at 100% 10%,
+    rgba(56,189,248,0.06) 0%, transparent 60%),
+    var(--bg) !important;
+}
+
+/* Contact — rose/pink glow top-left, keeps cohesion with footer */
+#contact {
+  background: radial-gradient(ellipse 65% 55% at 5% 15%,
+    rgba(236,72,153,0.07) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 50% at 95% 80%,
+    rgba(14,165,233,0.06) 0%, transparent 60%),
+    var(--bg) !important;
+}
+
+footer { position: relative; z-index: 1; }
+
+/* ── Swiper ──────────────────────────────────────────────────────── */
 .swiper-button-prev,
 .swiper-button-next { display: none !important; }
 
@@ -64,24 +127,18 @@ section {
   filter: grayscale(0.35);
 }
 .projectsSwiper .swiper-slide-active {
-  opacity: 1;
-  transform: scale(1);
-  filter: grayscale(0);
+  opacity: 1; transform: scale(1); filter: grayscale(0);
 }
 .projectsSwiper .swiper-slide-active a {
-  box-shadow: 0 20px 48px rgba(217, 70, 239, 0.28);
+  box-shadow: 0 20px 48px rgba(217,70,239,0.28);
 }
 
-/* ── Utility ───────────────────────────────────────────────────────── */
+/* ── Utility ─────────────────────────────────────────────────────── */
 .no-scrollbar                    { -ms-overflow-style: none; scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
+.hex-clip { clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); }
 
-/* Hex clip-path used by pagination buttons */
-.hex-clip {
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-}
-
-/* ── Performance: reduce motion ────────────────────────────────────── */
+/* ── Reduce motion ───────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

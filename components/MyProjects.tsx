@@ -338,17 +338,8 @@ const MyProjects: React.FC = () => {
     <section
       id="projects"
       className="relative overflow-hidden py-20 px-6 lg:px-16 text-gray-100"
-      style={{
-        background: "linear-gradient(160deg, #06101e 0%, #091626 50%, #060e1a 100%)",
-      }}
     >
-      <HexGridBg hexSize={26} frameSkip={1} r2={20} g2={184} b2={166} />
-      {/* Corner accent blobs */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-24 right-0 h-72 w-72 rounded-full blur-3xl" style={{ background: "radial-gradient(circle, rgba(14,165,233,0.1), transparent 70%)" }} />
-        <div className="absolute bottom-0 left-0 h-60 w-60 rounded-full blur-3xl" style={{ background: "radial-gradient(circle, rgba(20,184,166,0.08), transparent 70%)" }} />
-      </div>
-
+      <HexGridBg hexSize={30} />
       <div className="relative z-10 w-full max-w-7xl mx-auto text-center mb-12">
         {/* Badge */}
         <motion.span

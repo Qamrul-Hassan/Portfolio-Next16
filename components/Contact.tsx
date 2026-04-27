@@ -208,7 +208,6 @@ const Contact = () => {
     <section
       id="contact"
       className="relative py-16 px-6 lg:px-16 text-gray-100 overflow-hidden"
-      style={{ background: "linear-gradient(160deg, #060e1c 0%, #08131f 50%, #060c18 100%)" }}
     >
       {/* Custom toast portal */}
       <ToastContainer />
@@ -246,7 +245,7 @@ const Contact = () => {
         className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-stretch justify-center rounded-2xl shadow-xl border overflow-hidden"
         style={{ background: "linear-gradient(135deg, #0a0f1e 0%, #0d1b2a 60%, #0a1628 100%)", borderColor: "rgba(14,165,233,0.15)" }}
       >
-        <HexGridBg hexSize={26} frameSkip={1} r={14} g={165} b={233} r2={56} g2={189} b2={248} />
+        <HexGridBg hexSize={30} />
         <span className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at top right, rgba(14,165,233,0.12), transparent 45%)" }} />
 
         {/* Form */}

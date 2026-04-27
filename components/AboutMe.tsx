@@ -73,18 +73,9 @@ const AboutMe = () => {
     <section
       id="about"
       className="relative overflow-hidden py-20 px-6 lg:px-16 text-gray-100"
-      style={{ background: "linear-gradient(160deg, #0a0f1e 0%, #0d1b2a 50%, #0a1628 100%)" }}
     >
       {/* Shared hex + scan-line background — slightly smaller cell for variety */}
-      <HexGridBg hexSize={26} frameSkip={1} r2={56} g2={189} b2={248} />
-
-      {/* Corner blobs */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-        <div className="absolute -top-20 right-0 h-72 w-72 rounded-full blur-3xl"
-          style={{ background: "radial-gradient(circle, rgba(14,165,233,0.10), transparent 70%)" }} />
-        <div className="absolute -bottom-16 -left-16 h-60 w-60 rounded-full blur-3xl"
-          style={{ background: "radial-gradient(circle, rgba(20,184,166,0.08), transparent 70%)" }} />
-      </div>
+      <HexGridBg hexSize={30} />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 items-start">
 

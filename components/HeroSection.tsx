@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { FaLinkedin, FaGithub, FaXTwitter, FaWhatsapp, FaTelegram  } from "react-icons/fa6";
+import { FaLinkedin, FaGithub, FaXTwitter  } from "react-icons/fa6";
 import { Typewriter } from "react-simple-typewriter";
 import Image from "next/image";
 
@@ -34,6 +34,8 @@ const HeroBg: React.FC = () => {
       [34,  211, 238],   // cyan-400
       [6,   182, 212],   // cyan-500
       [20,  184, 166],   // teal-500
+      [168,  85, 247],   // violet-500
+      [99,  102, 241],   // indigo-500
     ];
     const COLS_RIGHT: [number, number, number][] = [
       [244, 114, 182],   // pink-400
@@ -41,6 +43,8 @@ const HeroBg: React.FC = () => {
       [251, 113, 133],   // rose-400
       [249, 168, 212],   // pink-300
       [253, 164, 175],   // rose-300
+      [232, 121, 249],   // fuchsia-400
+      [217,  70, 239],   // fuchsia-500
     ];
 
     type Hex = {
@@ -71,6 +75,16 @@ const HeroBg: React.FC = () => {
     };
     buildHexes();
 
+    // Adaptive frame-skip: ~20fps mobile, ~30fps tablet, 60fps desktop
+    const getSkip = () => {
+      const w = window.innerWidth;
+      if (w < 640)  return 3;
+      if (w < 1024) return 2;
+      return 1;
+    };
+    let frameSkip = getSkip();
+    window.addEventListener("resize", () => { frameSkip = getSkip(); }, { passive: true });
+
     const drawHex = (cx: number, cy: number, r: number) => {
       ctx.beginPath();
       for (let i = 0; i < 6; i++) {
@@ -83,12 +97,16 @@ const HeroBg: React.FC = () => {
     };
 
     let raf: number;
+    let frameCount = 0;
 
     const draw = () => {
+      raf = requestAnimationFrame(draw);
+      frameCount++;
+      if (frameCount % frameSkip !== 0) return;
       ctx.clearRect(0, 0, W, H);
       spawnT++;
 
-      if (spawnT >= 20) {
+      if (spawnT >= 15) {
         spawnT = 0;
         const idle = hexes.filter((h) => h.phase === "idle");
         if (idle.length) {
@@ -115,7 +133,7 @@ const HeroBg: React.FC = () => {
 
         if (h.phase === "grow") {
           h.scale += (1 - h.scale) * 0.15;
-          h.alpha += (0.7 - h.alpha) * 0.15;
+          h.alpha += (0.85 - h.alpha) * 0.15;
           if (h.scale > 0.96) { h.phase = "hold"; h.t = 0; }
         } else if (h.phase === "hold") {
           if (h.t > h.holdMax) { h.phase = "fade"; h.t = 0; }
@@ -130,7 +148,7 @@ const HeroBg: React.FC = () => {
         const [r, g, b] = h.color;
 
         drawHex(h.cx, h.cy, (R - 1) * h.scale);
-        ctx.fillStyle = `rgba(${r},${g},${b},${(h.alpha * 0.55).toFixed(3)})`;
+        ctx.fillStyle = `rgba(${r},${g},${b},${(h.alpha * 0.65).toFixed(3)})`;
         ctx.fill();
 
         ctx.strokeStyle = `rgba(${r},${g},${b},${h.alpha.toFixed(3)})`;
@@ -143,7 +161,6 @@ const HeroBg: React.FC = () => {
         ctx.stroke();
       });
 
-      raf = requestAnimationFrame(draw);
     };
 
     draw();
@@ -156,6 +173,7 @@ const HeroBg: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
+      aria-hidden="true"
       className="absolute inset-0 w-full h-full"
       style={{ pointerEvents: "none", zIndex: 1 }}
     />
@@ -175,22 +193,35 @@ const HeroSection: React.FC = () => {
       className="relative flex min-h-[74svh] items-center justify-center overflow-hidden py-8 sm:min-h-[88svh] sm:py-14 lg:min-h-[84svh] lg:py-10"
       style={{
         backgroundImage:
-          "linear-gradient(to bottom, rgba(0,0,0,0.65), rgba(2,10,20,0.5), rgba(0,0,0,0.75)), url('/banner.webp')",
+          "linear-gradient(160deg, rgba(5,12,24,0.82) 0%, rgba(10,5,30,0.70) 50%, rgba(5,12,24,0.85) 100%), url('/banner.webp')",
         backgroundSize: "cover",
         backgroundPosition: "right center",
       }}
     >
       <HeroBg />
-      {/* Subtle animated gradient orb */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div
-          className="absolute -left-32 top-1/4 h-96 w-96 rounded-full opacity-20 blur-3xl"
-          style={{ background: "radial-gradient(circle, #0EA5E9 0%, transparent 70%)" }}
-        />
-        <div
-          className="absolute -right-24 bottom-1/4 h-72 w-72 rounded-full opacity-15 blur-3xl"
-          style={{ background: "radial-gradient(circle, #14B8A6 0%, transparent 70%)" }}
-        />
+      {/* Bottom blend — fades hero into next section seamlessly */}
+      <div
+        className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 z-20"
+        style={{ background: "linear-gradient(to bottom, transparent, #050c18)" }}
+        aria-hidden="true"
+      />
+      {/* Background atmosphere — layered colour orbs */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        {/* Left side — large sky/cyan bloom */}
+        <div className="absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(14,165,233,0.28) 0%, transparent 70%)", opacity: 1 }} />
+        {/* Right-side top — fuchsia/violet glow behind text */}
+        <div className="absolute right-0 top-0 h-[26rem] w-[38rem] rounded-full blur-3xl"
+          style={{ background: "radial-gradient(ellipse at top right, rgba(168,85,247,0.22) 0%, rgba(236,72,153,0.14) 40%, transparent 70%)" }} />
+        {/* Right-side mid — warm rose accent */}
+        <div className="absolute right-[-4rem] top-[30%] h-72 w-72 rounded-full blur-2xl"
+          style={{ background: "radial-gradient(circle, rgba(244,114,182,0.20) 0%, transparent 65%)" }} />
+        {/* Bottom-right teal */}
+        <div className="absolute -right-16 bottom-[15%] h-64 w-64 rounded-full blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(20,184,166,0.18) 0%, transparent 70%)" }} />
+        {/* Centre diagonal shimmer */}
+        <div className="absolute left-1/2 top-0 h-full w-px opacity-10"
+          style={{ background: "linear-gradient(to bottom, transparent, #38BDF8 40%, #A855F7 60%, transparent)" }} />
       </div>
 
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-5 px-5 sm:gap-10 sm:px-8 lg:flex-row lg:items-center lg:gap-12 lg:px-16">
@@ -227,8 +258,30 @@ const HeroSection: React.FC = () => {
           </motion.div>
         </motion.div>
 
-        {/* Text Section */}
-        <div className="flex w-full max-w-2xl flex-col justify-center space-y-2 text-center sm:space-y-5 lg:w-1/2 lg:max-w-none lg:text-left">
+        {/* Text Section — right column with decorative panel */}
+        <div className="relative flex w-full max-w-2xl flex-col justify-center space-y-2 text-center sm:space-y-5 lg:w-1/2 lg:max-w-none lg:text-left">
+
+          {/* Decorative glow panel — visible on desktop, subtle on mobile */}
+          <div className="pointer-events-none absolute inset-0 -m-8 hidden lg:block" style={{ zIndex: 0 }} aria-hidden="true">
+            {/* Decorative border glow — no backdropFilter so text stays sharp */}
+            <div className="absolute inset-0 rounded-3xl"
+              style={{
+                background: "linear-gradient(135deg, rgba(168,85,247,0.04) 0%, rgba(236,72,153,0.03) 40%, rgba(14,165,233,0.02) 100%)",
+                border: "1px solid rgba(168,85,247,0.14)",
+              }} />
+            {/* Top-right corner accent */}
+            <div className="absolute -top-3 -right-3 h-24 w-24 rounded-full blur-xl"
+              style={{ background: "radial-gradient(circle, rgba(232,121,249,0.35) 0%, transparent 70%)" }} />
+            {/* Bottom-left corner accent */}
+            <div className="absolute -bottom-3 -left-3 h-20 w-20 rounded-full blur-xl"
+              style={{ background: "radial-gradient(circle, rgba(56,189,248,0.30) 0%, transparent 70%)" }} />
+            {/* Animated top border line */}
+            <div className="absolute top-0 left-[10%] right-[10%] h-px"
+              style={{ background: "linear-gradient(to right, transparent, rgba(168,85,247,0.6) 30%, rgba(236,72,153,0.6) 70%, transparent)" }} />
+            {/* Animated bottom border line */}
+            <div className="absolute bottom-0 left-[10%] right-[10%] h-px"
+              style={{ background: "linear-gradient(to right, transparent, rgba(14,165,233,0.5) 50%, transparent)" }} />
+          </div>
           <motion.p
             className="mb-1 text-[11px] font-semibold tracking-[0.22em] text-sky-300/80 uppercase sm:text-sm"
             initial={{ opacity: 0, y: -20 }}
@@ -295,8 +348,6 @@ const HeroSection: React.FC = () => {
               { href: "https://www.linkedin.com/in/md-qamrul-hassan-a44b3835b/", label: "LinkedIn", icon: <FaLinkedin />, hover: "hover:text-sky-400" },
               { href: "https://github.com/Qamrul-Hassan", label: "GitHub", icon: <FaGithub />, hover: "hover:text-teal-400" },
               { href: "https://x.com/Shajal1", label: "X", icon: <FaXTwitter  />, hover: "hover:text-sky-400" },
-              { href: "https://wa.me/8801712345678", label: "WhatsApp", icon: <FaWhatsapp />, hover: "hover:text-green-400" },
-              { href: "https://t.me/QHS73", label: "Telegram", icon: <FaTelegram />, hover: "hover:text-blue-400" },
             ].map((s) => (
               <motion.a
                 key={s.href}
@@ -313,44 +364,42 @@ const HeroSection: React.FC = () => {
             ))}
           </motion.div>
 
-          {/* Bouncing accent shapes */}
-          <div className="relative mt-3 flex justify-center gap-2 sm:mt-8 sm:gap-6 lg:justify-start">
+          {/* Bouncing gradient hexagons */}
+          <div className="relative mt-3 flex justify-center gap-5 sm:mt-8 sm:gap-8 lg:justify-start">
             {[
               {
-                // Sky blue
-                bg: "linear-gradient(135deg, #38BDF8 0%, #0EA5E9 100%)",
-                shadow: "0 8px 24px rgba(56,189,248,0.55)",
+                gradient: "linear-gradient(135deg, #38BDF8 0%, #6366F1 50%, #A855F7 100%)",
+                delay: 0,
               },
               {
-                // Fuchsia / violet
-                bg: "linear-gradient(135deg, #E879F9 0%, #A855F7 100%)",
-                shadow: "0 8px 24px rgba(232,121,249,0.55)",
+                gradient: "linear-gradient(135deg, #F472B6 0%, #EC4899 40%, #A855F7 100%)",
+                delay: 0.4,
               },
               {
-                // Amber / orange
-                bg: "linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)",
-                shadow: "0 8px 24px rgba(252,211,77,0.55)",
+                gradient: "linear-gradient(135deg, #2DD4BF 0%, #06B6D4 50%, #38BDF8 100%)",
+                delay: 0.8,
               },
             ].map((item, index) => (
               <motion.div
                 key={index}
-                className="h-7 w-7 sm:h-16 sm:w-16"
                 style={{
+                  width: 52,
+                  height: 52,
                   clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-                  background: item.bg,
-                  boxShadow: item.shadow,
+                  background: item.gradient,
                 }}
-                animate={{ y: [0, -22, 0] }}
+                animate={{ y: [0, -20, 0] }}
                 transition={{
                   duration: 2,
                   repeat: Infinity,
-                  repeatDelay: 1,
-                  delay: index * 0.5,
-                  ease: "easeInOut",
+                  repeatDelay: 0.8,
+                  delay: item.delay,
+                  ease: [0.45, 0, 0.55, 1],
                 }}
               />
             ))}
           </div>
+          {/* end decorative panel */}
         </div>
       </div>
     </section>
