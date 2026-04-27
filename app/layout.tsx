@@ -94,9 +94,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/*
          * ── Critical font CSS inlined — zero render-blocking ───────────────
-         * Inline the @font-face declarations for above-fold weights only.
-         * Non-critical weights load via afterInteractive script below.
-         * This eliminates the Google Fonts render-blocking request entirely.
+         * @font-face overrides for fallback fonts using size-adjust + metric
+         * overrides so the fallback font renders at the SAME size as the web
+         * font. This eliminates the layout shift (CLS) when Playfair/DM Sans
+         * load and swap in. Values tuned for Playfair Display 700 → Georgia.
          */}
         <style>{`
           .skip-link {
@@ -114,10 +115,29 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             transition: top 0.2s;
           }
           .skip-link:focus { top: 0; }
-          /* Fallback font stack while Google Fonts loads — prevents layout shift */
-          body { font-family: system-ui, -apple-system, sans-serif; }
-          /* Reserve space for Playfair Display to reduce CLS */
-          h1, h2, h3 { font-family: Georgia, 'Times New Roman', serif; }
+
+          /* Adjusted fallback for Playfair Display — prevents CLS on font swap */
+          @font-face {
+            font-family: 'Playfair Display Fallback';
+            src: local('Georgia');
+            size-adjust: 97%;
+            ascent-override: 95%;
+            descent-override: 25%;
+            line-gap-override: 0%;
+          }
+          /* Adjusted fallback for DM Sans — prevents CLS on font swap */
+          @font-face {
+            font-family: 'DM Sans Fallback';
+            src: local('Arial');
+            size-adjust: 100%;
+            ascent-override: 92%;
+            descent-override: 24%;
+            line-gap-override: 0%;
+          }
+
+          /* Use adjusted fallbacks BEFORE web fonts load */
+          body { font-family: 'DM Sans Fallback', system-ui, sans-serif; }
+          h1, h2, h3 { font-family: 'Playfair Display Fallback', Georgia, serif; }
         `}</style>
       </head>
 

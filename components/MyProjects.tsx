@@ -516,23 +516,30 @@ const MyProjects: React.FC = () => {
                     {cardContent}
                   </div>
                 ) : (
-                  <motion.a
+                  <a
                     href={project.link}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Open live demo for ${project.title}`}
                     className="group relative rounded-2xl overflow-hidden shadow-xl h-full flex flex-col"
-                    style={cardStyle}
-                    whileHover={{ scale: 1.02, y: -4 }}
-                    whileTap={{ scale: 0.97 }}
-                    initial={{ opacity: 0, scale: 0.8, y: 50 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ duration: 1.2, delay: index * 0.03 }}
-                    onMouseEnter={() => swiperInstance?.autoplay?.stop()}
-                    onMouseLeave={() => swiperInstance?.autoplay?.start()}
+                    style={{
+                      ...cardStyle,
+                      transition: "box-shadow 0.3s, transform 0.25s ease-out",
+                      willChange: "transform",
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.transform = "scale(1.02) translateY(-4px)";
+                      swiperInstance?.autoplay?.stop();
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.transform = "";
+                      swiperInstance?.autoplay?.start();
+                    }}
+                    onMouseDown={(e) => { (e.currentTarget as HTMLElement).style.transform = "scale(0.97)"; }}
+                    onMouseUp={(e) => { (e.currentTarget as HTMLElement).style.transform = "scale(1.02) translateY(-4px)"; }}
                   >
                     {cardContent}
-                  </motion.a>
+                  </a>
                 )}
               </SwiperSlide>
             );
