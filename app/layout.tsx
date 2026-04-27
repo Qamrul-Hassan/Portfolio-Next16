@@ -1,89 +1,56 @@
 import '../styles/globals.css';
 import type { Metadata, Viewport } from "next";
-import { Playfair_Display, DM_Sans } from "next/font/google";
-
-// next/font eliminates the render-blocking Google Fonts <link> tag entirely.
-// Fonts are downloaded at build time, self-hosted, and injected as CSS variables —
-// zero network round-trip on page load, zero FOIT risk, ~200-400ms LCP improvement on mobile.
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["700", "900"],
-  style: ["normal", "italic"],
-  variable: "--font-playfair",
-  display: "swap",
-});
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-dm-sans",
-  display: "swap",
-});
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Qamrul Hassan | Frontend Developer",
   description:
-    "Portfolio of Qamrul Hassan — Frontend Developer specializing in React, Next.js, TypeScript, and Tailwind CSS.",
-  icons: {
-    icon: "/favicon.ico",
-  },
+    "Portfolio of Qamrul Hassan — Frontend Developer specialising in React, Next.js, TypeScript, and Tailwind CSS.",
+  icons: { icon: "/favicon.ico" },
 };
 
+// Allow user zoom (accessibility) — canvas redraws to CSS px so stays crisp at any zoom
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  minimumScale: 1,
   viewportFit: "cover",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`scroll-smooth ${playfair.variable} ${dmSans.variable}`}>
+    <html lang="en" className="scroll-smooth">
       <head>
-        {/*
-          FIX: Preconnect hints — tells the browser to open TCP+TLS connections
-          to these origins as early as possible, reducing latency for the first
-          request to each. Vercel's image-optimization edge and analytics CDN
-          are the two most impactful origins for this portfolio.
+        {/* DNS + connection warm-up */}
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
-          dns-prefetch is a cheaper fallback for browsers that don't support
-          preconnect (rare, but still worth including).
-
-          These replace what Lighthouse flagged under "Network dependency tree"
-          as origins with no preconnect — estimated savings: ~100-200ms per
-          origin on mobile connections.
-        */}
-        <link rel="preconnect" href="https://vercel.com" />
-        <link rel="preconnect" href="https://va.vercel-scripts.com" />
-        <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
-
-        {/*
-          FIX: Preload the LCP image explicitly so the browser's preload scanner
-          finds it in <head> before it parses the JS bundle. Even though
-          HeroSection uses <Image priority>, adding a preload hint here gives
-          an additional ~50-100ms head start on slower connections because it
-          fires before React hydrates.
-        */}
-        <link
-          rel="preload"
-          as="image"
-          href="/banner.webp"
-          type="image/webp"
-          fetchPriority="high"
-        />
+        {/* Preload critical above-the-fold images */}
+        <link rel="preload" as="image" href="/Logo-4.webp" />
+        <link rel="preload" as="image" href="/banner.webp" />
+        <link rel="preload" as="image" href="/Portfolio-9.webp" />
       </head>
       <body
-        className="text-gray-900"
-        style={{
-          fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
-          background: "#050d1a",
-        }}
+        className="bg-[#050d1a] text-gray-100"
+        style={{ fontFamily: "'DM Sans', sans-serif" }}
         suppressHydrationWarning
       >
         {children}
+
+        {/*
+         * Non-blocking Google Fonts via next/script (afterInteractive).
+         * This runs after the page is interactive — zero render-blocking.
+         * The injected <link> uses display=swap so text is never invisible.
+         */}
+        <Script id="load-google-fonts" strategy="afterInteractive">{`
+          (function() {
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap';
+            document.head.appendChild(link);
+          })();
+        `}</Script>
       </body>
     </html>
   );

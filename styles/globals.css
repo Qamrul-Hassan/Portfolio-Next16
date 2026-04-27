@@ -1,36 +1,45 @@
 @import "tailwindcss";
 
+/* ── Design tokens ─────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg-deep:    #040b18;
+  --color-bg-base:    #050d1a;
+  --color-bg-mid:     #060f20;
+  --color-accent:     #0EA5E9;   /* sky-500  */
+  --color-accent-2:   #14B8A6;   /* teal-500 */
+  --color-accent-3:   #38BDF8;   /* sky-400  */
+  --font-display:     'Playfair Display', Georgia, serif;
+  --font-body:        'DM Sans', system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Base ──────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  /* Allow user zoom (a11y); canvases resize to CSS px so they stay sharp */
+  scroll-behavior: smooth;
 }
 
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-}
-
-/* Horizontal scroll prevention */
-html, body {
   max-width: 100%;
   overflow-x: hidden;
   margin: 0;
   padding: 0;
 }
 
-* {
-  box-sizing: border-box;
+body {
+  background: var(--color-bg-base);
+  color: #f1f5f9;
+  font-family: var(--font-body);
+  /* Smooth font rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Sections must not clip their canvas backgrounds on the y axis */
 section {
   width: 100%;
   max-width: 100%;
@@ -38,15 +47,9 @@ section {
   overflow-y: visible;
 }
 
-/* Playfair Display utility — use var() from next/font instead of a <link> stylesheet */
-.font-playfair {
-  font-family: var(--font-playfair), 'Playfair Display', serif;
-}
-
+/* ── Swiper overrides ──────────────────────────────────────────────── */
 .swiper-button-prev,
-.swiper-button-next {
-  display: none !important;
-}
+.swiper-button-next { display: none !important; }
 
 .projectsSwiper .swiper-slide {
   opacity: 0.35;
@@ -54,83 +57,35 @@ section {
   filter: grayscale(0.7);
   transition: opacity 350ms ease, transform 350ms ease, filter 350ms ease;
 }
-
 .projectsSwiper .swiper-slide-prev,
 .projectsSwiper .swiper-slide-next {
   opacity: 0.6;
   transform: scale(0.94);
   filter: grayscale(0.35);
 }
-
 .projectsSwiper .swiper-slide-active {
   opacity: 1;
   transform: scale(1);
   filter: grayscale(0);
 }
-
 .projectsSwiper .swiper-slide-active a {
   box-shadow: 0 20px 48px rgba(217, 70, 239, 0.28);
 }
 
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+/* ── Utility ───────────────────────────────────────────────────────── */
+.no-scrollbar                    { -ms-overflow-style: none; scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Hex clip-path used by pagination buttons */
+.hex-clip {
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-/* CSS-only floating animation — moves animation off the JS main thread entirely
-   (compositor thread only). Replaces a Framer Motion JS animate loop. */
-@keyframes hero-float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-20px); }
-}
-.hero-float {
-  animation: hero-float 2s ease-in-out infinite;
-}
-
-/* Respect reduced-motion preference */
+/* ── Performance: reduce motion ────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .hero-float {
-    animation: none;
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
-}
-
-/*
- * FIX: content-visibility — tells the browser to skip rendering work for
- * off-screen sections until they scroll near the viewport. This can reduce
- * initial rendering work by 40-60% on long pages, directly helping
- * "Minimize main-thread work" (was 5,443ms). contain-intrinsic-size prevents
- * layout shift when the section is first painted.
- *
- * We exclude #home (above-fold) so LCP is never delayed.
- */
-#about,
-#services,
-#projects,
-#contact {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 600px;
-}
-
-/*
- * FIX: Reduce layout recalculation cost — will-change hints promote the
- * animated elements to their own compositor layer so transforms/opacity
- * changes don't trigger paint of the whole page.
- * Only apply to elements that actually animate; overusing will-change wastes
- * GPU memory.
- */
-.hero-float {
-  will-change: transform;
-}
-
-/*
- * FIX: font-display swap is handled by next/font, but explicitly setting it
- * here as a safety net for any fallback font usage. Prevents render-blocking
- * from any font that might load outside next/font.
- */
-@font-face {
-  font-display: swap;
 }

@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import SectionBg from "./SectionBg";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
+import HexGridBg from "./HexGridBg";
 
-/* ── Hex + Wave Background for Projects ── */
+
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import { Navigation, Pagination, Autoplay, EffectCoverflow } from "swiper/modules";
@@ -296,13 +296,22 @@ const MyProjects: React.FC = () => {
       </>
     );
 
+    // Convert shape className to inline border-radius (avoids overflow-hidden clipping the pill)
+    const radiusMap: Record<string, string> = {
+      "md:rounded-l-full md:rounded-r-none": "9999px 12px 12px 9999px",
+      "md:rounded-r-full md:rounded-l-none": "12px 9999px 9999px 12px",
+      "md:rounded-none":                     "12px",
+    };
+    const borderRadius = radiusMap[cardShape] ?? "12px";
+    const sharedRadius = { borderRadius };
+    const sharedClass = `group relative block w-full h-[300px] overflow-hidden p-5 transition duration-300 hover:-translate-y-1 ${textAlign}`;
+
     const sharedStyle: React.CSSProperties = {
-      background: "rgba(12,24,39,0.85)",
+      background: "linear-gradient(155deg, #0c1827 0%, #0f2235 56%, #0a1520 100%)",
       border: "1px solid rgba(14,165,233,0.2)",
       boxShadow: "0 16px 35px rgba(0,0,0,0.35)",
+      ...sharedRadius,
     };
-
-    const sharedClass = `group relative block w-full h-[300px] overflow-hidden rounded-lg ${cardShape} ${textAlign} p-5 transition duration-300 hover:-translate-y-1`;
 
     if (project.link === "#") {
       return (
@@ -330,10 +339,10 @@ const MyProjects: React.FC = () => {
       id="projects"
       className="relative overflow-hidden py-20 px-6 lg:px-16 text-gray-100"
       style={{
-        background: "rgba(6,16,30,0.85)",
+        background: "linear-gradient(160deg, #06101e 0%, #091626 50%, #060e1a 100%)",
       }}
     >
-      <SectionBg />
+      <HexGridBg hexSize={26} frameSkip={1} r2={20} g2={184} b2={166} />
       {/* Corner accent blobs */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-24 right-0 h-72 w-72 rounded-full blur-3xl" style={{ background: "radial-gradient(circle, rgba(14,165,233,0.1), transparent 70%)" }} />
@@ -568,11 +577,12 @@ const MyProjects: React.FC = () => {
                   WebkitClipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
                   background: isActive
                     ? "linear-gradient(135deg, #0EA5E9, #14B8A6)"
-                    : "rgba(14,165,233,0.12)",
+                    : "rgba(14,165,233,0.15)",
                   color: isActive ? "#ffffff" : "#7dd3fc",
-                  border: isActive ? "none" : "1px solid rgba(14,165,233,0.3)",
-                  transform: isActive ? "scale(1.1)" : "scale(1)",
-                  boxShadow: isActive ? "0 4px 14px rgba(14,165,233,0.4)" : "none",
+                  border: "none",
+                  transform: isActive ? "scale(1.15)" : "scale(1)",
+                  boxShadow: isActive ? "0 0 18px rgba(14,165,233,0.5)" : "0 0 6px rgba(14,165,233,0.15)",
+                  transition: "all 0.2s ease",
                 }}
               >
                 {slideIndex + 1}

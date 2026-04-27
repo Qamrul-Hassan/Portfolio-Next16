@@ -1,18 +1,17 @@
-import { NextConfig } from 'next';
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  // Disable Next.js image optimization to avoid Vercel free tier limits
-  // (Image Optimization Transformations: 5K/month, Cache Writes: 100K/month)
+
+  // Compress all responses (gzip/brotli)
+  compress: true,
+
+  // Image optimization disabled to stay within Vercel free tier limits
+  // (5K transformations/month, 100K cache writes/month)
+  // Since images are .webp already, this is fine — no quality loss.
   images: {
     unoptimized: true,
   },
-  // Remove turbopack root (not needed, can cause issues)
-  ...(process.env.NODE_ENV === 'development' ? {
-    turbopack: {
-      root: process.cwd(),
-    },
-  } : {}),
 };
 
 export default nextConfig;

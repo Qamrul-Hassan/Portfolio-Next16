@@ -1,9 +1,7 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { FaEnvelope, FaMobileAlt } from "react-icons/fa";
 
-// Static component — no "use client", no Framer Motion.
-// Framer Motion on mount-only animations (opacity/x slide-in) blocks the
-// main thread during LCP. Pure CSS handles this at zero cost.
 const Topbar = () => {
   return (
     <div
@@ -16,7 +14,14 @@ const Topbar = () => {
           className="flex items-center text-xs sm:text-sm text-slate-400 hover:text-sky-400 transition duration-300"
         >
           <FaEnvelope className="text-sky-400 mr-2" />
-          <span className="font-medium">mdqamrul74@gmail.com</span>
+          <motion.span
+            className="font-medium"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            mdqamrul74@gmail.com
+          </motion.span>
         </a>
 
         <a
@@ -24,7 +29,14 @@ const Topbar = () => {
           className="flex items-center text-xs sm:text-sm text-slate-400 hover:text-teal-400 transition duration-300"
         >
           <FaMobileAlt className="text-teal-400 mr-2" />
-          <span className="font-medium">+880 1711-844948</span>
+          <motion.span
+            className="font-medium"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+          >
+            +880 1711-844948
+          </motion.span>
         </a>
       </div>
     </div>

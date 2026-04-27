@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
@@ -21,58 +21,26 @@ const Navbar: React.FC = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   useEffect(() => {
-    /*
-     * FIX: Forced reflow eliminated.
-     *
-     * Previous code read `section.offsetTop` inside the scroll handler which
-     * forces the browser to do a synchronous style + layout calculation
-     * (forced reflow). Lighthouse reported this as 20 ms+ of wasted time.
-     *
-     * Fix: Use IntersectionObserver instead. The browser resolves intersection
-     * geometry asynchronously, off the main thread, so no reflow is triggered.
-     * scrollY / isSticky still use a passive scroll listener but we removed the
-     * offsetTop loop from it entirely.
-     */
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        }
-      },
-      {
-        // Fire when the section crosses 20% into the viewport
-        rootMargin: "-20% 0px -60% 0px",
-        threshold: 0,
-      }
-    );
-
-    NAV_LINKS.forEach(({ id }) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-
-    // Lightweight scroll listener — only reads window.scrollY (no DOM layout read)
-    let rafPending = false;
     const handleScroll = () => {
-      if (rafPending) return;
-      rafPending = true;
-      requestAnimationFrame(() => {
-        rafPending = false;
-        const scrollY = window.scrollY;
-        setIsSticky(scrollY > 50);
-        setScrolled(scrollY > 80);
-      });
+      const topbarHeight = 50;
+      const scrollY = window.scrollY;
+      setIsSticky(scrollY > topbarHeight);
+      setScrolled(scrollY > 80);
+
+      const scrollPosition = scrollY + 120;
+      let current = "home";
+      for (const link of NAV_LINKS) {
+        const section = document.getElementById(link.id);
+        if (section && section.offsetTop <= scrollPosition) {
+          current = link.id;
+        }
+      }
+      setActiveSection(current);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -85,11 +53,6 @@ const Navbar: React.FC = () => {
   const scrollToSection = (id: string) => {
     const section = document.getElementById(id);
     if (!section) return;
-    /*
-     * FIX: getBoundingClientRect() + scrollY is still a layout read, but it
-     * only fires on user click (not on every scroll frame) so the cost is
-     * negligible and acceptable.
-     */
     const offset = 80;
     const targetPosition =
       section.getBoundingClientRect().top + window.scrollY - offset;
@@ -134,7 +97,6 @@ const Navbar: React.FC = () => {
                 alt="QHS Logo"
                 fill
                 priority
-                sizes="48px"
                 className="object-cover"
               />
             </div>
@@ -208,7 +170,7 @@ const Navbar: React.FC = () => {
             Hire Me
           </motion.button>
 
-          {/* Mobile burger */}
+          {/* Mobile burger button — always z-50 via nav, sits above overlay */}
           <button
             onClick={toggleMenu}
             className="lg:hidden relative z-[60] flex flex-col gap-1.5 p-2 rounded-lg focus:outline-none"
@@ -251,6 +213,7 @@ const Navbar: React.FC = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
+            {/* Close button inside overlay */}
             <button
               onClick={toggleMenu}
               className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-full text-sky-400 text-2xl font-bold focus:outline-none transition-all duration-300 hover:bg-sky-400/10 hover:scale-110"
