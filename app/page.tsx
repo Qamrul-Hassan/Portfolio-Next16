@@ -2,12 +2,9 @@ import React from "react";
 import Topbar from "../components/Topbar";
 import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
-import AboutMe from "../components/AboutMe";
-import Services from "../components/Services";
-import MyProjects from "../components/MyProjects";
-import Contact from "../components/Contact";
-import Footer from "../components/Footer";
-import Chat from "../components/Chat";
+import DeferredHomeSections, {
+  DeferredFooterAndChat,
+} from "../components/DeferredHomeSections";
 
 export default function Page() {
   return (
@@ -21,13 +18,9 @@ export default function Page() {
        */}
       <main id="main-content" tabIndex={-1} style={{ outline: "none" }}>
         <HeroSection />
-        <AboutMe />
-        <Services />
-        <MyProjects />
-        <Contact />
+        <DeferredHomeSections />
       </main>
-      <Footer />
-      <Chat />
+      <DeferredFooterAndChat />
     </>
   );
 }
