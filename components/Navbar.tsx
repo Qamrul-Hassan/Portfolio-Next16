@@ -94,7 +94,7 @@ const Navbar: React.FC = () => {
             <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-sky-400 transition-all duration-300 shadow-lg shadow-pink-500/20">
               <Image
                 src="/Logo-4.webp"
-                alt="QHS Logo"
+                alt="Qamrul Hassan Shajal Photography logo"
                 fill
                 priority
                 className="object-cover"

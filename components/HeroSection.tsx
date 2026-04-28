@@ -247,7 +247,7 @@ const HeroSection: React.FC = () => {
             <div className="relative h-full w-full overflow-hidden rounded-2xl border-2 border-sky-400/30 shadow-[0_14px_48px_rgba(14,165,233,0.25)]">
               <Image
                 src="/Portfolio-9.webp"
-                alt="Qamrul Hassan"
+                alt="Portrait of Qamrul Hassan Shajal"
                 fill
                 priority
                 className="object-cover"
