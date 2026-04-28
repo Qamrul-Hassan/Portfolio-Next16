@@ -47,9 +47,12 @@ export const metadata: Metadata = {
     ],
   },
   // Canonical URL
-  alternates: { canonical: "https://qhs-portfolio-next16.vercel.app" },
-};
+ alternates: { canonical: "https://qhs-portfolio-next16.vercel.app" },
 
+verification: {
+  google: "dq7dPG6QTXX416BxZguUkxSTazMJTF-BvTnDlrfayuI",
+},
+};
 /* ─────────────────────────────────────────────────────────────────────────────
  * Viewport — accessible zoom, no render blocking
  * ───────────────────────────────────────────────────────────────────────────── */
