@@ -36,11 +36,11 @@ const SectionBg: React.FC = () => {
     type HexState = { col: number; row: number; glow: number; target: number; timer: number };
     const hexStates: HexState[] = [];
 
-    type WaveLine = { y: number; amplitude: number; freq: number; speed: number; phase: number; color: string };
+    type WaveLine = { yFrac: number; amplitude: number; freq: number; speed: number; phase: number; color: string };
     const waves: WaveLine[] = [
-      { y: H * 0.3, amplitude: 18, freq: 0.012, speed: 0.018, phase: 0, color: "rgba(14,165,233,0.09)" },
-      { y: H * 0.55, amplitude: 14, freq: 0.018, speed: -0.014, phase: 1.5, color: "rgba(20,184,166,0.07)" },
-      { y: H * 0.75, amplitude: 22, freq: 0.009, speed: 0.011, phase: 3.1, color: "rgba(56,189,248,0.06)" },
+      { yFrac: 0.30, amplitude: 18, freq: 0.012, speed:  0.018, phase: 0,   color: "rgba(14,165,233,0.09)" },
+      { yFrac: 0.55, amplitude: 14, freq: 0.018, speed: -0.014, phase: 1.5, color: "rgba(20,184,166,0.07)" },
+      { yFrac: 0.75, amplitude: 22, freq: 0.009, speed:  0.011, phase: 3.1, color: "rgba(56,189,248,0.06)" },
     ];
 
     const drawHex = (cx: number, cy: number, size: number, alpha: number) => {
@@ -135,9 +135,10 @@ const SectionBg: React.FC = () => {
 
       waves.forEach(wave => {
         wave.phase += wave.speed;
+        const waveY = wave.yFrac * H;
         ctx.beginPath();
         for (let x = 0; x <= W; x += 4) {
-          const y = wave.y + Math.sin(x * wave.freq + wave.phase) * wave.amplitude;
+          const y = waveY + Math.sin(x * wave.freq + wave.phase) * wave.amplitude;
           x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
         }
         ctx.strokeStyle = wave.color;
@@ -156,6 +157,8 @@ const SectionBg: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
+      aria-hidden="true"
+      role="presentation"
       className="absolute inset-0 w-full h-full"
       style={{ pointerEvents: "none" }}
     />

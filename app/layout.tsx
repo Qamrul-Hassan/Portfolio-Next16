@@ -124,9 +124,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Skip-to-main for screen readers / keyboard users */}
         <a href="#main-content" className="skip-link">Skip to main content</a>
 
-        <main id="main-content">
-          {children}
-        </main>
+        {/*
+         * NOTE: page.tsx renders its own <main id="main-content"> so we do NOT
+         * wrap children in a second <main> here. The skip-link href="#main-content"
+         * will land on the <main> that page.tsx emits.
+         */}
+        {children}
 
         {/*
          * ── Non-blocking Google Fonts ──────────────────────────────────

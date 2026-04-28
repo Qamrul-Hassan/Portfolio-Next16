@@ -172,6 +172,8 @@ const GlobalHexBg: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
+      aria-hidden="true"
+      role="presentation"
       className="fixed inset-0 w-full h-full"
       style={{ pointerEvents: "none", zIndex: 0 }}
     />

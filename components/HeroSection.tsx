@@ -7,22 +7,35 @@ import { Typewriter } from "react-simple-typewriter";
 import Image from "next/image";
 
 
+// pointer:coarse = touchscreen device — skip the canvas to save main-thread budget
+function isTouchDevice(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(pointer: coarse)").matches;
+}
+
 const HeroBg: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    // Skip animation entirely on mobile — banner image already looks great
+    if (isTouchDevice()) return;
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     let W = (canvas.width = canvas.offsetWidth);
     let H = (canvas.height = canvas.offsetHeight);
+
     const onResize = () => {
       W = canvas.width = canvas.offsetWidth;
       H = canvas.height = canvas.offsetHeight;
+      frameSkip = getSkip();
+      buildHexes();
     };
-    window.addEventListener("resize", onResize);
+    window.addEventListener("resize", onResize, { passive: true });
 
     const R = 30;
     const HH = Math.sqrt(3) * R;
@@ -83,7 +96,6 @@ const HeroBg: React.FC = () => {
       return 1;
     };
     let frameSkip = getSkip();
-    window.addEventListener("resize", () => { frameSkip = getSkip(); }, { passive: true });
 
     const drawHex = (cx: number, cy: number, r: number) => {
       ctx.beginPath();
@@ -174,6 +186,7 @@ const HeroBg: React.FC = () => {
     <canvas
       ref={canvasRef}
       aria-hidden="true"
+      role="presentation"
       className="absolute inset-0 w-full h-full"
       style={{ pointerEvents: "none", zIndex: 1 }}
     />
