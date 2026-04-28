@@ -218,7 +218,7 @@ const Contact = () => {
       <span className="pointer-events-none absolute z-[1] top-1/2 left-8 h-20 w-20 lg:h-28 lg:w-28 -translate-y-1/2 rotate-12" style={{ border: "2px solid rgba(14,165,233,0.25)", background: "rgba(14,165,233,0.06)" }} />
 
       <motion.div
-        className="relative z-10 text-center mb-12"
+        className="relative z-10 text-center mb-12 px-2"
         initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
       >
         <motion.span
@@ -251,7 +251,7 @@ const Contact = () => {
         {/* Form */}
         <motion.form
           onSubmit={handleSubmit}
-          className="relative z-10 w-full lg:w-2/5 p-5 sm:p-7 md:p-9 flex flex-col gap-4 text-left lg:text-right"
+          className="relative z-10 w-full lg:w-2/5 p-5 sm:p-7 md:p-9 flex flex-col gap-4 text-center lg:text-right"
           style={{ background: "linear-gradient(135deg, rgba(15,23,42,0.9) 0%, rgba(30,41,59,0.9) 100%)", borderRight: "1px solid rgba(14,165,233,0.15)" }}
           initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 1 }}
         >
@@ -264,7 +264,7 @@ const Contact = () => {
               <input
                 type={field === "email" ? "email" : "text"} name={field} id={field} autoComplete={field}
                 value={formData[field as keyof typeof formData]} onChange={handleChange}
-                className="w-full p-3 rounded-lg text-sm text-gray-100 outline-none transition placeholder-slate-500 text-left lg:text-right"
+                className="w-full p-3 rounded-lg text-sm text-gray-100 outline-none transition placeholder-slate-500 text-left"
                 style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(14,165,233,0.2)" }}
                 onFocus={(e) => { e.target.style.borderColor = "#0EA5E9"; e.target.style.boxShadow = "0 0 0 3px rgba(14,165,233,0.1)"; }}
                 onBlur={(e) => { e.target.style.borderColor = "rgba(14,165,233,0.2)"; e.target.style.boxShadow = "none"; }}
@@ -278,7 +278,7 @@ const Contact = () => {
               style={{ color: formData.message ? "#38BDF8" : "#94a3b8" }}>Your Message</label>
             <textarea name="message" id="message" autoComplete="off" rows={4}
               value={formData.message} onChange={handleChange}
-              className="w-full p-3 rounded-lg text-sm text-gray-100 outline-none transition placeholder-slate-500 resize-none text-left lg:text-right"
+              className="w-full p-3 rounded-lg text-sm text-gray-100 outline-none transition placeholder-slate-500 resize-none text-left"
               style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(14,165,233,0.2)" }}
               onFocus={(e) => { e.target.style.borderColor = "#0EA5E9"; e.target.style.boxShadow = "0 0 0 3px rgba(14,165,233,0.1)"; }}
               onBlur={(e) => { e.target.style.borderColor = "rgba(14,165,233,0.2)"; e.target.style.boxShadow = "none"; }}

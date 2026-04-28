@@ -74,13 +74,13 @@ const AboutMe = () => {
       id="about"
       className="relative overflow-hidden py-20 px-6 lg:px-16 text-gray-100"
     >
-      {/* Shared hex + scan-line background — slightly smaller cell for variety */}
       <HexGridBg hexSize={30} />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 items-start">
 
         {/* ── Left: bio + resume ──────────────────────────────────── */}
-        <motion.div className="lg:w-1/2"
+        <motion.div
+          className="lg:w-1/2 w-full text-center lg:text-left"
           initial={{ opacity: 0, x: -60 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
 
           <motion.span
@@ -95,7 +95,8 @@ const AboutMe = () => {
             <span style={{ background: "linear-gradient(135deg, #0EA5E9 0%, #14B8A6 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Me</span>
           </h2>
 
-          <motion.div className="h-1 w-28 rounded-full mb-6" style={{ background: "linear-gradient(to right, #0EA5E9, #14B8A6)" }}
+          {/* Gradient line — centered on mobile, left on desktop */}
+          <motion.div className="h-1 w-28 rounded-full mb-6 mx-auto lg:mx-0" style={{ background: "linear-gradient(to right, #0EA5E9, #14B8A6)" }}
             initial={{ width: 0, opacity: 0 }} whileInView={{ width: 112, opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7 }} />
 
           <p className="text-lg leading-relaxed mb-5 text-gray-300">
@@ -107,27 +108,30 @@ const AboutMe = () => {
             &ldquo;Building engaging and accessible digital experiences.&rdquo;
           </motion.p>
 
-          <motion.button type="button"
-            onClick={() => { setShowResumeForm(p => !p); resetForm(); }}
-            className="relative inline-flex items-center gap-2 px-8 py-3.5 text-white font-bold rounded-xl overflow-visible shadow-lg transition duration-300 hover:-translate-y-0.5 hover:shadow-xl"
-            style={{ background: "linear-gradient(135deg, #0EA5E9 0%, #14B8A6 100%)", boxShadow: "0 8px 24px rgba(14,165,233,0.3)" }}
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5, duration: 0.8 }} whileTap={{ scale: 0.97 }}>
-            <FaDownload /><span>Request Resume Access</span>
-          </motion.button>
+          {/* Button — centered on mobile */}
+          <div className="flex justify-center lg:justify-start">
+            <motion.button type="button"
+              onClick={() => { setShowResumeForm(p => !p); resetForm(); }}
+              className="relative inline-flex items-center gap-2 px-8 py-3.5 text-white font-bold rounded-xl overflow-visible shadow-lg transition duration-300 hover:-translate-y-0.5 hover:shadow-xl"
+              style={{ background: "linear-gradient(135deg, #0EA5E9 0%, #14B8A6 100%)", boxShadow: "0 8px 24px rgba(14,165,233,0.3)" }}
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5, duration: 0.8 }} whileTap={{ scale: 0.97 }}>
+              <FaDownload /><span>Request Resume Access</span>
+            </motion.button>
+          </div>
 
           {showResumeForm && (
             <motion.form
               onSubmit={otpSent ? handleVerifyOtp : handleRequestResume}
-              className="mt-5 w-full max-w-md rounded-2xl border border-sky-100 bg-white p-5 shadow-lg"
+              className="mt-5 w-full max-w-md rounded-2xl border border-sky-100 bg-white p-5 shadow-lg mx-auto lg:mx-0"
               initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
-              <label className="mb-2 block text-sm font-semibold text-gray-800" htmlFor="resume-email">Enter your email to view resume</label>
+              <label className="mb-2 block text-sm font-semibold text-gray-800 text-left" htmlFor="resume-email">Enter your email to view resume</label>
               <input id="resume-email" type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com"
-                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100" disabled={otpSent} />
+                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100 text-left" disabled={otpSent} />
               {otpSent && (<>
-                <label className="mb-2 mt-3 block text-sm font-semibold text-gray-800" htmlFor="resume-otp">Enter 6-digit code sent to your email</label>
+                <label className="mb-2 mt-3 block text-sm font-semibold text-gray-800 text-left" htmlFor="resume-otp">Enter 6-digit code sent to your email</label>
                 <input id="resume-otp" type="text" inputMode="numeric" pattern="[0-9]{6}" required value={otp}
                   onChange={e => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))} placeholder="123456"
-                  className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100" />
+                  className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100 text-left" />
               </>)}
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <button type="submit" disabled={requestState === "loading"}
@@ -153,18 +157,17 @@ const AboutMe = () => {
                 </a>
               )}
               {requestMessage && (
-                <p className={`mt-3 text-sm ${requestState === "error" ? "text-red-600" : "text-emerald-600"}`}>{requestMessage}</p>
+                <p className={`mt-3 text-sm text-left ${requestState === "error" ? "text-red-600" : "text-emerald-600"}`}>{requestMessage}</p>
               )}
             </motion.form>
           )}
         </motion.div>
 
-        {/* ── Right: Skills — hexagon card grid ───────────────────── */}
+        {/* ── Right: Skills ───────────────────────────────────────── */}
         <motion.div
-          className="lg:w-1/2 grid grid-cols-2 md:grid-cols-3 gap-4"
+          className="lg:w-1/2 w-full grid grid-cols-2 md:grid-cols-3 gap-4"
           initial={{ opacity: 0, x: 60 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
           {skills.map(({ Icon, label, color }, index) => {
-            // Hexagon shapes matching the same pattern as Services
             const mobileShape  = index % 2 === 0 ? "rounded-l-full rounded-r-none" : "rounded-r-full rounded-l-none";
             const desktopShape = index % 3 === 0 ? "md:rounded-l-full md:rounded-r-none" : index % 3 === 2 ? "md:rounded-r-full md:rounded-l-none" : "md:rounded-none";
             return (

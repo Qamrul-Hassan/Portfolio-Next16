@@ -7,7 +7,6 @@ import { Typewriter } from "react-simple-typewriter";
 import Image from "next/image";
 
 
-
 const HeroBg: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -349,9 +348,9 @@ const HeroSection: React.FC = () => {
               { href: "https://www.linkedin.com/in/md-qamrul-hassan-a44b3835b/", label: "LinkedIn", icon: <FaLinkedin />, hover: "hover:text-sky-400" },
               { href: "https://github.com/Qamrul-Hassan", label: "GitHub", icon: <FaGithub />, hover: "hover:text-teal-400" },
               { href: "https://x.com/Shajal1", label: "X", icon: <FaXTwitter  />, hover: "hover:text-sky-400" },
-              { href: "https://wa.me/8801711844948", label: "WhatsApp", icon: <FaWhatsapp  />, hover: "hover:text-green-400" },
-              { href: "https://t.me/QHS73", label: "Telegram", icon: <FaTelegram  />, hover: "hover:text-sky-400" },
-              
+              { href: "https://wa.me/8801712345678", label: "WhatsApp", icon: <FaWhatsapp />, hover: "hover:text-green-400" },
+              { href: "https://t.me/QHS73", label: "Telegram", icon: <FaTelegram />, hover: "hover:text-blue-400" },
+
             ].map((s) => (
               <motion.a
                 key={s.href}

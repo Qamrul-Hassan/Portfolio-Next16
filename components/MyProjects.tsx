@@ -263,55 +263,84 @@ const MyProjects: React.FC = () => {
 
   const renderFeaturedCard = (
     project: Project,
-    cardShape: string,
+    shape: "left-pill" | "square" | "right-pill",
     textAlign: string
   ) => {
+    // Border radius — pill uses 9999px on the pill side for authentic look
+    const radiusMap = {
+      "left-pill":  "9999px 16px 16px 9999px",
+      "square":     "16px",
+      "right-pill": "16px 9999px 9999px 16px",
+    };
+    const borderRadius = radiusMap[shape];
+
+    // A pill with border-radius 9999px on a card ~300px wide means the curve
+    // intrudes ~(height/2) px into the content. For a ~280px tall card that's
+    // ~140px but visually the safe text zone starts much sooner.
+    // We compensate with generous padding on the curved side.
+    // left-pill: extra padding-left so text clears the left curve
+    // right-pill: extra padding-right so text clears the right curve
+    const ptb = "1.25rem"; // top/bottom padding
+    const pFlat = "1.5rem"; // padding on the flat (non-curved) side
+    const pCurve = "3.5rem"; // padding on the curved side — clears the pill intrusion
+
+    const paddingStyle: React.CSSProperties =
+      shape === "left-pill"
+        ? { paddingTop: ptb, paddingBottom: ptb, paddingLeft: pCurve, paddingRight: pFlat }
+        : shape === "right-pill"
+        ? { paddingTop: ptb, paddingBottom: ptb, paddingLeft: pFlat, paddingRight: pCurve }
+        : { padding: "1.25rem 1.5rem" };
+
+    // Accent line: full width on square; on pills anchor to the flat edge
+    // so it doesn't visually bleed into the curved void
+    const accentLine = shape === "square"
+      ? { top: 0, left: 0, right: 0, width: "100%" }
+      : shape === "left-pill"
+      ? { top: 0, right: 0, width: "65%", left: "auto" }
+      : { top: 0, left: 0, width: "65%", right: "auto" };
+
     const cardContent = (
       <>
         {/* Top glow blob */}
-        <span className="absolute -top-8 -right-8 h-24 w-24 rounded-2xl rotate-12 blur-2xl"
+        <span className="absolute -top-8 -right-8 h-24 w-24 rounded-2xl rotate-12 blur-2xl pointer-events-none"
           style={{ background: "rgba(14,165,233,0.25)" }} />
+
         {/* Top accent line */}
-        <span className="absolute top-0 left-0 h-[2px] w-full"
-          style={{ background: "linear-gradient(to right, transparent, #0EA5E9, #14B8A6, transparent)" }} />
+        <span className="absolute h-[2px] pointer-events-none"
+          style={{ ...accentLine, background: "linear-gradient(to right, transparent, #0EA5E9, #14B8A6, transparent)" }} />
 
         <p className="relative text-xs font-semibold uppercase tracking-[0.15em] mb-2"
           style={{ color: "#38BDF8" }}>
           Featured
         </p>
-        <h3 className="relative text-xl font-extrabold text-white mb-2">{project.title}</h3>
-        <p className="relative text-sm mb-3" style={{ color: "#cbd5e1" }}>{project.description}</p>
-        <p className="relative text-sm mb-2" style={{ color: "#94a3b8" }}>
+        <h3 className="relative text-base sm:text-lg font-extrabold text-white mb-2 leading-snug">{project.title}</h3>
+        <p className="relative text-xs sm:text-sm mb-3 leading-relaxed" style={{ color: "#cbd5e1" }}>{project.description}</p>
+        <p className="relative text-xs mb-2 leading-relaxed" style={{ color: "#94a3b8" }}>
           <span className="font-semibold" style={{ color: "#38BDF8" }}>Stack:</span>{" "}
           {project.tech}
         </p>
         {project.outcome && (
-          <p className="relative text-sm font-medium text-white">
+          <p className="relative text-xs font-medium text-white leading-relaxed">
             Result: <span className="font-normal" style={{ color: "#cbd5e1" }}>{project.outcome}</span>
           </p>
         )}
+
         {/* Bottom hover line */}
-        <span className="absolute bottom-0 left-1/2 h-[2px] w-0 group-hover:w-1/2 -translate-x-1/2 rounded-full transition-all duration-500"
+        <span className="absolute bottom-0 left-1/2 h-[2px] w-0 group-hover:w-2/5 -translate-x-1/2 rounded-full transition-all duration-500 pointer-events-none"
           style={{ background: "linear-gradient(to right, #0EA5E9, #14B8A6)" }} />
       </>
     );
-
-    // Convert shape className to inline border-radius (avoids overflow-hidden clipping the pill)
-    const radiusMap: Record<string, string> = {
-      "md:rounded-l-full md:rounded-r-none": "9999px 12px 12px 9999px",
-      "md:rounded-r-full md:rounded-l-none": "12px 9999px 9999px 12px",
-      "md:rounded-none":                     "12px",
-    };
-    const borderRadius = radiusMap[cardShape] ?? "12px";
-    const sharedRadius = { borderRadius };
-    const sharedClass = `group relative block w-full h-[300px] overflow-hidden p-5 transition duration-300 hover:-translate-y-1 ${textAlign}`;
 
     const sharedStyle: React.CSSProperties = {
       background: "linear-gradient(155deg, #0c1827 0%, #0f2235 56%, #0a1520 100%)",
       border: "1px solid rgba(14,165,233,0.2)",
       boxShadow: "0 16px 35px rgba(0,0,0,0.35)",
-      ...sharedRadius,
+      borderRadius,
+      overflow: "hidden",
+      ...paddingStyle,
     };
+
+    const sharedClass = `group relative block w-full h-full min-h-[260px] transition duration-300 hover:-translate-y-1 ${textAlign}`;
 
     if (project.link === "#") {
       return (
@@ -395,29 +424,29 @@ const MyProjects: React.FC = () => {
       </div>
 
       {/* Featured cards row */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto mb-10 grid grid-cols-1 md:grid-cols-3 gap-5">
-        {leftFeatured && renderFeaturedCard(leftFeatured, "md:rounded-l-full md:rounded-r-none", "md:text-")}
+      <div className="relative z-10 w-full max-w-7xl mx-auto mb-10 grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
+        {leftFeatured && renderFeaturedCard(leftFeatured, "left-pill", "text-right")}
 
         <div
-          className="relative [perspective:1400px]"
+          className="relative [perspective:1400px] h-full"
           onMouseEnter={() => setIsMiddlePaused(true)}
           onMouseLeave={() => setIsMiddlePaused(false)}
         >
           <AnimatePresence mode="wait">
             <motion.div
               key={middleFeatured.title}
+              className="h-full"
               initial={{ opacity: 0, y: 12, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -12, scale: 0.98 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              {renderFeaturedCard(middleFeatured, "md:rounded-1-none", "md:text-center")}
+              {renderFeaturedCard(middleFeatured, "square", "text-center")}
             </motion.div>
           </AnimatePresence>
-          
         </div>
 
-        {rightFeatured && renderFeaturedCard(rightFeatured, "md:rounded-r-full md:rounded-l-none", "text-left")}
+        {rightFeatured && renderFeaturedCard(rightFeatured, "right-pill", "text-left")}
       </div>
 
       {/* Swiper carousel */}
