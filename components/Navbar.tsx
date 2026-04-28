@@ -91,16 +91,15 @@ const Navbar: React.FC = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-sky-400 transition-all duration-300 shadow-lg shadow-pink-500/20">
+            <span className="relative block w-12 h-12 rounded-full overflow-hidden ring-2 ring-sky-400 transition-all duration-300 shadow-lg shadow-pink-500/20">
               <Image
                 src="/Logo-4.webp"
                 alt="Qamrul Hassan Shajal Photography logo"
                 fill
-                priority
                 className="object-cover"
               />
-            </div>
-            <div className="hidden sm:block">
+            </span>
+            <span className="hidden sm:block">
               <span
                 className="font-bold text-white text-base"
                 style={{ fontFamily: "'Playfair Display', serif" }}
@@ -110,7 +109,7 @@ const Navbar: React.FC = () => {
               <span className="block text-[10px] tracking-widest text-sky-400 uppercase -mt-0.5">
                 Web Developer
               </span>
-            </div>
+            </span>
           </motion.button>
 
           {/* Desktop nav */}

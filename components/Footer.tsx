@@ -143,10 +143,10 @@ const Footer = () => {
         <motion.button onClick={scrollToTop} aria-label="Scroll to top"
           className="group flex flex-col items-center gap-1 text-xs tracking-widest uppercase text-slate-400 hover:text-white transition-colors"
           whileHover={{ y: -2 }}>
-          <div className="w-10 h-10 rounded-full flex items-center justify-center mb-1 transition-all duration-300 group-hover:shadow-lg"
+          <span className="w-10 h-10 rounded-full flex items-center justify-center mb-1 transition-all duration-300 group-hover:shadow-lg"
             style={{ background: "linear-gradient(135deg, #0EA5E9, #14B8A6)", boxShadow: "0 0 20px rgba(14,165,233,0.3)" }}>
             <FaArrowUp className="w-4 h-4 text-white" />
-          </div>
+          </span>
           Back to top
         </motion.button>
       </div>
@@ -159,7 +159,7 @@ const Footer = () => {
           <motion.div className="lg:col-span-1" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
             <div className="flex items-center gap-3 mb-4 justify-center md:justify-start">
               <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-sky-400 shadow-lg shadow-sky-500/20">
-                <Image src="/Logo-4.webp" alt="QHS Logo" fill priority className="object-cover" />
+                <Image src="/Logo-4.webp" alt="QHS Logo" fill className="object-cover" />
               </div>
               <div>
                 <div className="font-bold text-base text-white leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>Qamrul Hassan</div>

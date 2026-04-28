@@ -1,13 +1,16 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaPhone, FaEnvelope, FaAt, FaComment } from "react-icons/fa";
 import Image from "next/image";
 import ContactImage from "../public/Contact.webp";
-import emailjs from "@emailjs/browser";
-import ReCAPTCHA from "react-google-recaptcha";
 import HexGridBg from "./HexGridBg";
+
+const ReCAPTCHA = dynamic(() => import("react-google-recaptcha"), {
+  ssr: false,
+});
 
 /* ─── Custom Toast System ─────────────────────────────────────────────── */
 type ToastType = "success" | "error" | "info";
@@ -143,8 +146,8 @@ const ToastContainer: React.FC = () => {
 const Contact = () => {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaKey, setCaptchaKey] = useState(0);
   const [showSuccessAnim, setShowSuccessAnim] = useState(false);
-  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -180,6 +183,7 @@ const Contact = () => {
     };
 
     try {
+      const emailjs = (await import("@emailjs/browser")).default;
       await emailjs.send(serviceID, ownerTemplateID, templateParams, publicKey);
       await emailjs.send(serviceID, userTemplateID, { ...templateParams, to_email: formData.email }, publicKey);
       toast.success("Message sent successfully!");
@@ -187,7 +191,7 @@ const Contact = () => {
       setTimeout(() => setShowSuccessAnim(false), 5000);
       setFormData({ name: "", email: "", message: "" });
       setCaptchaToken(null);
-      recaptchaRef.current?.reset();
+      setCaptchaKey((key) => key + 1);
     } catch (err) {
       console.error("EmailJS Error:", err);
       toast.error("Failed to send message. Please try again later.");
@@ -288,7 +292,7 @@ const Contact = () => {
           {showCaptcha && (
             <div className="flex justify-center mb-1">
               <div className="w-full flex justify-center max-[390px]:scale-[0.78] max-[390px]:origin-center">
-                <ReCAPTCHA ref={recaptchaRef} sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+                <ReCAPTCHA key={captchaKey} sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
                   onChange={handleCaptcha} onExpired={handleCaptchaExpired} size="normal" />
               </div>
             </div>

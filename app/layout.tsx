@@ -72,27 +72,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
         {/*
-         * ── Perf: preload LCP candidates ─────
-         * Only preload what's visible above-the-fold (banner, profile photo, logo).
-         * fetchpriority="high" nudges the browser to fetch these first.
-         */}
-        <link
-          rel="preload"
-          as="image"
-          href="/banner.webp"
-          // @ts-expect-error - valid attribute
-          fetchpriority="high"
-        />
-        <link
-          rel="preload"
-          as="image"
-          href="/Portfolio-9.webp"
-          // @ts-expect-error - valid attribute
-          fetchpriority="high"
-        />
-        <link rel="preload" as="image" href="/Logo-4.webp" />
-
-        {/*
          * ── Accessibility: skip navigation link (hidden until focused) ──
          * Improves keyboard nav — counts toward Best Practices score.
          */}

@@ -108,7 +108,7 @@ const HeroBg: React.FC = () => {
       ctx.closePath();
     };
 
-    let raf: number;
+    let raf: number | undefined;
     let frameCount = 0;
 
     const draw = () => {
@@ -175,9 +175,10 @@ const HeroBg: React.FC = () => {
 
     };
 
-    draw();
+    const startTimer = window.setTimeout(draw, 900);
     return () => {
-      cancelAnimationFrame(raf);
+      window.clearTimeout(startTimer);
+      if (raf !== undefined) cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
     };
   }, []);
@@ -262,7 +263,6 @@ const HeroSection: React.FC = () => {
                 src="/Portfolio-9.webp"
                 alt="Portrait of Qamrul Hassan Shajal"
                 fill
-                priority
                 className="object-cover"
                 sizes="(min-width: 1024px) 464px, (min-width: 768px) 432px, (min-width: 640px) 384px, 64vw"
               />

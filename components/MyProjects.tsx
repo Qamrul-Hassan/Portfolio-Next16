@@ -8,7 +8,7 @@ import HexGridBg from "./HexGridBg";
 
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
-import { Navigation, Pagination, Autoplay, EffectCoverflow } from "swiper/modules";
+import { Autoplay, EffectCoverflow } from "swiper/modules";
 
 type Project = {
   title: string;
@@ -452,7 +452,7 @@ const MyProjects: React.FC = () => {
       {/* Swiper carousel */}
       <div className="relative z-10 w-full max-w-7xl mx-auto">
         <Swiper
-          modules={[Navigation, Pagination, Autoplay, EffectCoverflow]}
+          modules={[Autoplay, EffectCoverflow]}
           spaceBetween={30}
           slidesPerView={2.5}
           centeredSlides={true}
