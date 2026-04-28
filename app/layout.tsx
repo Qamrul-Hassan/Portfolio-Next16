@@ -72,32 +72,29 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
         {/*
-         * ── Perf: preload true LCP candidates only ─────
-         * banner.webp is the LCP element — preload it with high fetchpriority.
-         * Portfolio-9.webp is above-fold profile image — also preload.
-         * Logo is NOT above-fold on mobile, skip it to avoid wasting bandwidth.
-         * imagesrcset helps the browser pick the right size for the viewport.
+         * ── Perf: preload LCP candidates ─────
+         * Only preload what's visible above-the-fold (banner, profile photo, logo).
+         * fetchpriority="high" nudges the browser to fetch these first.
          */}
         <link
           rel="preload"
           as="image"
           href="/banner.webp"
-          fetchPriority="high"
+          // @ts-expect-error - valid attribute
+          fetchpriority="high"
         />
         <link
           rel="preload"
           as="image"
           href="/Portfolio-9.webp"
-          fetchPriority="high"
-          imageSrcSet="/Portfolio-9.webp 1x"
+          // @ts-expect-error - valid attribute
+          fetchpriority="high"
         />
+        <link rel="preload" as="image" href="/Logo-4.webp" />
 
         {/*
-         * ── Critical font CSS inlined — zero render-blocking ───────────────
-         * @font-face overrides for fallback fonts using size-adjust + metric
-         * overrides so the fallback font renders at the SAME size as the web
-         * font. This eliminates the layout shift (CLS) when Playfair/DM Sans
-         * load and swap in. Values tuned for Playfair Display 700 → Georgia.
+         * ── Accessibility: skip navigation link (hidden until focused) ──
+         * Improves keyboard nav — counts toward Best Practices score.
          */}
         <style>{`
           .skip-link {
@@ -115,29 +112,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             transition: top 0.2s;
           }
           .skip-link:focus { top: 0; }
-
-          /* Adjusted fallback for Playfair Display — prevents CLS on font swap */
-          @font-face {
-            font-family: 'Playfair Display Fallback';
-            src: local('Georgia');
-            size-adjust: 97%;
-            ascent-override: 95%;
-            descent-override: 25%;
-            line-gap-override: 0%;
-          }
-          /* Adjusted fallback for DM Sans — prevents CLS on font swap */
-          @font-face {
-            font-family: 'DM Sans Fallback';
-            src: local('Arial');
-            size-adjust: 100%;
-            ascent-override: 92%;
-            descent-override: 24%;
-            line-gap-override: 0%;
-          }
-
-          /* Use adjusted fallbacks BEFORE web fonts load */
-          body { font-family: 'DM Sans Fallback', system-ui, sans-serif; }
-          h1, h2, h3 { font-family: 'Playfair Display Fallback', Georgia, serif; }
+          /* Fallback font stack while Google Fonts loads */
+          body { font-family: system-ui, -apple-system, sans-serif; }
         `}</style>
       </head>
 
@@ -158,19 +134,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
          * display=swap → text renders in system font, swaps when loaded.
          * Only 2 weights per font (not 5) — reduces download by ~40%.
          */}
-        {/*
-         * ── Non-blocking Google Fonts ──────────────────────────────────
-         * strategy="afterInteractive" → runs after hydration, zero render blocking.
-         * display=swap → text renders in system font, swaps when loaded.
-         * Only 2 weights per font — reduces download by ~40%.
-         * Duplicate guard prevents double-load on hot reload.
-         */}
         <Script id="load-google-fonts" strategy="afterInteractive">{`
           (function() {
             if (typeof document === 'undefined') return;
-            if (document.getElementById('gfonts')) return;
             var l = document.createElement('link');
-            l.id = 'gfonts';
             l.rel = 'stylesheet';
             l.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;600&display=swap';
             document.head.appendChild(l);

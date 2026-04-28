@@ -1,6 +1,6 @@
 "use client";
 
-import { FaLinkedin, FaGithub, FaXTwitter, FaEnvelope, FaPhone, FaLocationDot , FaArrowUp } from "react-icons/fa6";
+import { FaLinkedin, FaGithub, FaXTwitter, FaEnvelope, FaWhatsapp, FaTelegram, FaPhone, FaLocationDot , FaArrowUp } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRef, useEffect } from "react";
@@ -116,6 +116,8 @@ const socialLinks = [
   { href: "https://www.linkedin.com/in/md-qamrul-hassan-a44b3835b/", label: "LinkedIn profile", icon: <FaLinkedin className="w-5 h-5" />, color: "#0A66C2" },
   { href: "https://x.com/Shajal1", label: "X profile", icon: <FaXTwitter  className="w-5 h-5" />, color: "#1DA1F2" },
   { href: "https://github.com/Qamrul-Hassan", label: "GitHub profile", icon: <FaGithub className="w-5 h-5" />, color: "#1DA1F2" },
+  { href: "https://wa.me/8801711844948", label: "WhatsApp", icon: <FaWhatsapp  className="w-5 h-5" />, color: "#25D366" },
+  { href: "https://t.me/QHS73", label: "Telegram", icon: <FaTelegram  className="w-5 h-5" />, color: "#0088CC" },
 ];
 const quickLinks = ["Home", "About", "Services", "Projects", "Contact"];
 const skills = ["React", "Next.js", "TypeScript", "Tailwind CSS", "Bootstrap", "shadcn/UI", "Axios", "Redux", "Zustand", "State mgmt", "Firebase", "Figma", "GIT", "GitHub"];
@@ -151,11 +153,11 @@ const Footer = () => {
 
       {/* Main content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-16 pt-12 pb-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 text-center md:text-left">
 
           {/* Brand */}
           <motion.div className="lg:col-span-1" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-3 mb-4 justify-center md:justify-start">
               <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-sky-400 shadow-lg shadow-sky-500/20">
                 <Image src="/Logo-4.webp" alt="QHS Logo" fill priority className="object-cover" />
               </div>
@@ -165,7 +167,7 @@ const Footer = () => {
               </div>
             </div>
             <p className="text-slate-400 text-sm leading-relaxed mb-5">Crafting modern, responsive web experiences with a passion for clean code and beautiful interfaces. Open to collaborations and new opportunities.</p>
-            <div className="flex gap-3">
+            <div className="flex gap-3 justify-center md:justify-start">
               {socialLinks.map(social => (
                 <motion.a key={social.href} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.label}
                   className="w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300"
@@ -184,7 +186,7 @@ const Footer = () => {
             <ul className="space-y-2.5">
               {quickLinks.map((link, index) => (
                 <motion.li key={link} initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: 0.2 + index * 0.07 }}>
-                  <a href={`#${link.toLowerCase()}`} className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm">
+                  <a href={`#${link.toLowerCase()}`} className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm justify-center md:justify-start">
                     <span className="w-4 h-[1px] rounded transition-all duration-300 group-hover:w-6" style={{ background: "linear-gradient(to right, #0EA5E9, #14B8A6)" }} />
                     {link}
                   </a>
@@ -196,7 +198,7 @@ const Footer = () => {
           {/* Expertise */}
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}>
             <h3 className="text-sm font-bold uppercase tracking-widest text-sky-400 mb-5">Expertise</h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 justify-center md:justify-start">
               {skills.map((skill, index) => (
                 <motion.span key={skill} className="px-3 py-1 rounded-full text-xs font-medium text-slate-300 transition-all duration-300 hover:text-white cursor-default"
                   style={{ background: "rgba(14,165,233,0.08)", border: "1px solid rgba(14,165,233,0.18)" }}
@@ -208,7 +210,7 @@ const Footer = () => {
             </div>
             <div className="mt-6">
               <h3 className="text-sm font-bold uppercase tracking-widest text-sky-400 mb-3">Availability</h3>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 justify-center md:justify-start">
                 <span className="relative flex h-2.5 w-2.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: "#14B8A6" }} />
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5" style={{ background: "#14B8A6" }} />
@@ -221,27 +223,39 @@ const Footer = () => {
           {/* Contact */}
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.3 }}>
             <h3 className="text-sm font-bold uppercase tracking-widest text-sky-400 mb-5">Get In Touch</h3>
-            <div className="space-y-4">
-              <a href="mailto:mdqamrul74@gmail.com" className="group flex items-start gap-3 text-slate-400 hover:text-white transition-colors">
-                <div className="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all"
-                  style={{ background: "rgba(14,165,233,0.1)", border: "1px solid rgba(14,165,233,0.2)" }}>
-                  <FaEnvelope className="w-3.5 h-3.5 text-sky-400" />
+            <div className="space-y-5">
+              {/* Row: [icon] Label — centered, then address below */}
+              <a href="mailto:mdqamrul74@gmail.com" className="group flex flex-col items-center md:items-start gap-1 text-slate-400 hover:text-white transition-colors">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all"
+                    style={{ background: "rgba(14,165,233,0.1)", border: "1px solid rgba(14,165,233,0.2)" }}>
+                    <FaEnvelope className="w-3 h-3 text-sky-400" />
+                  </div>
+                  <span className="text-xs text-slate-500">Email</span>
                 </div>
-                <div><div className="text-xs text-slate-500 mb-0.5">Email</div><span className="text-sm group-hover:text-sky-400 transition-colors">mdqamrul74@gmail.com</span></div>
+                <span className="text-sm group-hover:text-sky-400 transition-colors">mdqamrul74@gmail.com</span>
               </a>
-              <a href="tel:+8801711844948" className="group flex items-start gap-3 text-slate-400 hover:text-white transition-colors">
-                <div className="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all"
-                  style={{ background: "rgba(20,184,166,0.1)", border: "1px solid rgba(20,184,166,0.2)" }}>
-                  <FaPhone className="w-3.5 h-3.5 text-teal-400" />
+
+              <a href="tel:+8801711844948" className="group flex flex-col items-center md:items-start gap-1 text-slate-400 hover:text-white transition-colors">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all"
+                    style={{ background: "rgba(20,184,166,0.1)", border: "1px solid rgba(20,184,166,0.2)" }}>
+                    <FaPhone className="w-3 h-3 text-teal-400" />
+                  </div>
+                  <span className="text-xs text-slate-500">Phone</span>
                 </div>
-                <div><div className="text-xs text-slate-500 mb-0.5">Phone</div><span className="text-sm group-hover:text-teal-400 transition-colors">+880 1711-844948</span></div>
+                <span className="text-sm group-hover:text-teal-400 transition-colors">+880 1711-844948</span>
               </a>
-              <div className="flex items-start gap-3 text-slate-400">
-                <div className="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ background: "rgba(14,165,233,0.08)", border: "1px solid rgba(14,165,233,0.15)" }}>
-                  <FaLocationDot  className="w-3.5 h-3.5 text-sky-400" />
+
+              <div className="flex flex-col items-center md:items-start gap-1 text-slate-400">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{ background: "rgba(14,165,233,0.08)", border: "1px solid rgba(14,165,233,0.15)" }}>
+                    <FaLocationDot className="w-3 h-3 text-sky-400" />
+                  </div>
+                  <span className="text-xs text-slate-500">Location</span>
                 </div>
-                <div><div className="text-xs text-slate-500 mb-0.5">Location</div><span className="text-sm">Dhaka, Bangladesh</span></div>
+                <span className="text-sm">Dhaka, Bangladesh</span>
               </div>
             </div>
           </motion.div>
@@ -250,7 +264,7 @@ const Footer = () => {
 
       {/* Bottom bar */}
       <div className="relative z-10 w-full" style={{ borderTop: "1px solid rgba(14,165,233,0.1)" }}>
-        <div className="w-full max-w-7xl mx-auto px-6 lg:px-16 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-500">
+        <div className="w-full max-w-7xl mx-auto px-6 lg:px-16 py-5 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-3 text-sm text-slate-500 text-center">
           <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
             &copy; {new Date().getFullYear()}{" "}<span className="text-slate-300 font-medium">Qamrul Hassan Shajal</span>. All Rights Reserved.
           </motion.span>

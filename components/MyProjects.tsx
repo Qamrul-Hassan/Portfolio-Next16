@@ -396,7 +396,7 @@ const MyProjects: React.FC = () => {
 
       {/* Featured cards row */}
       <div className="relative z-10 w-full max-w-7xl mx-auto mb-10 grid grid-cols-1 md:grid-cols-3 gap-5">
-        {leftFeatured && renderFeaturedCard(leftFeatured, "md:rounded-l-full md:rounded-r-none", "md:text-right")}
+        {leftFeatured && renderFeaturedCard(leftFeatured, "md:rounded-l-full md:rounded-r-none", "md:text-")}
 
         <div
           className="relative [perspective:1400px]"
@@ -411,9 +411,10 @@ const MyProjects: React.FC = () => {
               exit={{ opacity: 0, y: -12, scale: 0.98 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              {renderFeaturedCard(middleFeatured, "md:rounded-none", "md:text-center")}
+              {renderFeaturedCard(middleFeatured, "md:rounded-1-none", "md:text-center")}
             </motion.div>
           </AnimatePresence>
+          
         </div>
 
         {rightFeatured && renderFeaturedCard(rightFeatured, "md:rounded-r-full md:rounded-l-none", "text-left")}
@@ -516,30 +517,23 @@ const MyProjects: React.FC = () => {
                     {cardContent}
                   </div>
                 ) : (
-                  <a
+                  <motion.a
                     href={project.link}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Open live demo for ${project.title}`}
                     className="group relative rounded-2xl overflow-hidden shadow-xl h-full flex flex-col"
-                    style={{
-                      ...cardStyle,
-                      transition: "box-shadow 0.3s, transform 0.25s ease-out",
-                      willChange: "transform",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.transform = "scale(1.02) translateY(-4px)";
-                      swiperInstance?.autoplay?.stop();
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.transform = "";
-                      swiperInstance?.autoplay?.start();
-                    }}
-                    onMouseDown={(e) => { (e.currentTarget as HTMLElement).style.transform = "scale(0.97)"; }}
-                    onMouseUp={(e) => { (e.currentTarget as HTMLElement).style.transform = "scale(1.02) translateY(-4px)"; }}
+                    style={cardStyle}
+                    whileHover={{ scale: 1.02, y: -4 }}
+                    whileTap={{ scale: 0.97 }}
+                    initial={{ opacity: 0, scale: 0.8, y: 50 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ duration: 1.2, delay: index * 0.03 }}
+                    onMouseEnter={() => swiperInstance?.autoplay?.stop()}
+                    onMouseLeave={() => swiperInstance?.autoplay?.start()}
                   >
                     {cardContent}
-                  </a>
+                  </motion.a>
                 )}
               </SwiperSlide>
             );

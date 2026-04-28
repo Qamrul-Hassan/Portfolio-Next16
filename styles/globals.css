@@ -110,12 +110,6 @@ section::after {
 
 footer { position: relative; z-index: 1; }
 
-/*
- * ── Promote animated elements to GPU layer ───────────────────────────
- * Prevents composite-layer promotions from triggering layout during scroll.
- */
-[data-motion] { will-change: transform, opacity; }
-
 /* ── Swiper ──────────────────────────────────────────────────────── */
 .swiper-button-prev,
 .swiper-button-next { display: none !important; }

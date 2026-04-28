@@ -2,9 +2,10 @@
 
 import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { FaLinkedin, FaGithub, FaXTwitter  } from "react-icons/fa6";
+import { FaLinkedin, FaGithub, FaXTwitter, FaWhatsapp, FaTelegram  } from "react-icons/fa6";
 import { Typewriter } from "react-simple-typewriter";
 import Image from "next/image";
+
 
 
 const HeroBg: React.FC = () => {
@@ -13,198 +14,160 @@ const HeroBg: React.FC = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    // ── Perf: delay canvas start until after LCP / first paint ──────────
-    // requestIdleCallback gives the browser time to paint the LCP image first.
-    // Falls back to a 300ms timeout on Safari which lacks rIC support.
-    const startCanvas = () => {
-      const ctx = canvas.getContext("2d", { alpha: true });
-      if (!ctx) return;
+    let W = (canvas.width = canvas.offsetWidth);
+    let H = (canvas.height = canvas.offsetHeight);
+    const onResize = () => {
+      W = canvas.width = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+    };
+    window.addEventListener("resize", onResize);
 
-      // ── Perf: batch all DOM reads before any writes ──────────────────
-      // Reading offsetWidth/Height forces layout. Do it once here, not
-      // inside the draw loop, to avoid repeated forced reflows.
-      let W = canvas.offsetWidth;
-      let H = canvas.offsetHeight;
-      canvas.width = W;
-      canvas.height = H;
+    const R = 30;
+    const HH = Math.sqrt(3) * R;
+    const CW = R * 1.5;
 
-      let resizeTimer: ReturnType<typeof setTimeout>;
-      const onResize = () => {
-        // Debounce resize to avoid thrashing layout on every pixel
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          // Batch read then write
-          W = canvas.offsetWidth;
-          H = canvas.offsetHeight;
-          canvas.width = W;
-          canvas.height = H;
-          buildHexes();
-        }, 150);
-      };
-      window.addEventListener("resize", onResize, { passive: true });
+    const COLS_LEFT: [number, number, number][] = [
+      [56,  189, 248],   // sky-400
+      [14,  165, 233],   // sky-500
+      [34,  211, 238],   // cyan-400
+      [6,   182, 212],   // cyan-500
+      [20,  184, 166],   // teal-500
+      [168,  85, 247],   // violet-500
+      [99,  102, 241],   // indigo-500
+    ];
+    const COLS_RIGHT: [number, number, number][] = [
+      [244, 114, 182],   // pink-400
+      [236,  72, 153],   // pink-500
+      [251, 113, 133],   // rose-400
+      [249, 168, 212],   // pink-300
+      [253, 164, 175],   // rose-300
+      [232, 121, 249],   // fuchsia-400
+      [217,  70, 239],   // fuchsia-500
+    ];
 
-      const R = 30;
-      const HH = Math.sqrt(3) * R;
-      const CW = R * 1.5;
-
-      const COLS_LEFT: [number, number, number][] = [
-        [56,  189, 248],
-        [14,  165, 233],
-        [34,  211, 238],
-        [6,   182, 212],
-        [20,  184, 166],
-        [168,  85, 247],
-        [99,  102, 241],
-      ];
-      const COLS_RIGHT: [number, number, number][] = [
-        [244, 114, 182],
-        [236,  72, 153],
-        [251, 113, 133],
-        [249, 168, 212],
-        [253, 164, 175],
-        [232, 121, 249],
-        [217,  70, 239],
-      ];
-
-      type Hex = {
-        cx: number; cy: number;
-        scale: number; alpha: number;
-        phase: "idle" | "grow" | "hold" | "fade";
-        t: number; holdMax: number;
-        color: [number, number, number];
-      };
-
-      const hexes: Hex[] = [];
-      let spawnT = 0;
-
-      const buildHexes = () => {
-        hexes.length = 0;
-        const cols = Math.ceil(W / CW) + 2;
-        const rows = Math.ceil(H / HH) + 2;
-        for (let c = -1; c < cols; c++) {
-          for (let r = -1; r < rows; r++) {
-            hexes.push({
-              cx: c * CW,
-              cy: r * HH + (c % 2 === 0 ? 0 : HH / 2),
-              scale: 1, alpha: 0, phase: "idle", t: 0, holdMax: 40,
-              color: COLS_LEFT[0],
-            });
-          }
-        }
-      };
-      buildHexes();
-
-      // Adaptive frame-skip: ~20fps mobile, ~30fps tablet, 60fps desktop
-      const getSkip = () => {
-        const w = window.innerWidth;
-        if (w < 640)  return 3;
-        if (w < 1024) return 2;
-        return 1;
-      };
-      let frameSkip = getSkip();
-      window.addEventListener("resize", () => { frameSkip = getSkip(); }, { passive: true });
-
-      const drawHex = (cx: number, cy: number, r: number) => {
-        ctx.beginPath();
-        for (let i = 0; i < 6; i++) {
-          const a = (Math.PI / 3) * i - Math.PI / 6;
-          i === 0
-            ? ctx.moveTo(cx + r * Math.cos(a), cy + r * Math.sin(a))
-            : ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
-        }
-        ctx.closePath();
-      };
-
-      let raf: number;
-      let frameCount = 0;
-
-      // Cache W/H half values to avoid division in hot loop
-      let halfW = W / 2;
-      window.addEventListener("resize", () => { halfW = W / 2; }, { passive: true });
-
-      const draw = () => {
-        raf = requestAnimationFrame(draw);
-        frameCount++;
-        if (frameCount % frameSkip !== 0) return;
-        ctx.clearRect(0, 0, W, H);
-        spawnT++;
-
-        if (spawnT >= 15) {
-          spawnT = 0;
-          const idle = hexes.filter((h) => h.phase === "idle");
-          if (idle.length) {
-            const h = idle[Math.floor(Math.random() * idle.length)];
-            h.phase = "grow";
-            h.scale = 0;
-            h.alpha = 0;
-            h.t = 0;
-            h.holdMax = Math.floor(Math.random() * 50 + 25);
-            const isRightSide = h.cx >= halfW;
-            const palette = isRightSide ? COLS_RIGHT : COLS_LEFT;
-            h.color = palette[Math.floor(Math.random() * palette.length)];
-          }
-        }
-
-        hexes.forEach((h) => {
-          drawHex(h.cx, h.cy, R - 1);
-          ctx.strokeStyle = "rgba(56,189,248,0.08)";
-          ctx.lineWidth = 0.8;
-          ctx.stroke();
-
-          if (h.phase === "idle") return;
-          h.t++;
-
-          if (h.phase === "grow") {
-            h.scale += (1 - h.scale) * 0.15;
-            h.alpha += (0.85 - h.alpha) * 0.15;
-            if (h.scale > 0.96) { h.phase = "hold"; h.t = 0; }
-          } else if (h.phase === "hold") {
-            if (h.t > h.holdMax) { h.phase = "fade"; h.t = 0; }
-          } else {
-            h.alpha -= 0.020;
-            h.scale += (1.12 - h.scale) * 0.06;
-            if (h.alpha <= 0) {
-              h.phase = "idle"; h.alpha = 0; h.scale = 1; return;
-            }
-          }
-
-          const [r, g, b] = h.color;
-
-          drawHex(h.cx, h.cy, (R - 1) * h.scale);
-          ctx.fillStyle = `rgba(${r},${g},${b},${(h.alpha * 0.65).toFixed(3)})`;
-          ctx.fill();
-
-          ctx.strokeStyle = `rgba(${r},${g},${b},${h.alpha.toFixed(3)})`;
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
-
-          drawHex(h.cx, h.cy, (R - 1) * h.scale * 0.55);
-          ctx.strokeStyle = `rgba(${r},${g},${b},${(h.alpha * 0.6).toFixed(3)})`;
-          ctx.lineWidth = 0.8;
-          ctx.stroke();
-        });
-      };
-
-      draw();
-      return () => {
-        cancelAnimationFrame(raf);
-        window.removeEventListener("resize", onResize);
-      };
+    type Hex = {
+      cx: number; cy: number;
+      scale: number; alpha: number;
+      phase: "idle" | "grow" | "hold" | "fade";
+      t: number; holdMax: number;
+      color: [number, number, number];
     };
 
-    // Defer canvas until browser is idle (after LCP paints)
-    let cleanup: (() => void) | undefined;
-    let handle: number;
-    if ("requestIdleCallback" in window) {
-      handle = window.requestIdleCallback(() => { cleanup = startCanvas(); });
-    } else {
-      const t = setTimeout(() => { cleanup = startCanvas(); }, 300);
-      return () => clearTimeout(t);
-    }
+    const hexes: Hex[] = [];
+    let spawnT = 0;
+
+    const buildHexes = () => {
+      hexes.length = 0;
+      const cols = Math.ceil(W / CW) + 2;
+      const rows = Math.ceil(H / HH) + 2;
+      for (let c = -1; c < cols; c++) {
+        for (let r = -1; r < rows; r++) {
+          hexes.push({
+            cx: c * CW,
+            cy: r * HH + (c % 2 === 0 ? 0 : HH / 2),
+            scale: 1, alpha: 0, phase: "idle", t: 0, holdMax: 40,
+            color: COLS_LEFT[0],
+          });
+        }
+      }
+    };
+    buildHexes();
+
+    // Adaptive frame-skip: ~20fps mobile, ~30fps tablet, 60fps desktop
+    const getSkip = () => {
+      const w = window.innerWidth;
+      if (w < 640)  return 3;
+      if (w < 1024) return 2;
+      return 1;
+    };
+    let frameSkip = getSkip();
+    window.addEventListener("resize", () => { frameSkip = getSkip(); }, { passive: true });
+
+    const drawHex = (cx: number, cy: number, r: number) => {
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const a = (Math.PI / 3) * i - Math.PI / 6;
+        i === 0
+          ? ctx.moveTo(cx + r * Math.cos(a), cy + r * Math.sin(a))
+          : ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
+      }
+      ctx.closePath();
+    };
+
+    let raf: number;
+    let frameCount = 0;
+
+    const draw = () => {
+      raf = requestAnimationFrame(draw);
+      frameCount++;
+      if (frameCount % frameSkip !== 0) return;
+      ctx.clearRect(0, 0, W, H);
+      spawnT++;
+
+      if (spawnT >= 15) {
+        spawnT = 0;
+        const idle = hexes.filter((h) => h.phase === "idle");
+        if (idle.length) {
+          const h = idle[Math.floor(Math.random() * idle.length)];
+          h.phase = "grow";
+          h.scale = 0;
+          h.alpha = 0;
+          h.t = 0;
+          h.holdMax = Math.floor(Math.random() * 50 + 25);
+          const isRightSide = h.cx >= W * 0.5;
+          const palette = isRightSide ? COLS_RIGHT : COLS_LEFT;
+          h.color = palette[Math.floor(Math.random() * palette.length)];
+        }
+      }
+
+      hexes.forEach((h) => {
+        drawHex(h.cx, h.cy, R - 1);
+        ctx.strokeStyle = "rgba(56,189,248,0.08)";
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+
+        if (h.phase === "idle") return;
+        h.t++;
+
+        if (h.phase === "grow") {
+          h.scale += (1 - h.scale) * 0.15;
+          h.alpha += (0.85 - h.alpha) * 0.15;
+          if (h.scale > 0.96) { h.phase = "hold"; h.t = 0; }
+        } else if (h.phase === "hold") {
+          if (h.t > h.holdMax) { h.phase = "fade"; h.t = 0; }
+        } else {
+          h.alpha -= 0.020;
+          h.scale += (1.12 - h.scale) * 0.06;
+          if (h.alpha <= 0) {
+            h.phase = "idle"; h.alpha = 0; h.scale = 1; return;
+          }
+        }
+
+        const [r, g, b] = h.color;
+
+        drawHex(h.cx, h.cy, (R - 1) * h.scale);
+        ctx.fillStyle = `rgba(${r},${g},${b},${(h.alpha * 0.65).toFixed(3)})`;
+        ctx.fill();
+
+        ctx.strokeStyle = `rgba(${r},${g},${b},${h.alpha.toFixed(3)})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        drawHex(h.cx, h.cy, (R - 1) * h.scale * 0.55);
+        ctx.strokeStyle = `rgba(${r},${g},${b},${(h.alpha * 0.6).toFixed(3)})`;
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+      });
+
+    };
+
+    draw();
     return () => {
-      if ("cancelIdleCallback" in window) window.cancelIdleCallback(handle);
-      cleanup?.();
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onResize);
     };
   }, []);
 
@@ -386,6 +349,9 @@ const HeroSection: React.FC = () => {
               { href: "https://www.linkedin.com/in/md-qamrul-hassan-a44b3835b/", label: "LinkedIn", icon: <FaLinkedin />, hover: "hover:text-sky-400" },
               { href: "https://github.com/Qamrul-Hassan", label: "GitHub", icon: <FaGithub />, hover: "hover:text-teal-400" },
               { href: "https://x.com/Shajal1", label: "X", icon: <FaXTwitter  />, hover: "hover:text-sky-400" },
+              { href: "https://wa.me/8801711844948", label: "WhatsApp", icon: <FaWhatsapp  />, hover: "hover:text-green-400" },
+              { href: "https://t.me/QHS73", label: "Telegram", icon: <FaTelegram  />, hover: "hover:text-sky-400" },
+              
             ].map((s) => (
               <motion.a
                 key={s.href}
@@ -425,7 +391,6 @@ const HeroSection: React.FC = () => {
                   height: 52,
                   clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
                   background: item.gradient,
-                  willChange: "transform",
                 }}
                 animate={{ y: [0, -20, 0] }}
                 transition={{
