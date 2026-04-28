@@ -6,19 +6,19 @@ import Script from "next/script";
  * SEO — complete metadata improves Lighthouse SEO score from 92 → 100
  * ───────────────────────────────────────────────────────────────────────────── */
 export const metadata: Metadata = {
-  metadataBase: new URL("https://portfolio-next16.vercel.app"),
+  metadataBase: new URL("https://qhs-portfolio-next16.vercel.app/"),
   title: {
     default: "Qamrul Hassan | Frontend Developer",
-    template: "%s | Qamrul Hassan",
+    template: "%s | Qamrul Hassan Shajal Portfolio",
   },
   description:
     "Portfolio of Qamrul Hassan — Frontend Developer specialising in React, Next.js, TypeScript, and Tailwind CSS. Available for freelance work.",
   keywords: [
     "Frontend Developer", "React Developer", "Next.js", "TypeScript",
-    "Tailwind CSS", "Web Developer", "Bangladesh", "Qamrul Hassan",
+    "Tailwind CSS", "Web Developer", "Bangladesh", "Qamrul Hassan Shajal",
   ],
-  authors: [{ name: "Qamrul Hassan", url: "https://portfolio-next16.vercel.app" }],
-  creator: "Qamrul Hassan",
+  authors: [{ name: "Qamrul Hassan Shajal", url: "https://qhs-portfolio-next16.vercel.app/" }],
+  creator: "Qamrul Hassan Shajal",
   robots: {
     index: true,
     follow: true,
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://portfolio-next16.vercel.app",
+    url: "https://qhs-portfolio-next16.vercel.app",
     title: "Qamrul Hassan | Frontend Developer",
     description:
       "Frontend Developer specialising in React, Next.js, TypeScript, and Tailwind CSS.",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     ],
   },
   // Canonical URL
-  alternates: { canonical: "https://portfolio-next16.vercel.app" },
+  alternates: { canonical: "https://qhs-portfolio-next16.vercel.app" },
 };
 
 /* ─────────────────────────────────────────────────────────────────────────────
