@@ -162,7 +162,7 @@ const Footer = () => {
                 <Image src="/Logo-4.webp" alt="QHS Logo" fill className="object-cover" />
               </div>
               <div>
-                <div className="font-bold text-base text-white leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>Qamrul Hassan</div>
+                <div className="font-bold text-base text-white leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>Qamrul Hassan Shajal</div>
                 <div className="text-xs text-sky-400 tracking-wider">Web Developer</div>
               </div>
             </div>

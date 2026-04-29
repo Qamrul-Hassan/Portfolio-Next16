@@ -104,7 +104,7 @@ const Navbar: React.FC = () => {
                 className="font-bold text-white text-base"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
-                Qamrul Hassan
+                Qamrul Hassan Shajal
               </span>
               <span className="block text-[10px] tracking-widest text-sky-400 uppercase -mt-0.5">
                 Web Developer
