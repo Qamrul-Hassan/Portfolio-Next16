@@ -96,11 +96,11 @@ const AboutMe = () => {
           </h2>
 
           {/* Gradient line — centered on mobile, left on desktop */}
-          <motion.div className="h-1 w-28 rounded-full mb-6 mx-auto lg:mx-0" style={{ background: "linear-gradient(to right, #0EA5E9, #14B8A6)" }}
+          <motion.div className="h-1 w-28 rounded-full mb-6 mx-auto lg:mx-0" style={{ background: "linear-gradient( #0EA5E9, #14B8A6)" }}
             initial={{ width: 0, opacity: 0 }} whileInView={{ width: 112, opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7 }} />
 
           <p className="text-lg leading-relaxed mb-5 text-gray-300">
-            I am{" "}<span className="font-semibold text-sky-400">Qamrul Hassan</span>, a Web developer with a passion for crafting visually appealing and responsive web interfaces. With hands-on experience in modern tools and technologies, I specialise in transforming ideas into functional web solutions. I have a strong foundation in frontend development, focusing on creating user-friendly designs and maintaining performance.
+            I am{" "}<span className="font-semibold text-sky-400">Qamrul Hassan Shajal</span>, a Web developer with a passion for crafting visually appealing and responsive web interfaces. With hands-on experience in modern tools and technologies, I specialise in transforming ideas into functional web solutions. I have a strong foundation in frontend development, focusing on creating user-friendly designs and maintaining performance.
           </p>
 
           <motion.p className="italic text-xl font-semibold mb-8" style={{ color: "#0EA5E9" }}

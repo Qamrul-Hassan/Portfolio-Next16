@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://qhs-portfolio-next16.vercel.app",
-    title: "Qamrul Hassan | Frontend Developer",
+    title: "Qamrul Hassan Shajal| Web Developer",
     description:
       "Frontend Developer specialising in React, Next.js, TypeScript, and Tailwind CSS.",
     siteName: "Qamrul Hassan Portfolio",
@@ -36,8 +36,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Qamrul Hassan | Frontend Developer",
-    description: "Frontend Developer specialising in React, Next.js, TypeScript, and Tailwind CSS.",
+    title: "Qamrul Hassan Shajal | Web Developer",
+    description: "Web Developer specialising in React, Next.js, TypeScript, and Tailwind CSS.",
     images: ["/Portfolio-9.webp"],
   },
   icons: {
