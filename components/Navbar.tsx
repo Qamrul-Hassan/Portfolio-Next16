@@ -106,7 +106,7 @@ const Navbar: React.FC = () => {
               >
                 Qamrul Hassan Shajal
               </span>
-              <span className="block text-[10px] tracking-widest text-sky-400 uppercase -mt-0.5">
+              <span className="text-[10px] tracking-widest text-sky-400 uppercase -mt-0.5">
                 Web Developer
               </span>
             </span>
