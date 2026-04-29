@@ -99,7 +99,7 @@ const Navbar: React.FC = () => {
                 className="object-cover"
               />
             </span>
-            <span className="hidden sm:block">
+            <span className="block text-left">
               <span
                 className="font-bold text-white text-base"
                 style={{ fontFamily: "'Playfair Display', serif" }}
